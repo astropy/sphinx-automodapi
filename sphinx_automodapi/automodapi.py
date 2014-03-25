@@ -39,7 +39,7 @@ It accepts the following options:
     * ``:no-heading:```
         If specified do not create a top level heading for the section.
 
-This extension also adds two sphinx configuration options:
+This extension also adds two sphinx configuration option:
 
 * `automodapi_toctreedirnm`
     This must be a string that specifies the name of the directory the
@@ -68,6 +68,9 @@ import inspect
 import os
 import re
 import sys
+
+from .utils import find_mod_objs
+
 
 automod_templ_modheader = """
 {modname} {pkgormod}
@@ -272,8 +275,6 @@ def _mod_info(modname, toskip=[]):
     it has classes or functions.
     """
 
-    from ...utils.misc import find_mod_objs
-
     hascls = hasfunc = False
 
     for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=True)):
@@ -296,7 +297,7 @@ def process_automodapi(app, docname, source):
 
 def setup(app):
     # need automodsumm for automodapi
-    app.setup_extension('astropy.sphinx.ext.automodsumm')
+    app.setup_extension('astropy_helpers.sphinx.ext.automodsumm')
 
     app.connect('source-read', process_automodapi)
 
