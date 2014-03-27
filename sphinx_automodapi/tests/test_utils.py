@@ -5,25 +5,23 @@ from ..utils import find_mod_objs
 
 
 def test_find_mod_objs():
-    lnms, fqns, objs = find_mod_objs('astropy')
+    lnms, fqns, objs = find_mod_objs('astropy_helpers')
 
     # this import  is after the above call intentionally to make sure
     # find_mod_objs properly imports astropy on its own
-    import astropy
+    import astropy_helpers
 
     # just check for astropy.test ... other things might be added, so we
     # shouldn't check that it's the only thing
-    assert 'test' in lnms
-    assert astropy.test in objs
+    assert lnms == []
 
-    lnms, fqns, objs = find_mod_objs('astropy.utils.tests.test_misc',
-                                     onlylocals=False)
-    assert 'namedtuple' in lnms
-    assert 'collections.namedtuple' in fqns
+    lnms, fqns, objs = find_mod_objs(
+        'astropy_helpers.sphinx.ext.tests.test_utils', onlylocals=False)
+
     assert namedtuple in objs
 
-    lnms, fqns, objs = find_mod_objs('astropy.utils.tests.test_misc',
-                                     onlylocals=True)
+    lnms, fqns, objs = find_mod_objs(
+        'astropy_helpers.sphinx.ext.tests.test_utils', onlylocals=True)
     assert 'namedtuple' not in lnms
     assert 'collections.namedtuple' not in fqns
     assert namedtuple not in objs
