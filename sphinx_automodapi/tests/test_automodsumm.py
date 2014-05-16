@@ -1,5 +1,6 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
-from ....tests.helper import pytest
+
+import pytest
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
 
@@ -8,7 +9,7 @@ class FakeEnv(object):
     Mocks up a sphinx env setting construct for automodapi tests
     """
     def __init__(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
 
@@ -30,7 +31,7 @@ class FakeApp(object):
         self.warnings = []
         self._extensions = []
         if automodapipresent:
-            self._extensions.append('astropy.sphinx.ext.automodapi')
+            self._extensions.append('astropy_helpers.sphinx.ext.automodapi')
 
     def info(self, msg, loc):
         self.info.append((msg, loc))
@@ -42,21 +43,25 @@ class FakeApp(object):
 ams_to_asmry_str = """
 Before
 
-.. automodsumm:: astropy.sphinx.ext.automodsumm
+.. automodsumm:: astropy_helpers.sphinx.ext.automodsumm
     :p:
 
 And After
 """
 
-ams_to_asmry_expected = """.. autosummary::
+ams_to_asmry_expected = """\
+.. currentmodule:: astropy_helpers.sphinx.ext.automodsumm
+
+.. autosummary::
     :p:
 
-    ~astropy.sphinx.ext.automodsumm.Automoddiagram
-    ~astropy.sphinx.ext.automodsumm.Automodsumm
-    ~astropy.sphinx.ext.automodsumm.automodsumm_to_autosummary_lines
-    ~astropy.sphinx.ext.automodsumm.generate_automodsumm_docs
-    ~astropy.sphinx.ext.automodsumm.process_automodsumm_generation
-    ~astropy.sphinx.ext.automodsumm.setup"""
+    Automoddiagram
+    Automodsumm
+    automodsumm_to_autosummary_lines
+    generate_automodsumm_docs
+    process_automodsumm_generation
+    setup
+    unicode_literals"""
 
 
 def test_ams_to_asmry(tmpdir):
