@@ -65,8 +65,6 @@ package. It accepts no options.
 
 """
 
-from __future__ import unicode_literals
-
 import inspect
 import os
 import re
@@ -182,7 +180,7 @@ class Automoddiagram(InheritanceDiagram):
         oldargs = self.arguments
         try:
             if len(clsnms) > 0:
-                self.arguments = [' '.join(clsnms)]
+                self.arguments = [u' '.join(clsnms)]
             return InheritanceDiagram.run(self)
         finally:
             self.arguments = oldargs
@@ -394,7 +392,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
         try:
             name, obj, parent = import_by_name(name)
-        except ImportError as e:
+        except ImportError, e:
             warn('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 

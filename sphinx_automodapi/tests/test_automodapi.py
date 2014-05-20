@@ -12,7 +12,7 @@ class FakeConfig(object):
     Mocks up a sphinx configuration setting construct for automodapi tests
     """
     def __init__(self, **kwargs):
-        for k, v in kwargs.items():
+        for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
 
