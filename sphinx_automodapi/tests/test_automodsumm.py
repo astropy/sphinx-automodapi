@@ -1,6 +1,12 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
+import sys
+
 import pytest
+
+PY3 = sys.version_info[0] >= 3
+pytest.skip("PY3")
+
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
 

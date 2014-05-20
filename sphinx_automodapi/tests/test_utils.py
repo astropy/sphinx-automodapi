@@ -1,7 +1,14 @@
 #namedtuple is needed for find_mod_objs so it can have a non-local module
+
+import sys
 from collections import namedtuple
 
+import pytest
+
 from ..utils import find_mod_objs
+
+PY3 = sys.version_info[0] >= 3
+pytest.skip("PY3")
 
 
 def test_find_mod_objs():
