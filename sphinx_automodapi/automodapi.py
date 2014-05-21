@@ -3,13 +3,17 @@
 This sphinx extension adds a tools to simplify generating the API
 documentation for Astropy packages and affiliated packages.
 
-======================
-`automodapi` directive
-======================
-This directive takes a single argument that must be a module or package.
-It will produce a block of documentation that includes the docstring for
-the package, an `automodsumm` directive, and an `automod-diagram` if
-there are any classes in the module.
+.. _automodapi:
+
+========================
+automodapi directive
+========================
+This directive takes a single argument that must be a module or package. It
+will produce a block of documentation that includes the docstring for the
+package, an :ref:`automodsumm` directive, and an :ref:`automod-diagram` if
+there are any classes in the module. If only the main docstring of the
+module/package is desired in the documentation, use `automodule`_ instead of
+`automodapi`_.
 
 It accepts the following options:
 
@@ -36,24 +40,34 @@ It accepts the following options:
         Python's documentation, assuming the automodapi call is inside a
         top-level section (which usually uses '=').
 
-    * ``:no-heading:```
+    * ``:no-heading:``
         If specified do not create a top level heading for the section.
+        That is, do not create a title heading with text like "packagename
+        Package".  The actual docstring for the package/module will still be
+        shown, though, unless ``:no-main-docstr:`` is given.
 
-This extension also adds two sphinx configuration option:
+    * ``:allowed-package-names: str``
+        Specifies the packages that functions/classes documented here are
+        allowed to be from, as comma-separated list of package names. If not
+        given, only objects that are actually in a subpackage of the package
+        currently being documented are included.
 
-* `automodapi_toctreedirnm`
+This extension also adds two sphinx configuration options:
+
+* ``automodapi_toctreedirnm``
     This must be a string that specifies the name of the directory the
     automodsumm generated documentation ends up in. This directory path should
     be relative to the documentation root (e.g., same place as ``index.rst``).
     Defaults to ``'api'``.
 
-* `automodapi_writereprocessed`
-    Should be a bool, and if True, will cause `automodapi` to write files with
-    any ``automodapi``  sections replaced with the content Sphinx processes
-    after ``automodapi`` has run.   The output files are not actually used by
-    sphinx, so this option is only for figuring out the cause of sphinx warnings
-    or other debugging.   Defaults to `False`.
+* ``automodapi_writereprocessed``
+    Should be a bool, and if `True`, will cause `automodapi`_ to write files
+    with any `automodapi`_ sections replaced with the content Sphinx
+    processes after `automodapi`_ has run.  The output files are not
+    actually used by sphinx, so this option is only for figuring out the
+    cause of sphinx warnings or other debugging.  Defaults to `False`.
 
+.. _automodule: http://sphinx-doc.org/latest/ext/autodoc.html?highlight=automodule#directive-automodule
 """
 
 # Implementation note:
@@ -85,8 +99,7 @@ Classes
 
 .. automodsumm:: {modname}
     :classes-only:
-    {toctree}
-    {skips}
+    {clsfuncoptions}
 """
 
 automod_templ_funcs = """
@@ -95,8 +108,7 @@ Functions
 
 .. automodsumm:: {modname}
     :functions-only:
-    {toctree}
-    {skips}
+    {clsfuncoptions}
 """
 
 automod_templ_inh = """
@@ -105,12 +117,14 @@ Class Inheritance Diagram
 
 .. automod-diagram:: {modname}
     :private-bases:
+    :parts: 1
+    {allowedpkgnms}
 """
 
 _automodapirex = re.compile(r'^(?:\s*\.\.\s+automodapi::\s*)([A-Za-z0-9_.]+)'
                             r'\s*$((?:\n\s+:[a-zA-Z_\-]+:.*$)*)',
                             flags=re.MULTILINE)
-#the last group of the above regex is intended to go into finall with the below
+# the last group of the above regex is intended to go into finall with the below
 _automodapiargsrex = re.compile(r':([a-zA-Z_\-]+):(.*)$', flags=re.MULTILINE)
 
 
@@ -121,7 +135,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
     automodapi template form based on provided options.
 
     This is used with the sphinx event 'source-read' to replace
-    `automodapi` entries before sphinx actually processes them, as
+    `automodapi`_ entries before sphinx actually processes them, as
     automodsumm needs the code to be present to generate stub
     documentation.
 
@@ -133,16 +147,16 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
     app : `sphinx.application.Application`
         The sphinx application.
     dotoctree : bool
-        If True, a ":toctree:" option will be added in the "..
+        If `True`, a ":toctree:" option will be added in the "..
         automodsumm::" sections of the template, pointing to the
         appropriate "generated" directory based on the Astropy convention
         (e.g. in ``docs/api``)
     docname : str
         The name of the file for this `sourcestr` (if known - if not, it
-        can be None). If not provided and `dotoctree` is True, the
+        can be `None`). If not provided and `dotoctree` is `True`, the
         generated files may end up in the wrong place.
     warnings : bool
-        If False, all warnings that would normally be issued are
+        If `False`, all warnings that would normally be issued are
         silenced.
 
     Returns
@@ -171,18 +185,19 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         for grp in range(len(spl) // 3):
             modnm = spl[grp * 3 + 1]
 
-            #find where this is in the document for warnings
+            # find where this is in the document for warnings
             if docname is None:
                 location = None
             else:
                 location = (docname, spl[0].count('\n'))
 
-            #initialize default options
+            # initialize default options
             toskip = []
             inhdiag = maindocstr = top_head = True
             hds = '-^'
+            allowedpkgnms = []
 
-            #look for actual options
+            # look for actual options
             unknownops = []
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
@@ -195,8 +210,18 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     hds = args
                 elif opname == 'no-heading':
                     top_head = False
+                elif opname == 'allowed-package-names':
+                    allowedpkgnms.append(args.strip())
                 else:
                     unknownops.append(opname)
+
+            #join all the allowedpkgnms
+            if len(allowedpkgnms) == 0:
+                allowedpkgnms = ''
+                onlylocals = True
+            else:
+                allowedpkgnms = ':allowed-package-names: ' + ','.join(allowedpkgnms)
+                onlylocals = allowedpkgnms
 
             # get the two heading chars
             if len(hds) < 2:
@@ -206,16 +231,16 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 hds = '-^'
             h1, h2 = hds.lstrip()[:2]
 
-            #tell sphinx that the remaining args are invalid.
+            # tell sphinx that the remaining args are invalid.
             if len(unknownops) > 0 and app is not None:
                 opsstrs = ','.join(unknownops)
                 msg = 'Found additional options ' + opsstrs + ' in automodapi.'
                 if warnings:
                     app.warn(msg, location)
 
-            ispkg, hascls, hasfuncs = _mod_info(modnm, toskip)
+            ispkg, hascls, hasfuncs = _mod_info(modnm, toskip, onlylocals=onlylocals)
 
-            #add automodule directive only if no-main-docstr isn't present
+            # add automodule directive only if no-main-docstr isn't present
             if maindocstr:
                 automodline = '.. automodule:: {modname}'.format(modname=modnm)
             else:
@@ -226,31 +251,51 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     pkgormod='Package' if ispkg else 'Module',
                     pkgormodhds=h1 * (8 if ispkg else 7),
                     automoduleline=automodline))
+            else:
+                newstrs.append(automod_templ_modheader.format(
+                    modname='',
+                    modhds='',
+                    pkgormod='',
+                    pkgormodhds='',
+                    automoduleline=automodline))
+
+            #construct the options for the class/function sections
+            #start out indented at 4 spaces, but need to keep the indentation.
+            clsfuncoptions = []
+            if toctreestr:
+                clsfuncoptions.append(toctreestr)
+            if toskip:
+                clsfuncoptions.append(':skip: ' + ','.join(toskip))
+            if allowedpkgnms:
+                clsfuncoptions.append(allowedpkgnms)
+            clsfuncoptionstr = '\n    '.join(clsfuncoptions)
 
             if hasfuncs:
-                newstrs.append(automod_templ_funcs.format(modname=modnm,
+                newstrs.append(automod_templ_funcs.format(
+                    modname=modnm,
                     funchds=h2 * 9,
-                    toctree=toctreestr,
-                    skips=':skip: ' + ','.join(toskip) if toskip else ''))
+                    clsfuncoptions=clsfuncoptionstr))
 
             if hascls:
-                newstrs.append(automod_templ_classes.format(modname=modnm,
+                newstrs.append(automod_templ_classes.format(
+                    modname=modnm,
                     clshds=h2 * 7,
-                    toctree=toctreestr,
-                    skips=':skip: ' + ','.join(toskip) if toskip else ''))
+                    clsfuncoptions=clsfuncoptionstr))
 
             if inhdiag and hascls:
                 # add inheritance diagram if any classes are in the module
                 newstrs.append(automod_templ_inh.format(
-                    modname=modnm, clsinhsechds=h2 * 25))
+                    modname=modnm,
+                    clsinhsechds=h2 * 25,
+                    allowedpkgnms=allowedpkgnms))
 
             newstrs.append(spl[grp * 3 + 3])
 
         newsourcestr = ''.join(newstrs)
 
         if app.config.automodapi_writereprocessed:
-            #sometimes they are unicode, sometimes not, depending on how sphinx
-            #has processed things
+            # sometimes they are unicode, sometimes not, depending on how
+            # sphinx has processed things
             if isinstance(newsourcestr, unicode):
                 ustr = newsourcestr
             else:
@@ -269,7 +314,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         return sourcestr
 
 
-def _mod_info(modname, toskip=[]):
+def _mod_info(modname, toskip=[], onlylocals=True):
     """
     Determines if a module is a module or a package and whether or not
     it has classes or functions.
@@ -277,14 +322,14 @@ def _mod_info(modname, toskip=[]):
 
     hascls = hasfunc = False
 
-    for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=True)):
+    for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=onlylocals)):
         if localnm not in toskip:
             hascls = hascls or inspect.isclass(obj)
             hasfunc = hasfunc or inspect.isfunction(obj)
             if hascls and hasfunc:
                 break
 
-    #find_mod_objs has already imported modname
+    # find_mod_objs has already imported modname
     pkg = sys.modules[modname]
     ispkg = '__init__.' in os.path.split(pkg.__name__)[1]
 

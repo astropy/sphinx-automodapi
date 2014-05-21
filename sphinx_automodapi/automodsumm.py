@@ -3,25 +3,26 @@
 This sphinx extension adds two directives for summarizing the public
 members of a module or package.
 
-These directives are primarily for use with the `automodapi` extension,
+These directives are primarily for use with the `automodapi`_ extension,
 but can be used independently.
 
+.. _automodsumm:
+
 =======================
-`automodsumm` directive
+automodsumm directive
 =======================
 
 This directive will produce an "autosummary"-style table for public
-attributes of a specified module. See the `sphinx.ext.autosummary`
-extension for details on this process. The main difference from the
-`autosummary` directive is that `autosummary` requires manually inputting
-all attributes that appear in the table, while this captures the entries
-automatically.
+attributes of a specified module. See the `sphinx.ext.autosummary`_ extension
+for details on this process. The main difference from the `autosummary`_
+directive is that `autosummary`_ requires manually inputting all attributes
+that appear in the table, while this captures the entries automatically.
 
 This directive requires a single argument that must be a module or
 package.
 
-It also accepts any options supported by the `autosummary` directive-
-see `sphinx.ext.autosummary` for details. It also accepts two additional
+It also accepts any options supported by the `autosummary`_ directive-
+see `sphinx.ext.autosummary`_ for details. It also accepts two additional
 options:
 
     * ``:classes-only:``
@@ -39,22 +40,32 @@ options:
         and not have their documentation generated, nor be includded in
         the summary table.
 
+    * ``:allowed-package-names: pkgormod1, [pkgormod2, pkgormod3, ...]``
+        Specifies the packages that functions/classes documented here are
+        allowed to be from, as comma-separated list of package names. If not
+        given, only objects that are actually in a subpackage of the package
+        currently being documented are included.
+
 This extension also adds one sphinx configuration option:
 
-* `automodsumm_writereprocessed`
-    Should be a bool, and if True, will cause `automodsumm` to write files with
-    any ``automodsumm``  sections replaced with the content Sphinx processes
-    after ``automodsumm`` has run.   The output files are not actually used by
-    sphinx, so this option is only for figuring out the cause of sphinx warnings
-    or other debugging.   Defaults to `False`.
+* ``automodsumm_writereprocessed``
+    Should be a bool, and if True, will cause `automodsumm`_ to write files
+    with any ``automodsumm`` sections replaced with the content Sphinx
+    processes after ``automodsumm`` has run.  The output files are not
+    actually used by sphinx, so this option is only for figuring out the
+    cause of sphinx warnings or other debugging.  Defaults to `False`.
 
+.. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
+.. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
+
+.. _automod-diagram:
 
 ===========================
-`automod-diagram` directive
+automod-diagram directive
 ===========================
 
 This directive will produce an inheritance diagram like that of the
-`sphinx.ext.inheritance_diagram` extension.
+`sphinx.ext.inheritance_diagram`_ extension.
 
 This directive requires a single argument that must be a module or
 package. It accepts no options.
@@ -63,6 +74,7 @@ package. It accepts no options.
     Like 'inheritance-diagram', 'automod-diagram' requires
     `graphviz <http://www.graphviz.org/>`_ to generate the inheritance diagram.
 
+.. _sphinx.ext.inheritance_diagram: http://sphinx-doc.org/latest/ext/inheritance.html
 """
 
 import inspect
@@ -97,6 +109,7 @@ class Automodsumm(AstropyAutosummary):
     option_spec['functions-only'] = flag
     option_spec['classes-only'] = flag
     option_spec['skip'] = _str_list_converter
+    option_spec['allowed-package-names'] = _str_list_converter
 
     def run(self):
         env = self.state.document.settings.env
@@ -163,9 +176,16 @@ class Automodsumm(AstropyAutosummary):
 
 #<-------------------automod-diagram stuff------------------------------------>
 class Automoddiagram(InheritanceDiagram):
+
+    option_spec = dict(InheritanceDiagram.option_spec)
+    option_spec['allowed-package-names'] = _str_list_converter
+
     def run(self):
         try:
-            nms, objs = find_mod_objs(self.arguments[0], onlylocals=True)[1:]
+            ols = self.options.get('allowed-package-names', [])
+            ols = True if len(ols) == 0 else ols  # if none are given, assume only local
+
+            nms, objs = find_mod_objs(self.arguments[0], onlylocals=ols)[1:]
         except ImportError:
             self.warnings = []
             self.warn("Couldn't import module " + self.arguments[0])
@@ -276,11 +296,12 @@ def automodsumm_to_autosummary_lines(fn, app):
     #loop over all automodsumms in this document
     for i, (i1, i2, modnm, ops, rem) in enumerate(zip(indent1s, indent2s, mods,
                                                     opssecs, remainders)):
-        allindent = i1 + i2
+        allindent = i1 + ('' if i2 is None else i2)
 
         #filter out functions-only and classes-only options if present
         oplines = ops.split('\n')
         toskip = []
+        allowedpkgnms = []
         funcsonly = clssonly = False
         for i, ln in reversed(list(enumerate(oplines))):
             if ':functions-only:' in ln:
@@ -291,6 +312,9 @@ def automodsumm_to_autosummary_lines(fn, app):
                 del oplines[i]
             if ':skip:' in ln:
                 toskip.extend(_str_list_converter(ln.replace(':skip:', '')))
+                del oplines[i]
+            if ':allowed-package-names:' in ln:
+                allowedpkgnms.extend(_str_list_converter(ln.replace(':allowed-package-names:', '')))
                 del oplines[i]
         if funcsonly and clssonly:
             msg = ('Defined both functions-only and classes-only options. '
@@ -308,7 +332,8 @@ def automodsumm_to_autosummary_lines(fn, app):
                          '.. autosummary::'])
         newlines.extend(oplines)
 
-        for nm, fqn, obj in zip(*find_mod_objs(modnm, onlylocals=True)):
+        ols = True if len(allowedpkgnms) == 0 else allowedpkgnms
+        for nm, fqn, obj in zip(*find_mod_objs(modnm, onlylocals=ols)):
             if nm in toskip:
                 continue
             if funcsonly and not inspect.isfunction(obj):
