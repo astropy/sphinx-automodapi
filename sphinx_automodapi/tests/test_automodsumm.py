@@ -1,6 +1,12 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
+import sys
+
 import pytest
+
+PY3 = sys.version_info[0] >= 3
+pytest.skip("PY3")
+
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
 
@@ -9,7 +15,7 @@ class FakeEnv(object):
     Mocks up a sphinx env setting construct for automodapi tests
     """
     def __init__(self, **kwargs):
-        for k, v in kwargs.items():
+        for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
 
@@ -60,8 +66,7 @@ ams_to_asmry_expected = """\
     automodsumm_to_autosummary_lines
     generate_automodsumm_docs
     process_automodsumm_generation
-    setup
-    unicode_literals"""
+    setup"""
 
 
 def test_ams_to_asmry(tmpdir):
