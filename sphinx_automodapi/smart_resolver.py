@@ -17,7 +17,7 @@ from docutils.nodes import literal
 
 
 def process_docstring(app, what, name, obj, options, lines):
-    if what in ('class', 'exception'):
+    if isinstance(obj, type):
         env = app.env
         if not hasattr(env, 'class_name_mapping'):
             env.class_name_mapping = {}
