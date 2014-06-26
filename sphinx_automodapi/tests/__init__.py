@@ -44,7 +44,7 @@ def cython_testpackage(tmpdir, request):
     test_pkg.chdir()
     # Build the Cython module in a subprocess; otherwise strange things can
     # happen with Cython's global module state
-    sp.call(['python', 'setup.py', 'build_ext', '--inplace'])
+    sp.call([sys.executable, 'setup.py', 'build_ext', '--inplace'])
 
     sys.path.insert(0, str(test_pkg))
     import _eva_.unit02
