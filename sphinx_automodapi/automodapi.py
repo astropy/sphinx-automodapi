@@ -325,8 +325,7 @@ def _mod_info(modname, toskip=[], onlylocals=True):
     for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=onlylocals)):
         if localnm not in toskip:
             hascls = hascls or inspect.isclass(obj)
-            hasfunc = (hasfunc or inspect.isfunction(obj) or
-                        inspect.isroutine(obj))
+            hasfunc = hasfunc or inspect.isroutine(obj)
             if hascls and hasfunc:
                 break
 
