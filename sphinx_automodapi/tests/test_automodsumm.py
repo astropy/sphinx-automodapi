@@ -5,7 +5,7 @@ import sys
 import pytest
 
 PY3 = sys.version_info[0] >= 3
-pytest.skip("PY3")
+pytestmark = pytest.mark.skipif("PY3")
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 

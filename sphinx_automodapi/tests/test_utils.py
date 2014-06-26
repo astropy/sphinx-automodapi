@@ -8,7 +8,7 @@ import pytest
 from ..utils import find_mod_objs
 
 PY3 = sys.version_info[0] >= 3
-pytest.skip("PY3")
+pytestmark = pytest.mark.skipif("PY3")
 
 
 def test_find_mod_objs():
