@@ -17,6 +17,8 @@ def cython_testpackage(tmpdir, request):
     test_pkg.join('_eva_').join('unit02.pyx').write(dedent("""\
         def pilot():
             \"\"\"Returns the pilot of Eva Unit-02.\"\"\"
+
+            return True
     """))
 
     test_pkg.join('setup.py').write(dedent("""\
