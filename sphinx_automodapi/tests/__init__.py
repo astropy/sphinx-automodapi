@@ -48,7 +48,7 @@ def cython_testpackage(tmpdir, request):
     import _eva_.unit02
 
     def cleanup(test_pkg=test_pkg):
-        for modname in ['_eva_', '_eva_.uint02']:
+        for modname in ['_eva_', '_eva_.unit02']:
             try:
                 del sys.modules[modname]
             except KeyError:
