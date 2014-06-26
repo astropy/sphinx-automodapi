@@ -1,10 +1,10 @@
+import subprocess as sp
 import sys
 
 from textwrap import dedent
 
-from setuptools.sandbox import run_setup
-
 import pytest
+
 
 @pytest.fixture
 def cython_testpackage(tmpdir, request):
@@ -42,7 +42,9 @@ def cython_testpackage(tmpdir, request):
     """))
 
     test_pkg.chdir()
-    run_setup('setup.py', ['build_ext', '--inplace'])
+    # Build the Cython module in a subprocess; otherwise strange things can
+    # happen with Cython's global module state
+    sp.call(['python', 'setup.py', 'build_ext', '--inplace'])
 
     sys.path.insert(0, str(test_pkg))
     import _eva_.unit02
