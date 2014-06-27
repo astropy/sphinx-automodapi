@@ -4,8 +4,11 @@ import sys
 
 import pytest
 
+from . import *
+from ....tests import *
+
 PY3 = sys.version_info[0] >= 3
-pytest.skip("PY3")
+pytestmark = pytest.mark.skipif("PY3")
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
@@ -79,3 +82,33 @@ def test_ams_to_asmry(tmpdir):
     resultlines = automodsumm_to_autosummary_lines(str(fi), fakeapp)
 
     assert '\n'.join(resultlines) == ams_to_asmry_expected
+
+
+ams_cython_str = """
+Before
+
+.. automodsumm:: _eva_.unit02
+    :p:
+
+And After
+"""
+
+ams_cython_expected = """\
+.. currentmodule:: _eva_.unit02
+
+.. autosummary::
+    :p:
+
+    pilot"""
+
+
+def test_ams_cython(tmpdir, cython_testpackage):
+    from ..automodsumm import automodsumm_to_autosummary_lines
+
+    fi = tmpdir.join('automodsumm.rst')
+    fi.write(ams_cython_str)
+
+    fakeapp = FakeApp(srcdir='')
+    resultlines = automodsumm_to_autosummary_lines(str(fi), fakeapp)
+
+    assert '\n'.join(resultlines) == ams_cython_expected

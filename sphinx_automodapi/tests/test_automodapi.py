@@ -5,10 +5,14 @@ import sys
 
 import pytest
 
+from . import *
+from ....tests import *
+
 PY3 = sys.version_info[0] >= 3
-pytest.skip("PY3")
+pytestmark = pytest.mark.skipif("PY3")
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
+
 
 class FakeConfig(object):
     """
@@ -298,3 +302,45 @@ def test_am_replacer_invalidop():
                           'automodapi.', None)]
 
     assert fakeapp.warnings == expected_warnings
+
+
+am_replacer_cython_str = """
+This comes before
+
+.. automodapi:: _eva_.unit02
+{options}
+
+This comes after
+"""
+
+am_replacer_cython_expected = """
+This comes before
+
+_eva_.unit02 Module
+-------------------
+
+.. automodule:: _eva_.unit02
+
+Functions
+^^^^^^^^^
+
+.. automodsumm:: _eva_.unit02
+    :functions-only:
+    :toctree: api/
+
+This comes after
+""".format(empty='').replace('/', os.sep)
+
+
+def test_am_replacer_cython(cython_testpackage):
+    """
+    Tests replacing an ".. automodapi::" for a Cython module.
+    """
+
+    from ..automodapi import automodapi_replace
+
+    fakeapp = FakeApp()
+    result = automodapi_replace(am_replacer_cython_str.format(options=''),
+                                fakeapp)
+
+    assert result == am_replacer_cython_expected
