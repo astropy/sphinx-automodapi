@@ -1,3 +1,4 @@
+import os
 import subprocess as sp
 import sys
 
@@ -21,7 +22,13 @@ def cython_testpackage(tmpdir, request):
             return True
     """))
 
+    import astropy_helpers
+
     test_pkg.join('setup.py').write(dedent("""\
+        import sys
+
+        sys.path.insert(0, {0!r})
+
         from os.path import join
         from setuptools import setup, Extension
         from astropy_helpers.setup_helpers import register_commands
@@ -39,7 +46,7 @@ def cython_testpackage(tmpdir, request):
             ext_modules=[Extension('_eva_.unit02',
                                    [join('_eva_', 'unit02.pyx')])]
         )
-    """))
+    """.format(os.path.dirname(astropy_helpers.__path__[0]))))
 
     test_pkg.chdir()
     # Build the Cython module in a subprocess; otherwise strange things can
