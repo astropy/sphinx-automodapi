@@ -146,7 +146,7 @@ class Automodsumm(AstropyAutosummary):
             if funconly and not clsonly:
                 cont = []
                 for nm, obj in zip(localnames, objs):
-                    if nm not in skipnames and inspect.isfunction(obj):
+                    if nm not in skipnames and inspect.isroutine(obj):
                         cont.append(nm)
             elif clsonly:
                 cont = []
@@ -336,7 +336,7 @@ def automodsumm_to_autosummary_lines(fn, app):
         for nm, fqn, obj in zip(*find_mod_objs(modnm, onlylocals=ols)):
             if nm in toskip:
                 continue
-            if funcsonly and not inspect.isfunction(obj):
+            if funcsonly and not inspect.isroutine(obj):
                 continue
             if clssonly and not inspect.isclass(obj):
                 continue

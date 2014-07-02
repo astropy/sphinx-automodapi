@@ -88,6 +88,7 @@ ams_cython_str = """
 Before
 
 .. automodsumm:: _eva_.unit02
+    :functions-only:
     :p:
 
 And After
