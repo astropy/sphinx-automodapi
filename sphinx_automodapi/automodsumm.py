@@ -417,7 +417,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
         try:
             name, obj, parent = import_by_name(name)
-        except ImportError, e:
+        except ImportError as e:
             warn('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 
