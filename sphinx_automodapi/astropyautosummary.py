@@ -38,11 +38,17 @@ class AstropyAutosummary(Autosummary):
                 display_name = name.split('.')[-1]
 
             try:
-                real_name, obj, parent = import_by_name(name, prefixes=prefixes)
+                import_by_name_values = import_by_name(name, prefixes=prefixes)
             except ImportError:
                 self.warn('[astropyautosummary] failed to import %s' % name)
                 items.append((name, '', '', name))
                 continue
+
+            # to accommodate Sphinx v1.2.2 and v1.2.3
+            if len(import_by_name_values) == 3:
+                real_name, obj, parent = import_by_name_values
+            elif len(import_by_name_values) == 4:
+                real_name, obj, parent, module_name = import_by_name_values
 
             # NB. using real_name here is important, since Documenters
             #     handle module prefixes slightly differently
