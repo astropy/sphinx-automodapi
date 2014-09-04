@@ -416,11 +416,17 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
         ensuredir(path)
 
         try:
-            name, obj, parent = import_by_name(name)
+            import_by_name_values = import_by_name(name)
         except ImportError as e:
             warn('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 
+        # if block to accommodate Sphinx's v1.2.2 and v1.2.3 respectively
+        if len(import_by_name_values) == 3:
+            name, obj, parent = import_by_name_values
+        elif len(import_by_name_values) == 4:
+            name, obj, parent, module_name = import_by_name_values
+        
         fn = os.path.join(path, name + suffix)
 
         # skip it if it exists
