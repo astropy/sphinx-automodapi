@@ -51,15 +51,17 @@ def missing_reference_handler(app, env, node, contnode):
                     reftarget = front
                     suffix = '.' + suffix
 
-            if reftype in ('class') and '.' in reftarget and \
-                    reftarget not in mapping:
+            if (reftype in ('class', ) and '.' in reftarget
+                and reftarget not in mapping):
+
                 if '.' in front:
                     reftarget, _ = front.rsplit('.', 1)
                     suffix = '.' + suffix
                 reftarget = reftarget + suffix
                 prefix = reftarget.rsplit('.')[0]
-                if reftarget not in mapping and \
-                        prefix in env.intersphinx_named_inventory:
+                if (reftarget not in mapping and
+                    prefix in env.intersphinx_named_inventory):
+
                     if reftarget in env.intersphinx_named_inventory[prefix]['py:class']:
                         newtarget = env.intersphinx_named_inventory[prefix]['py:class'][reftarget][2]
                         if not node['refexplicit'] and \
