@@ -66,9 +66,8 @@ def missing_reference_handler(app, env, node, contnode):
                                 '~' not in node.rawsource:
                             contnode = literal(text=reftarget)
                         newnode = reference('', '', internal=True)
-                        if newnode is not None:
-                            newnode['reftitle'] = reftarget
-                            newnode['refuri'] = newtarget
+                        newnode['reftitle'] = reftarget
+                        newnode['refuri'] = newtarget
                         newnode.append(contnode)
 
                         return newnode
