@@ -9,11 +9,11 @@ location.
 
 In the `autodoc-process-docstring` event, a mapping from the actual
 name to the API name is maintained.  Later, in the `missing-reference`
-enent, unresolved references are looked up in this dictionary and
+event, unresolved references are looked up in this dictionary and
 corrected if possible.
 """
 
-from docutils.nodes import literal
+from docutils.nodes import literal, reference
 
 
 def process_docstring(app, what, name, obj, options, lines):
@@ -50,6 +50,29 @@ def missing_reference_handler(app, env, node, contnode):
                 if front in mapping:
                     reftarget = front
                     suffix = '.' + suffix
+
+            if (reftype in ('class', ) and '.' in reftarget
+                and reftarget not in mapping):
+
+                if '.' in front:
+                    reftarget, _ = front.rsplit('.', 1)
+                    suffix = '.' + suffix
+                reftarget = reftarget + suffix
+                prefix = reftarget.rsplit('.')[0]
+                if (reftarget not in mapping and
+                    prefix in env.intersphinx_named_inventory):
+
+                    if reftarget in env.intersphinx_named_inventory[prefix]['py:class']:
+                        newtarget = env.intersphinx_named_inventory[prefix]['py:class'][reftarget][2]
+                        if not node['refexplicit'] and \
+                                '~' not in node.rawsource:
+                            contnode = literal(text=reftarget)
+                        newnode = reference('', '', internal=True)
+                        newnode['reftitle'] = reftarget
+                        newnode['refuri'] = newtarget
+                        newnode.append(contnode)
+
+                        return newnode
 
         if reftarget in mapping:
             newtarget = mapping[reftarget] + suffix
