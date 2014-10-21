@@ -6,9 +6,7 @@ import pytest
 
 from . import *
 from ....tests import *
-
-PY3 = sys.version_info[0] >= 3
-pytestmark = pytest.mark.skipif("PY3")
+from ....utils import iteritems
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
@@ -18,7 +16,7 @@ class FakeEnv(object):
     Mocks up a sphinx env setting construct for automodapi tests
     """
     def __init__(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in iteritems(kwargs):
             setattr(self, k, v)
 
 
