@@ -200,7 +200,7 @@ class Automoddiagram(InheritanceDiagram):
         oldargs = self.arguments
         try:
             if len(clsnms) > 0:
-                self.arguments = [u' '.join(clsnms)]
+                self.arguments = [' '.join(clsnms).decode('utf-8')]
             return InheritanceDiagram.run(self)
         finally:
             self.arguments = oldargs
