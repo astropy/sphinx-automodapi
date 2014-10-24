@@ -6,7 +6,6 @@ import sys
 import pytest
 
 from . import *
-from ....tests import *
 from ....utils import iteritems
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
