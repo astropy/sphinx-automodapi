@@ -85,7 +85,7 @@ Class Inheritance Diagram
     {empty}
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 # the .format is necessary for editors that remove empty-line whitespace
 
 
@@ -125,7 +125,7 @@ Classes
 
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 
 
 def test_am_replacer_noinh():
@@ -174,7 +174,7 @@ Class Inheritance Diagram
 
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 
 
 def test_am_replacer_titleandhdrs():
@@ -218,7 +218,7 @@ Functions
 
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 
 
 def test_am_replacer_nomain():
@@ -261,7 +261,7 @@ Functions
 
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 
 
 def test_am_replacer_skip():
@@ -326,7 +326,7 @@ Functions
     :toctree: api/
 
 This comes after
-""".format(empty='').replace('/', os.sep)
+""".format(empty='')
 
 
 def test_am_replacer_cython(cython_testpackage):
