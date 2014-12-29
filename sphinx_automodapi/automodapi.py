@@ -172,8 +172,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         if dotoctree:
             toctreestr = ':toctree: '
             dirnm = app.config.automodapi_toctreedirnm
-            if not dirnm.endswith(os.sep):
-                dirnm += os.sep
+            if not dirnm.endswith("/"):
+                dirnm += "/"
             if docname is not None:
                 toctreestr += '../' * docname.count('/') + dirnm
             else:
