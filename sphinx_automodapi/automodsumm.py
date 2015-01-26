@@ -81,12 +81,23 @@ import inspect
 import os
 import re
 
+from distutils.version import LooseVersion
+
+import sphinx
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs
 from .astropyautosummary import AstropyAutosummary
+
+
+# Don't use AstropyAutosummary with newer versions of Sphinx
+# See https://github.com/astropy/astropy-helpers/pull/129
+if LooseVersion(sphinx.__version__) < LooseVersion('1.2.0'):
+    BaseAutosummary = AstropyAutosummary
+else:
+    BaseAutosummary = Autosummary
 
 
 def _str_list_converter(argument):
@@ -100,7 +111,7 @@ def _str_list_converter(argument):
         return [s.strip() for s in argument.split(',')]
 
 
-class Automodsumm(AstropyAutosummary):
+class Automodsumm(BaseAutosummary):
     required_arguments = 1
     optional_arguments = 0
     final_argument_whitespace = False
@@ -426,7 +437,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             name, obj, parent = import_by_name_values
         elif len(import_by_name_values) == 4:
             name, obj, parent, module_name = import_by_name_values
-        
+
         fn = os.path.join(path, name + suffix)
 
         # skip it if it exists
