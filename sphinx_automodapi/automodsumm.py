@@ -37,7 +37,7 @@ options:
 
     * ``:skip: obj1, [obj2, obj3, ...]``
         If present, specifies that the listed objects should be skipped
-        and not have their documentation generated, nor be includded in
+        and not have their documentation generated, nor be included in
         the summary table.
 
     * ``:allowed-package-names: pkgormod1, [pkgormod2, pkgormod3, ...]``
