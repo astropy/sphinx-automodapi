@@ -172,17 +172,22 @@ class Automodsumm(BaseAutosummary):
 
             self.content = cont
 
-            #for some reason, even though ``currentmodule`` is substituted in, sphinx
-            #doesn't necessarily recognize this fact.  So we just force it
-            #internally, and that seems to fix things
+            # for some reason, even though ``currentmodule`` is substituted in,
+            # sphinx doesn't necessarily recognize this fact.  So we just force
+            # it internally, and that seems to fix things
             env.temp_data['py:module'] = modname
 
-            #can't use super because Sphinx/docutils has trouble
-            #return super(Autosummary,self).run()
+            # can't use super because Sphinx/docutils has trouble return
+            # super(Autosummary,self).run()
             nodelist.extend(Autosummary.run(self))
+
             return self.warnings + nodelist
         finally:  # has_content = False for the Automodsumm
             self.content = []
+
+    def get_items(self, names):
+        self.genopt['imported-members'] = True
+        return Autosummary.get_items(self, names)
 
 
 #<-------------------automod-diagram stuff------------------------------------>
