@@ -43,13 +43,16 @@ def type_object_attrgetter(obj, attr, *defargs):
     of autodoc.
     """
 
-    if attr in obj.__dict__ and isinstance(obj.__dict__[attr], property):
-        # Note, this should only be used for properties--for any other type of
-        # descriptor (classmethod, for example) this can mess up existing
-        # expectcations of what getattr(cls, ...) returns
-        return obj.__dict__[attr]
-    else:
-        return getattr(obj, attr, *defargs)
+    for base in obj.__mro__:
+        if attr in base.__dict__:
+            if isinstance(base.__dict__[attr], property):
+                # Note, this should only be used for properties--for any other
+                # type of descriptor (classmethod, for example) this can mess
+                # up existing expectations of what getattr(cls, ...) returns
+                return base.__dict__[attr]
+            break
+
+    return getattr(obj, attr, *defargs)
 
 
 def setup(app):
