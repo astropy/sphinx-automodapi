@@ -171,6 +171,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         sphinx markup.
     """
 
+    env = app.builder.env
+
     spl = _automodapirex.split(sourcestr)
     if len(spl) > 1:  # automodsumm is in this document
 
@@ -311,7 +313,12 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     f.write('\n**NEW DOC**\n\n')
                     f.write(ustr)
             else:
-                with open(os.path.join(app.srcdir, docname + '.automodapi'), 'w') as f:
+                # Determine the filename associated with this doc (specifically
+                # the extension)
+                filename = docname + os.path.splitext(env.doc2path(docname))[1]
+                filename += '.automodapi'
+
+                with open(os.path.join(app.srcdir, filename), 'w') as f:
                     f.write(ustr)
 
         return newsourcestr
