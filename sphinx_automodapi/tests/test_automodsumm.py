@@ -66,7 +66,8 @@ ams_to_asmry_expected = """\
     automodsumm_to_autosummary_lines
     generate_automodsumm_docs
     process_automodsumm_generation
-    setup"""
+    setup
+"""
 
 
 def test_ams_to_asmry(tmpdir):
@@ -97,7 +98,8 @@ ams_cython_expected = """\
 .. autosummary::
     :p:
 
-    pilot"""
+    pilot
+"""
 
 
 def test_ams_cython(tmpdir, cython_testpackage):
