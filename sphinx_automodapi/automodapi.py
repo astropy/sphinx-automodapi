@@ -85,6 +85,11 @@ import sys
 
 from .utils import find_mod_objs
 
+if sys.version_info[0] == 3:
+    text_type = str
+else:
+    text_type = unicode
+
 
 automod_templ_modheader = """
 {modname} {pkgormod}
@@ -296,7 +301,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         if app.config.automodapi_writereprocessed:
             # sometimes they are unicode, sometimes not, depending on how
             # sphinx has processed things
-            if isinstance(newsourcestr, unicode):
+            if isinstance(newsourcestr, text_type):
                 ustr = newsourcestr
             else:
                 ustr = newsourcestr.decode(app.config.source_encoding)
@@ -304,10 +309,16 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             if docname is None:
                 with open(os.path.join(app.srcdir, 'unknown.automodapi'), 'a') as f:
                     f.write('\n**NEW DOC**\n\n')
-                    f.write(ustr.encode('utf8'))
+                    f.write(ustr)
             else:
-                with open(os.path.join(app.srcdir, docname + '.automodapi'), 'w') as f:
-                    f.write(ustr.encode('utf8'))
+                env = app.builder.env
+                # Determine the filename associated with this doc (specifically
+                # the extension)
+                filename = docname + os.path.splitext(env.doc2path(docname))[1]
+                filename += '.automodapi'
+
+                with open(os.path.join(app.srcdir, filename), 'w') as f:
+                    f.write(ustr)
 
         return newsourcestr
     else:
@@ -330,8 +341,11 @@ def _mod_info(modname, toskip=[], onlylocals=True):
                 break
 
     # find_mod_objs has already imported modname
+    # TODO: There is probably a cleaner way to do this, though this is pretty
+    # reliable for all Python versions for most cases that we care about.
     pkg = sys.modules[modname]
-    ispkg = '__init__.' in os.path.split(pkg.__name__)[1]
+    ispkg = (hasattr(pkg, '__file__') and isinstance(pkg.__file__, str) and
+             os.path.split(pkg.__file__)[1].startswith('__init__.py'))
 
     return ispkg, hascls, hasfunc
 

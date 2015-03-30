@@ -172,17 +172,22 @@ class Automodsumm(BaseAutosummary):
 
             self.content = cont
 
-            #for some reason, even though ``currentmodule`` is substituted in, sphinx
-            #doesn't necessarily recognize this fact.  So we just force it
-            #internally, and that seems to fix things
+            # for some reason, even though ``currentmodule`` is substituted in,
+            # sphinx doesn't necessarily recognize this fact.  So we just force
+            # it internally, and that seems to fix things
             env.temp_data['py:module'] = modname
 
-            #can't use super because Sphinx/docutils has trouble
-            #return super(Autosummary,self).run()
+            # can't use super because Sphinx/docutils has trouble return
+            # super(Autosummary,self).run()
             nodelist.extend(Autosummary.run(self))
+
             return self.warnings + nodelist
         finally:  # has_content = False for the Automodsumm
             self.content = []
+
+    def get_items(self, names):
+        self.genopt['imported-members'] = True
+        return Autosummary.get_items(self, names)
 
 
 #<-------------------automod-diagram stuff------------------------------------>
@@ -220,10 +225,12 @@ class Automoddiagram(InheritanceDiagram):
 #<---------------------automodsumm generation stuff--------------------------->
 def process_automodsumm_generation(app):
     env = app.builder.env
-    ext = app.config.source_suffix
 
-    filestosearch = [x + ext for x in env.found_docs
-                     if os.path.isfile(env.doc2path(x))]\
+    filestosearch = []
+    for docname in env.found_docs:
+        filename = env.doc2path(docname)
+        if os.path.isfile(filename):
+            filestosearch.append(docname + os.path.splitext(filename)[1])
 
     liness = []
     for sfn in filestosearch:
@@ -238,10 +245,11 @@ def process_automodsumm_generation(app):
                         f.write('\n')
 
     for sfn, lines in zip(filestosearch, liness):
+        suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
             generate_automodsumm_docs(lines, sfn, builder=app.builder,
                                       warn=app.warn, info=app.info,
-                                      suffix=app.config.source_suffix,
+                                      suffix=suffix,
                                       base_path=app.srcdir)
 
 #_automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -281,6 +289,7 @@ def automodsumm_to_autosummary_lines(fn, app):
 
 
     """
+
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
     with open(fullfn) as fr:
@@ -288,7 +297,8 @@ def automodsumm_to_autosummary_lines(fn, app):
             from astropy_helpers.sphinx.ext.automodapi import automodapi_replace
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
-            filestr = automodapi_replace(fr.read(), app, True, fn, False)
+            docname = os.path.splitext(fn)[0]
+            filestr = automodapi_replace(fr.read(), app, True, docname, False)
         else:
             filestr = fr.read()
 
@@ -352,6 +362,9 @@ def automodsumm_to_autosummary_lines(fn, app):
             if clssonly and not inspect.isclass(obj):
                 continue
             newlines.append(allindent + nm)
+
+    # add one newline at the end of the autosummary block
+    newlines.append('')
 
     return newlines
 
