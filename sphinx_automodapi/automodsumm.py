@@ -593,8 +593,9 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
 
 def setup(app):
-    # need our autosummary
+    # need our autosummary and autodoc fixes
     app.setup_extension('astropy_helpers.sphinx.ext.astropyautosummary')
+    app.setup_extension('astropy_helpers.sphinx.ext.autodoc_enhancements')
     # need inheritance-diagram for automod-diagram
     app.setup_extension('sphinx.ext.inheritance_diagram')
 
