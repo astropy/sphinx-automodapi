@@ -2,6 +2,21 @@
 Miscellaneous enhancements to help autodoc along.
 """
 
+import inspect
+import sys
+import types
+
+from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
+from sphinx.util.inspect import isdescriptor
+
+if sys.version_info[0] == 3:
+    class_types = (type,)
+else:
+    class_types = (type, types.ClassType)
+
+
+MethodDescriptorType = type(type.__subclasses__)
+
 
 # See
 # https://github.com/astropy/astropy-helpers/issues/116#issuecomment-71254836
@@ -55,5 +70,29 @@ def type_object_attrgetter(obj, attr, *defargs):
     return getattr(obj, attr, *defargs)
 
 
+# Provided to work around a bug in Sphinx
+# See https://github.com/sphinx-doc/sphinx/pull/1843
+class AttributeDocumenter(AttributeDocumenter):
+    @classmethod
+    def can_document_member(cls, member, membername, isattr, parent):
+        non_attr_types = cls.method_types + class_types + \
+            (MethodDescriptorType,)
+        isdatadesc = isdescriptor(member) and not \
+            isinstance(member, non_attr_types) and not \
+            type(member).__name__ == "instancemethod"
+        # That last condition addresses an obscure case of C-defined
+        # methods using a deprecated type in Python 3, that is not otherwise
+        # exported anywhere by Python
+        return isdatadesc or (not isinstance(parent, ModuleDocumenter) and
+                              not inspect.isroutine(member) and
+                              not isinstance(member, class_types))
+
+
 def setup(app):
+    # Must have the autodoc extension set up first so we can override it
+    app.setup_extension('sphinx.ext.autodoc')
+    # Need to import this too since it re-registers all the documenter types
+    # =_=
+    import sphinx.ext.autosummary.generate
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
+    app.add_autodocumenter(AttributeDocumenter)
