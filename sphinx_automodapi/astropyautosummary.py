@@ -111,3 +111,12 @@ def setup(app):
     if LooseVersion(sphinx.__version__) < LooseVersion('1.2.0'):
         # this replaces the default autosummary with the astropy one
         app.add_directive('autosummary', AstropyAutosummary)
+    elif LooseVersion(sphinx.__version__) < LooseVersion('1.3.2'):
+        # Patch Autosummary again, but to work around an upstream bug; see
+        # https://github.com/astropy/astropy-helpers/issues/172
+        class PatchedAutosummary(Autosummary):
+            def get_items(self, names):
+                self.genopt['imported-members'] = True
+                return Autosummary.get_items(self, names)
+
+        app.add_directive('autosummary', PatchedAutosummary)
