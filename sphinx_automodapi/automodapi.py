@@ -52,6 +52,14 @@ It accepts the following options:
         given, only objects that are actually in a subpackage of the package
         currently being documented are included.
 
+    * ``:inherited-members: True | False``
+        The global sphinx configuration option
+        ``automodsumm_inherited_members`` decides if members that a class
+        inherits from a base class are included in the generated
+        documentation. The option ``:inherited-members:`` allows to
+        overrride this global setting.
+
+
 This extension also adds two sphinx configuration options:
 
 * ``automodapi_toctreedirnm``
@@ -204,6 +212,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # look for actual options
             unknownops = []
+            inherited_members = None
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
                     toskip.append(args.strip())
@@ -217,6 +226,10 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     top_head = False
                 elif opname == 'allowed-package-names':
                     allowedpkgnms.append(args.strip())
+                elif opname == 'inherited-members':
+                    inherited_members = True
+                elif opname == 'no-inherited-members':
+                    inherited_members = False
                 else:
                     unknownops.append(opname)
 
@@ -273,6 +286,11 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:
                 clsfuncoptions.append(allowedpkgnms)
+            if hascls: # This makes no sense unless there are classes.
+                if inherited_members is True:
+                    clsfuncoptions.append(':inherited-members:')
+                if inherited_members is False:
+                    clsfuncoptions.append(':no-inherited-members:')
             clsfuncoptionstr = '\n    '.join(clsfuncoptions)
 
             if hasfuncs:

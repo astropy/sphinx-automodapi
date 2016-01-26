@@ -46,6 +46,14 @@ options:
         given, only objects that are actually in a subpackage of the package
         currently being documented are included.
 
+    * ``:inherited-members:`` or ``:no-inherited-members:``
+        The global sphinx configuration option
+        ``automodsumm_inherited_members`` decides if members that a class
+        inherits from a base class are included in the generated
+        documentation. The flag ``:inherited-members:`` or
+        ``:no-inherited-members:`` allows to
+        overrride this global setting.
+
 This extension also adds two sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
@@ -57,7 +65,7 @@ This extension also adds two sphinx configuration options:
 
 * ``automodsumm_inherited_members``
     Should be a bool and if ``True``, will cause `automodsumm`_ to
-    decument class members that are inherited from a base class.
+    document class members that are inherited from a base class.
     Defaults to ``False``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
@@ -126,6 +134,8 @@ class Automodsumm(BaseAutosummary):
     option_spec['classes-only'] = flag
     option_spec['skip'] = _str_list_converter
     option_spec['allowed-package-names'] = _str_list_converter
+    option_spec['inherited-members'] = flag
+    option_spec['no-inherited-members'] = flag
 
     def run(self):
         env = self.state.document.settings.env
@@ -389,12 +399,14 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
     from sphinx.ext.autosummary import import_by_name, get_documenter
-    from sphinx.ext.autosummary.generate import (find_autosummary_in_lines,
-                                                 _simple_info, _simple_warn)
+    from sphinx.ext.autosummary.generate import (_simple_info, _simple_warn)
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
     from jinja2.sandbox import SandboxedEnvironment
+
+    from .utils import find_autosummary_in_lines
+
 
     if info is None:
         info = _simple_info
@@ -437,7 +449,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     new_files = []
 
     # write
-    for name, path, template_name in sorted(items):
+    for name, path, template_name, inherited_mem in sorted(items):
         if path is None:
             # The corresponding autosummary:: directive did not have
             # a :toctree: option
@@ -538,16 +550,23 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                 ns['exceptions'], ns['all_exceptions'] = \
                                    get_members_mod(obj, 'exception')
             elif doc.objtype == 'class':
+                if inherited_mem is not None:
+                    # option set in this specifc directive
+                    include_base = inherited_mem
+                else:
+                    # use default value
+                    include_base = inherited_members
+
                 api_class_methods = ['__init__', '__call__']
                 ns['members'] = get_members_class(obj, None,
-                                                  include_base=inherited_members)
+                                                  include_base=include_base)
                 ns['methods'], ns['all_methods'] = \
                                  get_members_class(obj, 'method',
                                                    api_class_methods,
-                                                   include_base=inherited_members)
+                                                   include_base=include_base)
                 ns['attributes'], ns['all_attributes'] = \
                                  get_members_class(obj, 'attribute',
-                                                   include_base=inherited_members)
+                                                   include_base=include_base)
                 ns['methods'].sort()
                 ns['attributes'].sort()
 
