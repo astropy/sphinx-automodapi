@@ -47,12 +47,10 @@ options:
         currently being documented are included.
 
     * ``:inherited-members:`` or ``:no-inherited-members:``
-        The global sphinx configuration option
-        ``automodsumm_inherited_members`` decides if members that a class
-        inherits from a base class are included in the generated
-        documentation. The flag ``:inherited-members:`` or
-        ``:no-inherited-members:`` allows to
-        overrride this global setting.
+        The global sphinx configuration option ``automodsumm_inherited_members``
+        decides if members that a class inherits from a base class are included
+        in the generated documentation. The flags ``:inherited-members:`` or
+        ``:no-inherited-members:`` allows overrriding this global setting.
 
 This extension also adds two sphinx configuration options:
 
@@ -64,9 +62,11 @@ This extension also adds two sphinx configuration options:
     cause of sphinx warnings or other debugging.  Defaults to ``False``.
 
 * ``automodsumm_inherited_members``
-    Should be a bool and if ``True``, will cause `automodsumm`_ to
-    document class members that are inherited from a base class.
-    Defaults to ``False``.
+    Should be a bool and if ``True``, will cause `automodsumm`_ to document
+    class members that are inherited from a base class. This value can be
+    overriden for any particular automodsumm directive by including the
+    ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
+    ``False``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
