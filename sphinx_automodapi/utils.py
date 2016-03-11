@@ -69,7 +69,7 @@ def find_mod_objs(modname, onlylocals=False):
     return localnames, fqnames, objs
 
 
-def find_autosummary_in_lines(lines, module=None, filename=None):
+def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None):
     """Find out what items appear in autosummary:: directives in the
     given lines.
     Returns a list of (name, toctree, template, inherited_members)

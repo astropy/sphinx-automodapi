@@ -405,7 +405,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     from jinja2 import FileSystemLoader, TemplateNotFound
     from jinja2.sandbox import SandboxedEnvironment
 
-    from .utils import find_autosummary_in_lines
+    from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
 
     if info is None:

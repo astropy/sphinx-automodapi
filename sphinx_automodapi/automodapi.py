@@ -52,12 +52,12 @@ It accepts the following options:
         given, only objects that are actually in a subpackage of the package
         currently being documented are included.
 
-    * ``:inherited-members: True | False``
+    * ``:inherited-members:`` / ``:no-inherited-members:``
         The global sphinx configuration option
         ``automodsumm_inherited_members`` decides if members that a class
         inherits from a base class are included in the generated
-        documentation. The option ``:inherited-members:`` allows to
-        overrride this global setting.
+        documentation. The option ``:inherited-members:`` or ``:no-inherited-members:``
+        allows the user to overrride the global setting.
 
 
 This extension also adds two sphinx configuration options:
