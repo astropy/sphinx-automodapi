@@ -75,6 +75,10 @@ This extension also adds two sphinx configuration options:
     actually used by sphinx, so this option is only for figuring out the
     cause of sphinx warnings or other debugging.  Defaults to `False`.
 
+* ``automodsumm_inherited_members``
+    Should be a bool and if ``True`` members that a class inherits from a base
+    class are included in the generated documentation. Defaults to ``False``.
+
 .. _automodule: http://sphinx-doc.org/latest/ext/autodoc.html?highlight=automodule#directive-automodule
 """
 
