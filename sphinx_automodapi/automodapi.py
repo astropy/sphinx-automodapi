@@ -52,6 +52,14 @@ It accepts the following options:
         given, only objects that are actually in a subpackage of the package
         currently being documented are included.
 
+    * ``:inherited-members:`` / ``:no-inherited-members:``
+        The global sphinx configuration option
+        ``automodsumm_inherited_members`` decides if members that a class
+        inherits from a base class are included in the generated
+        documentation. The option ``:inherited-members:`` or ``:no-inherited-members:``
+        allows the user to overrride the global setting.
+
+
 This extension also adds two sphinx configuration options:
 
 * ``automodapi_toctreedirnm``
@@ -66,6 +74,10 @@ This extension also adds two sphinx configuration options:
     processes after `automodapi`_ has run.  The output files are not
     actually used by sphinx, so this option is only for figuring out the
     cause of sphinx warnings or other debugging.  Defaults to `False`.
+
+* ``automodsumm_inherited_members``
+    Should be a bool and if ``True`` members that a class inherits from a base
+    class are included in the generated documentation. Defaults to ``False``.
 
 .. _automodule: http://sphinx-doc.org/latest/ext/autodoc.html?highlight=automodule#directive-automodule
 """
@@ -204,6 +216,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # look for actual options
             unknownops = []
+            inherited_members = None
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
                     toskip.append(args.strip())
@@ -217,6 +230,10 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     top_head = False
                 elif opname == 'allowed-package-names':
                     allowedpkgnms.append(args.strip())
+                elif opname == 'inherited-members':
+                    inherited_members = True
+                elif opname == 'no-inherited-members':
+                    inherited_members = False
                 else:
                     unknownops.append(opname)
 
@@ -273,6 +290,11 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:
                 clsfuncoptions.append(allowedpkgnms)
+            if hascls: # This makes no sense unless there are classes.
+                if inherited_members is True:
+                    clsfuncoptions.append(':inherited-members:')
+                if inherited_members is False:
+                    clsfuncoptions.append(':no-inherited-members:')
             clsfuncoptionstr = '\n    '.join(clsfuncoptions)
 
             if hasfuncs:

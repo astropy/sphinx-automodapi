@@ -22,7 +22,7 @@ This directive requires a single argument that must be a module or
 package.
 
 It also accepts any options supported by the `autosummary`_ directive-
-see `sphinx.ext.autosummary`_ for details. It also accepts two additional
+see `sphinx.ext.autosummary`_ for details. It also accepts some additional
 options:
 
     * ``:classes-only:``
@@ -46,14 +46,27 @@ options:
         given, only objects that are actually in a subpackage of the package
         currently being documented are included.
 
-This extension also adds one sphinx configuration option:
+    * ``:inherited-members:`` or ``:no-inherited-members:``
+        The global sphinx configuration option ``automodsumm_inherited_members``
+        decides if members that a class inherits from a base class are included
+        in the generated documentation. The flags ``:inherited-members:`` or
+        ``:no-inherited-members:`` allows overrriding this global setting.
+
+This extension also adds two sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
-    Should be a bool, and if True, will cause `automodsumm`_ to write files
+    Should be a bool, and if ``True``, will cause `automodsumm`_ to write files
     with any ``automodsumm`` sections replaced with the content Sphinx
     processes after ``automodsumm`` has run.  The output files are not
     actually used by sphinx, so this option is only for figuring out the
-    cause of sphinx warnings or other debugging.  Defaults to `False`.
+    cause of sphinx warnings or other debugging.  Defaults to ``False``.
+
+* ``automodsumm_inherited_members``
+    Should be a bool and if ``True``, will cause `automodsumm`_ to document
+    class members that are inherited from a base class. This value can be
+    overriden for any particular automodsumm directive by including the
+    ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
+    ``False``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
@@ -121,6 +134,8 @@ class Automodsumm(BaseAutosummary):
     option_spec['classes-only'] = flag
     option_spec['skip'] = _str_list_converter
     option_spec['allowed-package-names'] = _str_list_converter
+    option_spec['inherited-members'] = flag
+    option_spec['no-inherited-members'] = flag
 
     def run(self):
         env = self.state.document.settings.env
@@ -250,7 +265,8 @@ def process_automodsumm_generation(app):
             generate_automodsumm_docs(lines, sfn, builder=app.builder,
                                       warn=app.warn, info=app.info,
                                       suffix=suffix,
-                                      base_path=app.srcdir)
+                                      base_path=app.srcdir,
+                                      inherited_members=app.config.automodsumm_inherited_members)
 
 #_automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
 #                             r'\n\1(\s*)(\S|$)', re.MULTILINE)
@@ -371,7 +387,8 @@ def automodsumm_to_autosummary_lines(fn, app):
 
 def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                               info=None, base_path=None, builder=None,
-                              template_dir=None):
+                              template_dir=None,
+                              inherited_members=False):
     """
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
@@ -382,12 +399,14 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
     from sphinx.ext.autosummary import import_by_name, get_documenter
-    from sphinx.ext.autosummary.generate import (find_autosummary_in_lines,
-                                                 _simple_info, _simple_warn)
+    from sphinx.ext.autosummary.generate import (_simple_info, _simple_warn)
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
     from jinja2.sandbox import SandboxedEnvironment
+
+    from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
+
 
     if info is None:
         info = _simple_info
@@ -430,7 +449,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     new_files = []
 
     # write
-    for name, path, template_name in sorted(items):
+    for name, path, template_name, inherited_mem in sorted(items):
         if path is None:
             # The corresponding autosummary:: directive did not have
             # a :toctree: option
@@ -531,12 +550,23 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                 ns['exceptions'], ns['all_exceptions'] = \
                                    get_members_mod(obj, 'exception')
             elif doc.objtype == 'class':
+                if inherited_mem is not None:
+                    # option set in this specifc directive
+                    include_base = inherited_mem
+                else:
+                    # use default value
+                    include_base = inherited_members
+
                 api_class_methods = ['__init__', '__call__']
-                ns['members'] = get_members_class(obj, None)
+                ns['members'] = get_members_class(obj, None,
+                                                  include_base=include_base)
                 ns['methods'], ns['all_methods'] = \
-                                 get_members_class(obj, 'method', api_class_methods)
+                                 get_members_class(obj, 'method',
+                                                   api_class_methods,
+                                                   include_base=include_base)
                 ns['attributes'], ns['all_attributes'] = \
-                                 get_members_class(obj, 'attribute')
+                                 get_members_class(obj, 'attribute',
+                                                   include_base=include_base)
                 ns['methods'].sort()
                 ns['attributes'].sort()
 
@@ -604,3 +634,4 @@ def setup(app):
     app.connect('builder-inited', process_automodsumm_generation)
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
+    app.add_config_value('automodsumm_inherited_members', False, 'env')
