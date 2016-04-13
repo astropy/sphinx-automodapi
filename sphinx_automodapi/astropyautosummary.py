@@ -33,7 +33,8 @@ class AstropyAutosummary(Autosummary):
         ``[(name, signature, summary_string, real_name), ...]``.
         """
         from sphinx.ext.autosummary import (get_import_prefixes_from_env,
-            import_by_name, get_documenter, mangle_signature)
+                                            import_by_name, get_documenter,
+                                            mangle_signature)
 
         env = self.state.document.settings.env
 

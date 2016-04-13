@@ -1,4 +1,4 @@
-#namedtuple is needed for find_mod_objs so it can have a non-local module
+# namedtuple is needed for find_mod_objs so it can have a non-local module
 
 import sys
 from collections import namedtuple
