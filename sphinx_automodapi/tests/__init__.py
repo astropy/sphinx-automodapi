@@ -14,8 +14,8 @@ def cython_testpackage(tmpdir, request):
     """
 
     test_pkg = tmpdir.mkdir('test_pkg')
-    test_pkg.mkdir('_eva_').ensure('__init__.py')
-    test_pkg.join('_eva_').join('unit02.pyx').write(dedent("""\
+    test_pkg.mkdir('apyhtest_eva').ensure('__init__.py')
+    test_pkg.join('apyhtest_eva').join('unit02.pyx').write(dedent("""\
         def pilot():
             \"\"\"Returns the pilot of Eva Unit-02.\"\"\"
 
@@ -33,7 +33,7 @@ def cython_testpackage(tmpdir, request):
         from setuptools import setup, Extension
         from astropy_helpers.setup_helpers import register_commands
 
-        NAME = '_eva_'
+        NAME = 'apyhtest_eva'
         VERSION = 0.1
         RELEASE = True
 
@@ -43,8 +43,8 @@ def cython_testpackage(tmpdir, request):
             name=NAME,
             version=VERSION,
             cmdclass=cmdclassd,
-            ext_modules=[Extension('_eva_.unit02',
-                                   [join('_eva_', 'unit02.pyx')])]
+            ext_modules=[Extension('apyhtest_eva.unit02',
+                                   [join('apyhtest_eva', 'unit02.pyx')])]
         )
     """.format(os.path.dirname(astropy_helpers.__path__[0]))))
 
@@ -54,10 +54,10 @@ def cython_testpackage(tmpdir, request):
     sp.call([sys.executable, 'setup.py', 'build_ext', '--inplace'])
 
     sys.path.insert(0, str(test_pkg))
-    import _eva_.unit02
+    import apyhtest_eva.unit02
 
     def cleanup(test_pkg=test_pkg):
-        for modname in ['_eva_', '_eva_.unit02']:
+        for modname in ['apyhtest_eva', 'apyhtest_eva.unit02']:
             try:
                 del sys.modules[modname]
             except KeyError:

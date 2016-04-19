@@ -304,7 +304,7 @@ def test_am_replacer_invalidop():
 am_replacer_cython_str = """
 This comes before
 
-.. automodapi:: _eva_.unit02
+.. automodapi:: apyhtest_eva.unit02
 {options}
 
 This comes after
@@ -313,15 +313,15 @@ This comes after
 am_replacer_cython_expected = """
 This comes before
 
-_eva_.unit02 Module
+apyhtest_eva.unit02 Module
 -------------------
 
-.. automodule:: _eva_.unit02
+.. automodule:: apyhtest_eva.unit02
 
 Functions
 ^^^^^^^^^
 
-.. automodsumm:: _eva_.unit02
+.. automodsumm:: apyhtest_eva.unit02
     :functions-only:
     :toctree: api/
 
