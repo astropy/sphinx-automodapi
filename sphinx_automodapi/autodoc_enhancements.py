@@ -98,6 +98,7 @@ def setup(app):
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
 
     _oldwarn = app._warning
+    _oldwarncount = app._warncount
     try:
         # this is a really ugly hack to supress a warning that sphinx 1.4
         # generates when overriding an existing directive (which is *desired*
@@ -116,3 +117,4 @@ def setup(app):
         app.add_autodocumenter(AttributeDocumenter)
     finally:
         app._warning = _oldwarn
+        app._warncount = _oldwarncount
