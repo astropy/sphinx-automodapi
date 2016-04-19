@@ -6,8 +6,6 @@ import inspect
 import sys
 import types
 
-from io import StringIO
-
 from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
 from sphinx.util.inspect import isdescriptor
 
@@ -106,7 +104,15 @@ def setup(app):
         # behavior here).  If sphinx implements a better way to supress these
         # warnings, that should be used (only the `app.add_autodocumenter` call
         # call should be left in)
-        app._warning = StringIO()
+        try:
+            # *this* is in a try/finally because we don't want to force six as
+            # a real dependency.  In sphinx 1.4, six is a prerequisite, so
+            # there's no issue. But in older sphinxes this may not be true...
+            # but the inderlying warning is absent anyway so we let it slide.
+            from six import StringIO
+            app._warning = StringIO()
+        except ImportError:
+            pass
         app.add_autodocumenter(AttributeDocumenter)
     finally:
         app._warning = _oldwarn
