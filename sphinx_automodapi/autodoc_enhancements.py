@@ -6,6 +6,8 @@ import inspect
 import sys
 import types
 
+from io import StringIO
+
 from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
 from sphinx.util.inspect import isdescriptor
 
@@ -94,5 +96,17 @@ def setup(app):
     # Need to import this too since it re-registers all the documenter types
     # =_=
     import sphinx.ext.autosummary.generate
+
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
-    app.add_autodocumenter(AttributeDocumenter)
+
+    _oldwarn = app._warning
+    try:
+        # this is a really ugly hack to supress a warning that sphinx 1.4
+        # generates when overriding an existing directive (which is *desired*
+        # behavior here).  If sphinx implements a better way to supress these
+        # warnings, that should be used (only the `app.add_autodocumenter` call
+        # call should be left in)
+        app._warning = StringIO()
+        app.add_autodocumenter(AttributeDocumenter)
+    finally:
+        app._warning = _oldwarn
