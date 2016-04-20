@@ -102,8 +102,10 @@ def setup(app):
     try:
         # this is a really ugly hack to supress a warning that sphinx 1.4
         # generates when overriding an existing directive (which is *desired*
-        # behavior here).  If sphinx implements a better way to supress these
-        # warnings, that should be used (only the `app.add_autodocumenter` call
+        # behavior here).  Once there's a release that includes it, we should
+        # use the fix mentioned in
+        # https://github.com/sphinx-doc/sphinx/issues/2451
+        # and remove this. (only the `app.add_autodocumenter` call
         # call should be left in)
         try:
             # *this* is in a try/finally because we don't want to force six as
