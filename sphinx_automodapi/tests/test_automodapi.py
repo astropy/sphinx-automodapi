@@ -314,7 +314,7 @@ am_replacer_cython_expected = """
 This comes before
 
 apyhtest_eva.unit02 Module
--------------------
+--------------------------
 
 .. automodule:: apyhtest_eva.unit02
 
