@@ -85,7 +85,7 @@ def test_ams_to_asmry(tmpdir):
 ams_cython_str = """
 Before
 
-.. automodsumm:: _eva_.unit02
+.. automodsumm:: apyhtest_eva.unit02
     :functions-only:
     :p:
 
@@ -93,7 +93,7 @@ And After
 """
 
 ams_cython_expected = """\
-.. currentmodule:: _eva_.unit02
+.. currentmodule:: apyhtest_eva.unit02
 
 .. autosummary::
     :p:
