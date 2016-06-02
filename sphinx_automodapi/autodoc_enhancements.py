@@ -97,26 +97,29 @@ def setup(app):
 
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
 
-    _oldwarn = app._warning
-    _oldwarncount = app._warncount
-    try:
+    if sphinx.version_info < (1,4,2):
         # this is a really ugly hack to supress a warning that sphinx 1.4
         # generates when overriding an existing directive (which is *desired*
-        # behavior here).  Once there's a release that includes it, we should
-        # use the fix mentioned in
+        # behavior here).  As of sphinx v1.4.2, this has been fixed:
         # https://github.com/sphinx-doc/sphinx/issues/2451
-        # and remove this. (only the `app.add_autodocumenter` call
-        # call should be left in)
+        # But we leave it in for 1.4.0/1.4.1 .  But if the "needs_sphinx" is
+        # eventually updated to >= 1.4.2, this should be removed entirely (in
+        # favor of the line in the "else" clause)
+        _oldwarn = app._warning
+        _oldwarncount = app._warncount
         try:
-            # *this* is in a try/finally because we don't want to force six as
-            # a real dependency.  In sphinx 1.4, six is a prerequisite, so
-            # there's no issue. But in older sphinxes this may not be true...
-            # but the inderlying warning is absent anyway so we let it slide.
-            from six import StringIO
-            app._warning = StringIO()
-        except ImportError:
-            pass
+            try:
+                # *this* is in a try/finally because we don't want to force six as
+                # a real dependency.  In sphinx 1.4, six is a prerequisite, so
+                # there's no issue. But in older sphinxes this may not be true...
+                # but the inderlying warning is absent anyway so we let it slide.
+                from six import StringIO
+                app._warning = StringIO()
+            except ImportError:
+                pass
+            app.add_autodocumenter(AttributeDocumenter)
+        finally:
+            app._warning = _oldwarn
+            app._warncount = _oldwarncount
+    else:
         app.add_autodocumenter(AttributeDocumenter)
-    finally:
-        app._warning = _oldwarn
-        app._warncount = _oldwarncount
