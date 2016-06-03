@@ -166,8 +166,8 @@ class Automodsumm(BaseAutosummary):
                         skipnames.append(lnm)
                 if len(option_skipnames) > 0:
                     self.warn('Tried to skip objects {objs} in module {mod}, '
-                              'but they were not present.  Ignoring.'.format(
-                              objs=option_skipnames, mod=modname))
+                              'but they were not present.  Ignoring.'
+                              .format(objs=option_skipnames, mod=modname))
 
             if funconly and not clsonly:
                 cont = []
@@ -205,7 +205,7 @@ class Automodsumm(BaseAutosummary):
         return Autosummary.get_items(self, names)
 
 
-#<-------------------automod-diagram stuff------------------------------------>
+# <-------------------automod-diagram stuff----------------------------------->
 class Automoddiagram(InheritanceDiagram):
 
     option_spec = dict(InheritanceDiagram.option_spec)
@@ -237,7 +237,7 @@ class Automoddiagram(InheritanceDiagram):
             self.arguments = oldargs
 
 
-#<---------------------automodsumm generation stuff--------------------------->
+# <---------------------automodsumm generation stuff-------------------------->
 def process_automodsumm_generation(app):
     env = app.builder.env
 
@@ -262,14 +262,13 @@ def process_automodsumm_generation(app):
     for sfn, lines in zip(filestosearch, liness):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
-            generate_automodsumm_docs(lines, sfn, builder=app.builder,
-                                      warn=app.warn, info=app.info,
-                                      suffix=suffix,
-                                      base_path=app.srcdir,
-                                      inherited_members=app.config.automodsumm_inherited_members)
+            generate_automodsumm_docs(
+                lines, sfn, builder=app.builder, warn=app.warn, info=app.info,
+                suffix=suffix, base_path=app.srcdir,
+                inherited_members=app.config.automodsumm_inherited_members)
 
-#_automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
-#                             r'\n\1(\s*)(\S|$)', re.MULTILINE)
+# _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
+#                              r'\n\1(\s*)(\S|$)', re.MULTILINE)
 _lineendrex = r'(?:\n|$)'
 _hdrex = r'^\n?(\s*)\.\. automodsumm::\s*(\S+)\s*' + _lineendrex
 _oprex1 = r'(?:\1(\s+)\S.*' + _lineendrex + ')'
@@ -319,7 +318,7 @@ def automodsumm_to_autosummary_lines(fn, app):
             filestr = fr.read()
 
     spl = _automodsummrex.split(filestr)
-    #0th entry is the stuff before the first automodsumm line
+    # 0th entry is the stuff before the first automodsumm line
     indent1s = spl[1::5]
     mods = spl[2::5]
     opssecs = spl[3::5]
@@ -330,12 +329,12 @@ def automodsumm_to_autosummary_lines(fn, app):
     # entries for all the public objects
     newlines = []
 
-    #loop over all automodsumms in this document
+    # loop over all automodsumms in this document
     for i, (i1, i2, modnm, ops, rem) in enumerate(zip(indent1s, indent2s, mods,
-                                                    opssecs, remainders)):
+                                                      opssecs, remainders)):
         allindent = i1 + ('' if i2 is None else i2)
 
-        #filter out functions-only and classes-only options if present
+        # filter out functions-only and classes-only options if present
         oplines = ops.split('\n')
         toskip = []
         allowedpkgnms = []
@@ -407,13 +406,12 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-
     if info is None:
         info = _simple_info
     if warn is None:
         warn = _simple_warn
 
-    #info('[automodsumm] generating automodsumm for: ' + srcfn)
+    # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
@@ -431,7 +429,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     template_env = SandboxedEnvironment(loader=template_loader)
 
     # read
-    #items = find_autosummary_in_files(sources)
+    # items = find_autosummary_in_files(sources)
     items = find_autosummary_in_lines(lines, filename=srcfn)
     if len(items) > 0:
         msg = '[automodsumm] {1}: found {0} automodsumm entries to generate'
@@ -544,11 +542,11 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             if doc.objtype == 'module':
                 ns['members'] = get_members_mod(obj, None)
                 ns['functions'], ns['all_functions'] = \
-                                   get_members_mod(obj, 'function')
+                    get_members_mod(obj, 'function')
                 ns['classes'], ns['all_classes'] = \
-                                 get_members_mod(obj, 'class')
+                    get_members_mod(obj, 'class')
                 ns['exceptions'], ns['all_exceptions'] = \
-                                   get_members_mod(obj, 'exception')
+                    get_members_mod(obj, 'exception')
             elif doc.objtype == 'class':
                 if inherited_mem is not None:
                     # option set in this specifc directive
@@ -561,12 +559,11 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                 ns['members'] = get_members_class(obj, None,
                                                   include_base=include_base)
                 ns['methods'], ns['all_methods'] = \
-                                 get_members_class(obj, 'method',
-                                                   api_class_methods,
-                                                   include_base=include_base)
+                    get_members_class(obj, 'method', api_class_methods,
+                                      include_base=include_base)
                 ns['attributes'], ns['all_attributes'] = \
-                                 get_members_class(obj, 'attribute',
-                                                   include_base=include_base)
+                    get_members_class(obj, 'attribute',
+                                      include_base=include_base)
                 ns['methods'].sort()
                 ns['attributes'].sort()
 

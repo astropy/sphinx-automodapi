@@ -237,7 +237,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 else:
                     unknownops.append(opname)
 
-            #join all the allowedpkgnms
+            # join all the allowedpkgnms
             if len(allowedpkgnms) == 0:
                 allowedpkgnms = ''
                 onlylocals = True
@@ -268,11 +268,12 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             else:
                 automodline = ''
             if top_head:
-                newstrs.append(automod_templ_modheader.format(modname=modnm,
-                    modhds=h1 * len(modnm),
-                    pkgormod='Package' if ispkg else 'Module',
-                    pkgormodhds=h1 * (8 if ispkg else 7),
-                    automoduleline=automodline))
+                newstrs.append(automod_templ_modheader.format(
+                        modname=modnm,
+                        modhds=h1 * len(modnm),
+                        pkgormod='Package' if ispkg else 'Module',
+                        pkgormodhds=h1 * (8 if ispkg else 7),
+                        automoduleline=automodline))
             else:
                 newstrs.append(automod_templ_modheader.format(
                     modname='',
@@ -281,8 +282,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     pkgormodhds='',
                     automoduleline=automodline))
 
-            #construct the options for the class/function sections
-            #start out indented at 4 spaces, but need to keep the indentation.
+            # construct the options for the class/function sections
+            # start out indented at 4 spaces, but need to keep the indentation.
             clsfuncoptions = []
             if toctreestr:
                 clsfuncoptions.append(toctreestr)
@@ -290,7 +291,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:
                 clsfuncoptions.append(allowedpkgnms)
-            if hascls: # This makes no sense unless there are classes.
+            if hascls:  # This makes no sense unless there are classes.
                 if inherited_members is True:
                     clsfuncoptions.append(':inherited-members:')
                 if inherited_members is False:
