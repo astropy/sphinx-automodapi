@@ -7,9 +7,6 @@ import pytest
 
 from ..utils import find_mod_objs
 
-PY3 = sys.version_info[0] >= 3
-pytestmark = pytest.mark.skipif("PY3")
-
 
 def test_find_mod_objs():
     lnms, fqns, objs = find_mod_objs('astropy_helpers')

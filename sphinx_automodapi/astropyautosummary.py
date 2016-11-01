@@ -19,7 +19,7 @@ import sphinx
 
 from sphinx.ext.autosummary import Autosummary
 
-from ...utils import deprecated
+from .utils_extra import deprecated
 
 # used in AstropyAutosummary.get_items
 _itemsummrex = re.compile(r'^([A-Z].*?\.(?:\s|$))')
