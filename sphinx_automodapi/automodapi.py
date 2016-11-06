@@ -370,7 +370,8 @@ def process_automodapi(app, docname, source):
 
 
 def setup(app):
-    # need automodsumm for automodapi
+
+    app.setup_extension('sphinx.ext.autosummary')
     app.setup_extension('sphinx_automodapi.automodsumm')
 
     app.connect('source-read', process_automodapi)
