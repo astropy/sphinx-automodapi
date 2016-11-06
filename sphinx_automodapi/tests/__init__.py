@@ -22,7 +22,7 @@ def cython_testpackage(tmpdir, request):
             return True
     """))
 
-    import astropy_helpers
+    import sphinx_automodapi  # noqa
 
     test_pkg.join('setup.py').write(dedent("""\
         import sys
@@ -31,22 +31,19 @@ def cython_testpackage(tmpdir, request):
 
         from os.path import join
         from setuptools import setup, Extension
-        from astropy_helpers.setup_helpers import register_commands
 
         NAME = 'apyhtest_eva'
         VERSION = 0.1
         RELEASE = True
 
-        cmdclassd = register_commands(NAME, VERSION, RELEASE)
 
         setup(
             name=NAME,
             version=VERSION,
-            cmdclass=cmdclassd,
             ext_modules=[Extension('apyhtest_eva.unit02',
                                    [join('apyhtest_eva', 'unit02.pyx')])]
         )
-    """.format(os.path.dirname(astropy_helpers.__path__[0]))))
+    """.format(os.path.dirname(sphinx_automodapi.__path__[0]))))
 
     test_pkg.chdir()
     # Build the Cython module in a subprocess; otherwise strange things can
