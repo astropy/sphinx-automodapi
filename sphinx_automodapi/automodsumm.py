@@ -606,7 +606,6 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             f.close()
 
 
-
 def setup(app):
 
     # need autodoc fixes

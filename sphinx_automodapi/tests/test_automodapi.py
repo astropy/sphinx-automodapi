@@ -1,11 +1,7 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-import os
-import sys
-
 import pytest
 
-from . import *
 from ..utils import iteritems
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
@@ -26,10 +22,8 @@ class FakeApp(object):
     """
 
     # Some default config values
-    _defaults = {
-        'automodapi_toctreedirnm': 'api',
-        'automodapi_writereprocessed': False
-    }
+    _defaults = {'automodapi_toctreedirnm': 'api',
+                 'automodapi_writereprocessed': False}
 
     def __init__(self, **configs):
         config = self._defaults.copy()

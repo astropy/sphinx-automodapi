@@ -1,10 +1,7 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-import sys
-
 import pytest
 
-from . import *
 from ..utils import iteritems
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present

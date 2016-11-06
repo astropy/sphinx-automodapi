@@ -270,7 +270,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                         modhds=h1 * len(modnm),
                         pkgormod='Package' if ispkg else 'Module',
                         pkgormodhds=h1 * (8 if ispkg else 7),
-                        automoduleline=automodline))
+                        automoduleline=automodline))  # noqa
             else:
                 newstrs.append(automod_templ_modheader.format(
                     modname='',
