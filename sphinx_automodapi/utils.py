@@ -7,6 +7,14 @@ from warnings import warn
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 
 
+if sys.version_info[0] >= 3:
+    def iteritems(dictionary):
+        return dictionary.items()
+else:
+    def iteritems(dictionary):
+        return dictionary.iteritems()
+
+
 def find_mod_objs(modname, onlylocals=False):
     """ Returns all the public attributes of a module referenced by name.
 
