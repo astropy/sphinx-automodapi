@@ -20,12 +20,12 @@ def test_find_mod_objs():
     assert lnms == []
 
     lnms, fqns, objs = find_mod_objs(
-        'astropy_helpers.sphinx.ext.tests.test_utils', onlylocals=False)
+        'sphinx_automodapi.tests.test_utils', onlylocals=False)
 
     assert namedtuple in objs
 
     lnms, fqns, objs = find_mod_objs(
-        'astropy_helpers.sphinx.ext.tests.test_utils', onlylocals=True)
+        'sphinx_automodapi.tests.test_utils', onlylocals=True)
     assert 'namedtuple' not in lnms
     assert 'collections.namedtuple' not in fqns
     assert namedtuple not in objs
