@@ -97,7 +97,7 @@ def setup(app):
 
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
 
-    if sphinx.version_info < (1,4,2):
+    if sphinx.version_info < (1, 4, 2):
         # this is a really ugly hack to supress a warning that sphinx 1.4
         # generates when overriding an existing directive (which is *desired*
         # behavior here).  As of sphinx v1.4.2, this has been fixed:
