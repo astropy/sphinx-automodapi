@@ -308,8 +308,8 @@ def automodsumm_to_autosummary_lines(fn, app):
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
     with open(fullfn) as fr:
-        if 'astropy_helpers.sphinx.ext.automodapi' in app._extensions:
-            from astropy_helpers.sphinx.ext.automodapi import automodapi_replace
+        if 'sphinx_automodapi.automodapi' in app._extensions:
+            from sphinx_automodapi.automodapi import automodapi_replace
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
             docname = os.path.splitext(fn)[0]
@@ -621,8 +621,8 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
 def setup(app):
     # need our autosummary and autodoc fixes
-    app.setup_extension('astropy_helpers.sphinx.ext.astropyautosummary')
-    app.setup_extension('astropy_helpers.sphinx.ext.autodoc_enhancements')
+    app.setup_extension('sphinx_automodapi.astropyautosummary')
+    app.setup_extension('sphinx_automodapi.autodoc_enhancements')
     # need inheritance-diagram for automod-diagram
     app.setup_extension('sphinx.ext.inheritance_diagram')
 

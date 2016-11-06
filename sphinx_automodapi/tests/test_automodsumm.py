@@ -37,7 +37,7 @@ class FakeApp(object):
         self.warnings = []
         self._extensions = []
         if automodapipresent:
-            self._extensions.append('astropy_helpers.sphinx.ext.automodapi')
+            self._extensions.append('sphinx_automodapi.automodapi')
 
     def info(self, msg, loc):
         self.info.append((msg, loc))
@@ -49,14 +49,14 @@ class FakeApp(object):
 ams_to_asmry_str = """
 Before
 
-.. automodsumm:: astropy_helpers.sphinx.ext.automodsumm
+.. automodsumm:: sphinx_automodapi.automodsumm
     :p:
 
 And After
 """
 
 ams_to_asmry_expected = """\
-.. currentmodule:: astropy_helpers.sphinx.ext.automodsumm
+.. currentmodule:: sphinx_automodapi.automodsumm
 
 .. autosummary::
     :p:
