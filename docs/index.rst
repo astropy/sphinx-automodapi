@@ -19,6 +19,8 @@ possible to do::
 
     pip install sphinx-automodapi
 
+.. _quickstart:
+
 Quick start
 -----------
 
@@ -47,6 +49,20 @@ be installed. To disable the inheritance diagram, you can do::
     .. automodapi:: mypackage.mymodule
        :no-inheritance-diagram:
 
+The ``automodapi`` directive takes other options that are described in more
+detail in the `User guide`_ below.
+
 .. TODO: disable inheritance diagram by default!
 
 .. TODO: mention about api directory being excluded
+
+User guide
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   automodapi.rst
+   automodsumm.rst
+
+.. TOOD: in future, could also describe autodoc_enhancements and smart_resolver

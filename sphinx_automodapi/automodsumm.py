@@ -1,16 +1,5 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 """
-This sphinx extension adds two directives for summarizing the public
-members of a module or package.
-
-These directives are primarily for use with the `automodapi`_ extension,
-but can be used independently.
-
-.. _automodsumm:
-
-automodsumm directive
-=====================
-
 This directive will produce an "autosummary"-style table for public
 attributes of a specified module. See the `sphinx.ext.autosummary`_ extension
 for details on this process. The main difference from the `autosummary`_
