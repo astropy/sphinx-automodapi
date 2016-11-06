@@ -1,4 +1,4 @@
-Documentation for sphinx_automodapi
+Documentation for sphinx-automodapi
 ===================================
 
 The sphinx-automodapi package provides Sphinx directives that help faciliate
@@ -29,16 +29,24 @@ To use this extension, you will need to add the following entries to the
                   'sphinx_automodapi.automodsumm',
                   'sphinx_automodapi.automodapi']
 
+.. TODO: we could make automodsumm be automatically set up when automodapi is set up
+
 You can then add an ``automodapi`` block anywhere that you want to generate
 documentation for a module::
 
     .. automodapi:: mypackage.mymodule
 
-This will add a section with a list of objects (functions, classes, etc.),
-and for objects like classes, a table of attributes/methods will be shown.
+This will add a section with the docstring of the module, followed by a list of
+functions, and by a list of classes. For each function and class, a full API
+page will be generated.
 
-User guide
-----------
+By default, sphinx_automodapi will try and make a diagram showing an
+inheritance graph of all the classes in the module. This requires graphviz to
+be installed. To disable the inheritance diagram, you can do::
 
-.. automodapi:: sphinx_automodapi.test
-   :no-inheritance-diagram:
+    .. automodapi:: mypackage.mymodule
+       :no-inheritance-diagram:
+
+.. TODO: disable inheritance diagram by default!
+
+.. TODO: mention about api directory being excluded
