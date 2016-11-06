@@ -13,4 +13,5 @@ setup(
     license='BSD',
     url='http://astropy.org',
     zip_safe=False,
-    packages=['sphinx_automodapi'])
+    packages=['sphinx_automodapi'],
+    package_data = {'sphinx_automodapi': ['templates/*/*.rst']})

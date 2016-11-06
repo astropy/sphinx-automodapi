@@ -11,26 +11,26 @@ but can be used independently.
 automodsumm directive
 =====================
 
-This directive will produce an "Autosummary"-style table for public
+This directive will produce an "autosummary"-style table for public
 attributes of a specified module. See the `sphinx.ext.autosummary`_ extension
-for details on this process. The main difference from the `Autosummary`_
-directive is that `Autosummary`_ requires manually inputting all attributes
+for details on this process. The main difference from the `autosummary`_
+directive is that `autosummary`_ requires manually inputting all attributes
 that appear in the table, while this captures the entries automatically.
 
 This directive requires a single argument that must be a module or
 package.
 
-It also accepts any options supported by the `Autosummary`_ directive-
+It also accepts any options supported by the `autosummary`_ directive-
 see `sphinx.ext.autosummary`_ for details. It also accepts some additional
 options:
 
     * ``:classes-only:``
-        If present, the Autosummary table will only contain entries for
+        If present, the autosummary table will only contain entries for
         classes. This cannot be used at the same time with
         ``:functions-only:`` .
 
     * ``:functions-only:``
-        If present, the Autosummary table will only contain entries for
+        If present, the autosummary table will only contain entries for
         functions. This cannot be used at the same time with
         ``:classes-only:`` .
 
@@ -67,8 +67,8 @@ This extension also adds two sphinx configuration options:
     ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
     ``False``.
 
-.. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/Autosummary.html
-.. _Autosummary: http://sphinx-doc.org/latest/ext/Autosummary.html#directive-Autosummary
+.. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
+.. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
 
 .. _automod-diagram:
 
@@ -138,7 +138,7 @@ class Automodsumm(Autosummary):
             return self.warnings
 
         try:
-            # set self.content to trick the Autosummary internals.
+            # set self.content to trick the autosummary internals.
             # Be sure to respect functions-only and classes-only.
             funconly = 'functions-only' in self.options
             clsonly = 'classes-only' in self.options
@@ -235,7 +235,7 @@ def process_automodsumm_generation(app):
 
     liness = []
     for sfn in filestosearch:
-        lines = automodsumm_to_Autosummary_lines(sfn, app)
+        lines = automodsumm_to_autosummary_lines(sfn, app)
         liness.append(lines)
         if app.config.automodsumm_writereprocessed:
             if lines:  # empty list means no automodsumm entry is in the file
@@ -263,17 +263,17 @@ _automodsummrex = re.compile(_hdrex + '(' + _oprex1 + '?' + _oprex2 + '*)',
                              re.MULTILINE)
 
 
-def automodsumm_to_Autosummary_lines(fn, app):
+def automodsumm_to_autosummary_lines(fn, app):
     """
     Generates lines from a file with an "automodsumm" entry suitable for
-    feeding into "Autosummary".
+    feeding into "autosummary".
 
     Searches the provided file for `automodsumm` directives and returns
-    a list of lines specifying the `Autosummary` commands for the modules
+    a list of lines specifying the `autosummary` commands for the modules
     requested. This does *not* return the whole file contents - just an
-    Autosummary section in place of any :automodsumm: entries. Note that
+    autosummary section in place of any :automodsumm: entries. Note that
     any options given for `automodsumm` are also included in the
-    generated `Autosummary` section.
+    generated `autosummary` section.
 
     Parameters
     ----------
@@ -286,7 +286,7 @@ def automodsumm_to_Autosummary_lines(fn, app):
     ------
     lines : list of str
         Lines for all `automodsumm` entries with the entries replaced by
-        `Autosummary` and the module's members added.
+        `autosummary` and the module's members added.
 
 
     """
@@ -311,7 +311,7 @@ def automodsumm_to_Autosummary_lines(fn, app):
     indent2s = spl[4::5]
     remainders = spl[5::5]
 
-    # only grab automodsumm sections and convert them to Autosummary with the
+    # only grab automodsumm sections and convert them to autosummary with the
     # entries for all the public objects
     newlines = []
 
@@ -346,12 +346,12 @@ def automodsumm_to_Autosummary_lines(fn, app):
             continue
 
         # Use the currentmodule directive so we can just put the local names
-        # in the Autosummary table.  Note that this doesn't always seem to
+        # in the autosummary table.  Note that this doesn't always seem to
         # actually "take" in Sphinx's eyes, so in `Automodsumm.run`, we have to
         # force it internally, as well.
         newlines.extend([i1 + '.. currentmodule:: ' + modnm,
                          '',
-                         '.. Autosummary::'])
+                         '.. autosummary::'])
         newlines.extend(oplines)
 
         ols = True if len(allowedpkgnms) == 0 else allowedpkgnms
@@ -364,7 +364,7 @@ def automodsumm_to_Autosummary_lines(fn, app):
                 continue
             newlines.append(allindent + nm)
 
-    # add one newline at the end of the Autosummary block
+    # add one newline at the end of the autosummary block
     newlines.append('')
 
     return newlines
@@ -378,7 +378,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
     generate source for the automodsumm directives that should be
-    autosummarized. Unlike generate_Autosummary_docs, this function is
+    autosummarized. Unlike generate_autosummary_docs, this function is
     called one file at a time.
     """
 
@@ -390,7 +390,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     from jinja2 import FileSystemLoader, TemplateNotFound
     from jinja2.sandbox import SandboxedEnvironment
 
-    from .utils import find_autosummary_in_lines_for_automodsumm as find_Autosummary_in_lines
+    from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
     if info is None:
         info = _simple_info
@@ -400,7 +400,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
     # Create our own templating environment - here we use Astropy's
-    # templates rather than the default Autosummary templates, in order to
+    # templates rather than the default autosummary templates, in order to
     # allow docstrings to be shown for methods.
     template_dirs = [os.path.join(os.path.dirname(__file__), 'templates'),
                      os.path.join(base_path, '_templates')]
@@ -415,8 +415,8 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
     template_env = SandboxedEnvironment(loader=template_loader)
 
     # read
-    # items = find_Autosummary_in_files(sources)
-    items = find_Autosummary_in_lines(lines, filename=srcfn)
+    # items = find_autosummary_in_files(sources)
+    items = find_autosummary_in_lines(lines, filename=srcfn)
     if len(items) > 0:
         msg = '[automodsumm] {1}: found {0} automodsumm entries to generate'
         info(msg.format(len(items), srcfn))
@@ -424,7 +424,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 #    gennms = [item[0] for item in items]
 #    if len(gennms) > 20:
 #        gennms = gennms[:10] + ['...'] + gennms[-10:]
-#    info('[automodsumm] generating Autosummary for: ' + ', '.join(gennms))
+#    info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
 
     # remove possible duplicates
     items = dict([(item, True) for item in items]).keys()
@@ -434,8 +434,9 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
     # write
     for name, path, template_name, inherited_mem in sorted(items):
+
         if path is None:
-            # The corresponding Autosummary:: directive did not have
+            # The corresponding autosummary:: directive did not have
             # a :toctree: option
             continue
 
@@ -470,7 +471,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             if template_name is not None:
                 template = template_env.get_template(template_name)
             else:
-                tmplstr = 'Autosummary/%s.rst'
+                tmplstr = 'autosummary_core/%s.rst'
                 try:
                     template = template_env.get_template(tmplstr % doc.objtype)
                 except TemplateNotFound:
@@ -603,6 +604,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             f.write(rendered)
         finally:
             f.close()
+
 
 
 def setup(app):
