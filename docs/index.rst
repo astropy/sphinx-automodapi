@@ -24,12 +24,10 @@ possible to do::
 Quick start
 -----------
 
-To use this extension, you will need to add the following entries to the
+To use this extension, you will need to add the following entry to the
 ``extensions`` list in your Sphinx ``conf.py`` file::
 
-    extensions = ['sphinx.ext.autosummary',
-                  'sphinx_automodapi.automodsumm',
-                  'sphinx_automodapi.automodapi']
+    extensions = ['sphinx_automodapi.automodapi']
 
 .. TODO: we could make automodsumm be automatically set up when automodapi is set up
 
