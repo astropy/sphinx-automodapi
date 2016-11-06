@@ -3,6 +3,7 @@
 import pytest
 
 from ..utils import iteritems
+from . import cython_testpackage
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 

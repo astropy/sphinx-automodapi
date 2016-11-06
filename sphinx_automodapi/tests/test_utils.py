@@ -6,7 +6,7 @@ from ..utils import find_mod_objs
 
 
 def test_find_mod_objs():
-    lnms, fqns, objs = find_mod_objs('astropy_helpers')
+    lnms, fqns, objs = find_mod_objs('sphinx_automodapi')
 
     # just check for astropy.test ... other things might be added, so we
     # shouldn't check that it's the only thing
