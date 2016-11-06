@@ -135,7 +135,7 @@ Class Inheritance Diagram
     {allowedpkgnms}
 """
 
-_automodapirex = re.compile(r'^(?:\s*\.\.\s+automodapi::\s*)([A-Za-z0-9_.]+)'
+_automodapirex = re.compile(r'^(?:\.\.\s+automodapi::\s*)([A-Za-z0-9_.]+)'
                             r'\s*$((?:\n\s+:[a-zA-Z_\-]+:.*$)*)',
                             flags=re.MULTILINE)
 # the last group of the above regex is intended to go into finall with the below
