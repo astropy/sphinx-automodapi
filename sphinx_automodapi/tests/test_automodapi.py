@@ -57,8 +57,9 @@ This comes after
 am_replacer_basic_expected = """
 This comes before
 
+
 sphinx_automodapi.tests.test_automodapi Module
--------------------------------------------------------
+----------------------------------------------
 
 .. automodule:: sphinx_automodapi.tests.test_automodapi
 
@@ -104,8 +105,9 @@ def test_am_replacer_basic():
 am_replacer_noinh_expected = """
 This comes before
 
+
 sphinx_automodapi.tests.test_automodapi Module
--------------------------------------------------------
+----------------------------------------------
 
 .. automodule:: sphinx_automodapi.tests.test_automodapi
 
@@ -145,8 +147,9 @@ def test_am_replacer_noinh():
 am_replacer_titleandhdrs_expected = """
 This comes before
 
+
 sphinx_automodapi.tests.test_automodapi Module
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 .. automodule:: sphinx_automodapi.tests.test_automodapi
 
@@ -204,8 +207,9 @@ This comes after
 am_replacer_nomain_expected = """
 This comes before
 
+
 sphinx_automodapi.automodapi Module
---------------------------------------------
+-----------------------------------
 
 
 
@@ -246,8 +250,9 @@ This comes after
 am_replacer_skip_expected = """
 This comes before
 
+
 sphinx_automodapi.automodapi Module
---------------------------------------------
+-----------------------------------
 
 .. automodule:: sphinx_automodapi.automodapi
 
@@ -312,6 +317,7 @@ This comes after
 
 am_replacer_cython_expected = """
 This comes before
+
 
 apyhtest_eva.unit02 Module
 --------------------------
