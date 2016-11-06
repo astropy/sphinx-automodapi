@@ -1,13 +1,10 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 """
-This sphinx extension adds a tools to simplify generating the API
-documentation for Astropy packages and affiliated packages.
-
 .. _automodapi:
 
-========================
 automodapi directive
-========================
+====================
+
 This directive takes a single argument that must be a module or package. It
 will produce a block of documentation that includes the docstring for the
 package, an :ref:`automodsumm` directive, and an :ref:`automod-diagram` if

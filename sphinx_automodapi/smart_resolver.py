@@ -89,5 +89,4 @@ def missing_reference_handler(app, env, node, contnode):
 
 def setup(app):
     app.connect('autodoc-process-docstring', process_docstring)
-
     app.connect('missing-reference', missing_reference_handler)
