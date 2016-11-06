@@ -10,28 +10,35 @@ Installation
 ------------
 
 This extension requires Sphinx 1.2 or later, and at the moment can be installed
-by cloning the repository then running:
+by cloning the repository then running::
 
     python setup.py install
 
 However, we will soon release a version on PyPI, at which point it will be
-possible to do:
+possible to do::
 
     pip install sphinx-automodapi
 
-Usage
------
+Quick start
+-----------
 
 To use this extension, you will need to add the following entries to the
-``extensions`` list in your Sphinx ``conf.py`` file:
+``extensions`` list in your Sphinx ``conf.py`` file::
 
-    extensions = ['sphinx_automodapi.automodsumm',
+    extensions = ['sphinx.ext.autosummary',
+                  'sphinx_automodapi.automodsumm',
                   'sphinx_automodapi.automodapi']
 
 You can then add an ``automodapi`` block anywhere that you want to generate
-documentation for a module:
+documentation for a module::
 
     .. automodapi:: mypackage.mymodule
 
 This will add a section with a list of objects (functions, classes, etc.),
 and for objects like classes, a table of attributes/methods will be shown.
+
+User guide
+----------
+
+.. automodapi:: sphinx_automodapi.test
+   :no-inheritance-diagram:
