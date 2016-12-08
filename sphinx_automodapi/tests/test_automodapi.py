@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 import pytest
@@ -96,6 +97,31 @@ def test_am_replacer_basic():
     result = automodapi_replace(am_replacer_str.format(options=''), fakeapp)
 
     assert result == am_replacer_basic_expected
+
+
+am_replacer_repr_str = u"""
+This comes before with spéciàl çhars
+
+.. automodapi:: sphinx_automodapi.tests.test_automodapi
+{options}
+
+This comes after
+"""
+
+
+def test_am_replacer_writereprocessed(tmpdir):
+    """
+    Tests the automodapi_writereprocessed option
+    """
+    from ..automodapi import automodapi_replace
+
+    fakeapp = FakeApp()
+    fakeapp.srcdir = str(tmpdir)
+    fakeapp.config.automodapi_writereprocessed = True
+    automodapi_replace(am_replacer_repr_str.format(options=''), fakeapp)
+
+    assert tmpdir.join('unknown.automodapi').isfile()
+
 
 am_replacer_noinh_expected = """
 This comes before
