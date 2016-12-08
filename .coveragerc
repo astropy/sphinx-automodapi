@@ -1,0 +1,4 @@
+[run]
+source = sphinx_automodapi
+omit = sphinx_automodapi/tests/*.py
+
