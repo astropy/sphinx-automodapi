@@ -186,6 +186,7 @@ class Automoddiagram(InheritanceDiagram):
 
     option_spec = dict(InheritanceDiagram.option_spec)
     option_spec['allowed-package-names'] = _str_list_converter
+    option_spec['skip'] = _str_list_converter
 
     def run(self):
         try:
@@ -198,8 +199,14 @@ class Automoddiagram(InheritanceDiagram):
             self.warn("Couldn't import module " + self.arguments[0])
             return self.warnings
 
+        # Check if some classes should be skipped
+        skip = self.options.get('skip', [])
+
         clsnms = []
         for n, o in zip(nms, objs):
+
+            if n.split('.')[-1] in skip:
+                continue
 
             if inspect.isclass(o):
                 clsnms.append(n)

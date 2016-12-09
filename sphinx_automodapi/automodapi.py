@@ -129,6 +129,7 @@ Class Inheritance Diagram
     :private-bases:
     :parts: 1
     {allowedpkgnms}
+    {skip}
 """
 
 _automodapirex = re.compile(r'^(?:\.\.\s+automodapi::\s*)([A-Za-z0-9_.]+)'
@@ -305,10 +306,17 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             if inhdiag and hascls:
                 # add inheritance diagram if any classes are in the module
-                newstrs.append(automod_templ_inh.format(
+                if toskip:
+                    clsskip = ':skip: ' + ','.join(toskip)
+                else:
+                    clsskip = ''
+                diagram_entry = automod_templ_inh.format(
                     modname=modnm,
                     clsinhsechds=h2 * 25,
-                    allowedpkgnms=allowedpkgnms))
+                    allowedpkgnms=allowedpkgnms,
+                    skip=clsskip)
+                diagram_entry = diagram_entry.replace('    \n', '')
+                newstrs.append(diagram_entry)
 
             newstrs.append(spl[grp * 3 + 3])
 
