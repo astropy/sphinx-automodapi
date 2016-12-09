@@ -29,8 +29,6 @@ To use this extension, you will need to add the following entry to the
 
     extensions = ['sphinx_automodapi.automodapi']
 
-.. TODO: we could make automodsumm be automatically set up when automodapi is set up
-
 You can then add an ``automodapi`` block anywhere that you want to generate
 documentation for a module::
 
@@ -50,9 +48,20 @@ be installed. To disable the inheritance diagram, you can do::
 The ``automodapi`` directive takes other options that are described in more
 detail in the `User guide`_ below.
 
-.. TODO: disable inheritance diagram by default!
+If you are documenting a module which imports classes from other files, and you
+want to include an inheritance diagram for the classes, you may run into Sphinx
+warnings, because the class may be documented as e.g. ``astropy.table.Table``
+but the class really lives at ``astropy.table.core.Table``. To fix this you can
+make use of the ``'sphinx_automodapi.smart_resolver'`` Sphinx extension, which
+will automatically try and resolve such differences. In this, case, be sure to
+include::
 
-.. TODO: mention about api directory being excluded
+    extensions = ['sphinx_automodapi.automodapi',
+                  'sphinx_automodapi.smart_resolver']
+
+in your ``conf.py`` file.
+..
+.. TODO: disable inheritance diagram by default!
 
 User guide
 ----------
