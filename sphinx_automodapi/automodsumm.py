@@ -166,6 +166,7 @@ class Automodsumm(Autosummary):
             # sphinx doesn't necessarily recognize this fact.  So we just force
             # it internally, and that seems to fix things
             env.temp_data['py:module'] = modname
+            env.ref_context['py:module'] = modname
 
             # can't use super because Sphinx/docutils has trouble return
             # super(Autosummary,self).run()
