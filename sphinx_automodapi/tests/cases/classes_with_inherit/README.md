@@ -1,1 +1,2 @@
-A simple case where we are only looking at a module with functions, so no issues with inherited classes etc
+Documenting a module with classes including one that inherits a base class
+that isn't in the public API.
