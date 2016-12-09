@@ -78,7 +78,7 @@ def test_run_full_case(tmpdir, case_dir):
 
     try:
         os.chdir(src_dir)
-        status = build_main(argv=('sphinx-build', '-W', '-b', 'html', '.', 'build/_html'))
+        status = build_main(argv=['sphinx-build', '-W', '-b', 'html', '.', 'build/_html'])
     finally:
         os.chdir(start_dir)
 
