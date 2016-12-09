@@ -94,5 +94,3 @@ def test_run_full_case(tmpdir, case_dir):
             actual = open(path_actual).read()
             reference = open(path_reference).read()
             assert actual.strip() == reference.strip()
-            # if actual != reference:
-            #     raise ValueError("Expected:\n\n{0}\n\nGot:\n\n{1}\n".format(reference, actual))
