@@ -66,7 +66,7 @@ def test_run_full_case(tmpdir, case_dir):
                  'automodapi_writereprocessed': True,
                  'automodsumm_writereprocessed': True})
 
-    if 'toplevel' in case_dir:
+    if os.path.basename(case_dir) == 'mixed_toplevel':
         conf['extensions'].append('sphinx_automodapi.smart_resolver')
 
     write_conf(os.path.join(src_dir, 'conf.py'), conf)
