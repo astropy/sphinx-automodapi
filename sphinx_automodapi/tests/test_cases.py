@@ -4,11 +4,15 @@
 # We store different cases in the cases sub-directory of the tests directory
 
 import os
+import sys
 import glob
 import shutil
+
 import pytest
-from copy import deepcopy
+
+from copy import deepcopy, copy
 from sphinx import build_main
+from docutils.parsers.rst import directives, roles
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
@@ -21,10 +25,32 @@ def write_conf(filename, conf):
             f.write("{0} = {1}\n".format(key, repr(conf[key])))
 
 
+
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/{0}/'.format(sys.version_info[0]), None)
+    }
+
 DEFAULT_CONF = {'source_suffix': '.rst',
                 'master_doc': 'index',
                 'nitpicky': True,
-                'extensions': ['sphinx_automodapi.automodapi']}
+                'extensions': ['sphinx.ext.intersphinx', 'sphinx_automodapi.automodapi'],
+                'suppress_warnings': ['app.add_directive', 'app.add_node'],
+                'intersphinx_mapping': intersphinx_mapping,
+                'nitpick_ignore': [('py:class', 'sphinx_automodapi.tests.example_module.classes.BaseSpam')]}
+
+
+
+
+def setup_function(func):
+    # This can be replaced with the docutils_namespace context manager once
+    # it is in a stable release of Sphinx
+    func._directives = copy(directives._directives)
+    func._roles = copy(roles._roles)
+
+
+def teardown_function(func):
+    directives._directives = func._directives
+    roles._roles = func._roles
 
 
 @pytest.mark.parametrize('case_dir', CASES_DIRS)
@@ -40,6 +66,9 @@ def test_run_full_case(tmpdir, case_dir):
                  'automodapi_writereprocessed': True,
                  'automodsumm_writereprocessed': True})
 
+    if 'toplevel' in case_dir:
+        conf['extensions'].append('sphinx_automodapi.smart_resolver')
+
     write_conf(os.path.join(src_dir, 'conf.py'), conf)
 
     for input_file in glob.glob(os.path.join(input_dir, '*')):
@@ -49,9 +78,11 @@ def test_run_full_case(tmpdir, case_dir):
 
     try:
         os.chdir(src_dir)
-        build_main(argv=('sphinx-build', '-b', 'html', '.', 'build/_html'))
+        status = build_main(argv=('sphinx-build', '-W', '-b', 'html', '.', 'build/_html'))
     finally:
         os.chdir(start_dir)
+
+    assert status == 0
 
     # Check that all expected output files are there and match the reference files
     for root, dirnames, filenames in os.walk(output_dir):
