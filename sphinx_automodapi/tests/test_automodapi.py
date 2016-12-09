@@ -79,11 +79,9 @@ Class Inheritance Diagram
 .. automod-diagram:: sphinx_automodapi.tests.test_automodapi
     :private-bases:
     :parts: 1
-    {empty}
 
 This comes after
-""".format(empty='')
-# the .format is necessary for editors that remove empty-line whitespace
+"""
 
 
 def test_am_replacer_basic():
@@ -194,11 +192,10 @@ Class Inheritance Diagram
 .. automod-diagram:: sphinx_automodapi.tests.test_automodapi
     :private-bases:
     :parts: 1
-    {empty}
 
 
 This comes after
-""".format(empty='')
+"""
 
 
 def test_am_replacer_titleandhdrs():

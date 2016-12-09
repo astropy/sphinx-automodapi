@@ -20,7 +20,7 @@ addons:
 env:
   matrix:
     - PYTHON_VERSION=2.7
-    - PYTHON_VERSION=3.4
+    - PYTHON_VERSION=3.4 SPHINX_VERSION=1.3
     - PYTHON_VERSION=3.5
   global:
     - CONDA_DEPENDENCIES="setuptools pytest sphinx cython pytest-cov"

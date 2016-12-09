@@ -16,7 +16,7 @@ the bulk of the work in creating the API tables and pages is done by
 Nevertheless, in most cases, users should not need to call ``automodsumm``
 directly, except if finer control is desired. The syntax of the directive is::
 
-    .. aautomodsumm:: mypackage.mymodule
+    .. automodsumm:: mypackage.mymodule
        <options go here>
 
 .. TODO: the typo above is deliberate, to avoid the directive getting picked
