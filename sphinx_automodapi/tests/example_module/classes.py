@@ -42,3 +42,10 @@ class Egg(object):
         Buy some MOAR egg.
         """
         pass
+
+    @property
+    def weight(self):
+        """
+        The weight of an egg
+        """
+        return 0
