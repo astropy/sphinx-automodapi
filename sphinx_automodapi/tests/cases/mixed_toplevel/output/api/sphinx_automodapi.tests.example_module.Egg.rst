@@ -12,6 +12,14 @@ Egg
 
    
    
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+   
+      ~Egg.weight
+
+   
    
 
    
@@ -28,6 +36,13 @@ Egg
    
 
    
+   
+
+   .. rubric:: Attributes Documentation
+
+   
+   .. autoattribute:: weight
+
    
    
 
