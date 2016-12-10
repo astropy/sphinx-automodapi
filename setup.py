@@ -19,5 +19,16 @@ setup(
     license='BSD',
     url='http://astropy.org',
     zip_safe=False,
-    packages=['sphinx_automodapi'],
-    package_data = {'sphinx_automodapi': ['templates/*/*.rst']})
+    packages=['sphinx_automodapi', 'sphinx_automodapi.tests', 'sphinx_automodapi.tests.example_module'],
+    package_data = {'sphinx_automodapi': ['templates/*/*.rst'],
+                    'sphinx_automodapi.tests': ['cases/*/*', 'cases/*/*/*', 'cases/*/*/*/*']},
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: BSD License',
+    ]
+)
