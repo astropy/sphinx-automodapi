@@ -8,12 +8,11 @@ Overview
 
 The main Sphinx directive provided by the sphinx-automodapi package is the
 ``automodapi`` directive. As described in the :ref:`quickstart` guide,
-before you use the directive, you will need to make sure the following lines
-are in your documentation's ``conf.py`` file::
+before you use the directive, you will need to make sure the following
+extension is included in the ``extensions`` entry of your documentation's
+``conf.py`` file:
 
-    extensions = ['sphinx.ext.autosummary',
-                  'sphinx_automodapi.automodsumm',
-                  'sphinx_automodapi.automodapi']
+    extensions = ['sphinx_automodapi.automodapi']
 
 You can then add an ``automodapi`` block anywhere that you want to generate
 documentation for a module::
