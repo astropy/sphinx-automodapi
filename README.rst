@@ -11,7 +11,7 @@ package. The documentation can be found on
 
 *Note that packages from the Astropy project should continue to use this
 extension from the astropy-helpers rather than using this standalone
-extension.*
+package.*
 
 .. |Travis Status| image:: https://travis-ci.org/astropy/sphinx-automodapi.svg?branch=master
    :target: https://travis-ci.org/astropy/sphinx-automodapi
