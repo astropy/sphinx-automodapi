@@ -6,9 +6,12 @@ About
 This is a Sphinx extension to automatically generate API pages for whole
 modules. It was originally developed for the Astropy project but is now
 available as a standalone package since it can be used for any other
-package.
+package. The documentation can be found on
+`ReadTheDocs <http://sphinx-automodapi.readthedocs.io/en/latest/>`_.
 
-The documentation can be found on `ReadTheDocs <http://sphinx-automodapi.readthedocs.io/en/latest/>`_.
+*Note that packages from the Astropy project should continue to use this
+extension from the astropy-helpers rather than using this standalone
+extension.*
 
 .. |Travis Status| image:: https://travis-ci.org/astropy/sphinx-automodapi.svg?branch=master
    :target: https://travis-ci.org/astropy/sphinx-automodapi
