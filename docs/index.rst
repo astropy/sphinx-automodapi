@@ -9,13 +9,7 @@ standalone package that can be used for any project.
 Installation
 ------------
 
-This extension requires Sphinx 1.2 or later, and at the moment can be installed
-by cloning the repository then running::
-
-    python setup.py install
-
-However, we will soon release a version on PyPI, at which point it will be
-possible to do::
+This extension requires Sphinx 1.2 or later, and can be installed with::
 
     pip install sphinx-automodapi
 

@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.1 (unreleased)
+0.1 (2016-12-12)
 ----------------
 
 - Fixed a bug that caused the automodapi directive to not work properly when
