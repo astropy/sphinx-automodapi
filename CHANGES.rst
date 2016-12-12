@@ -4,7 +4,7 @@ Changes in sphinx-automodapi
 0.2 (unreleased)
 ----------------
 
-- No changes yet.
+- Suppress warning about re-defining autoattribute in recent versions of Sphinx.
 
 0.1 (2016-12-12)
 ----------------
