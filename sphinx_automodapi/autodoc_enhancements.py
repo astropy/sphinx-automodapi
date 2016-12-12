@@ -122,4 +122,10 @@ def setup(app):
             app._warning = _oldwarn
             app._warncount = _oldwarncount
     else:
-        app.add_autodocumenter(AttributeDocumenter)
+        suppress_warnigns_orig = app.config.suppress_warnings[:]
+        if 'app.add_directive' not in app.config.suppress_warnings:
+            app.config.suppress_warnings.append('app.add_directive')
+        try:
+            app.add_autodocumenter(AttributeDocumenter)
+        finally:
+            app.config.suppress_warnings = suppress_warnigns_orig
