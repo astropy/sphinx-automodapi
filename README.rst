@@ -1,4 +1,4 @@
-|Travis Status| |AppVeyor status| |Coverage Status|
+|Travis Status| |AppVeyor status| |Coverage Status| |PyPI|
 
 About
 =====
@@ -19,3 +19,5 @@ package.*
    :target: https://ci.appveyor.com/project/Astropy/sphinx-automodapi/branch/master
 .. |Coverage Status| image:: https://coveralls.io/repos/github/astropy/sphinx-automodapi/badge.svg?branch=master
    :target: https://coveralls.io/github/astropy/sphinx-automodapi?branch=master
+.. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
+   :target: https://pypi.python.org/pypi/sphinx-automodapi
