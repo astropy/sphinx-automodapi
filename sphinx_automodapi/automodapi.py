@@ -383,7 +383,11 @@ def process_automodapi(app, docname, source):
 def setup(app):
 
     app.setup_extension('sphinx.ext.autosummary')
-    app.setup_extension('sphinx_automodapi.automodsumm')
+
+    # Note: we use __name__ here instead of just writing the module name in
+    #       case this extension is bundled into another package
+    from . import automodsumm
+    app.setup_extension(automodsumm.__name__)
 
     app.connect('source-read', process_automodapi)
 

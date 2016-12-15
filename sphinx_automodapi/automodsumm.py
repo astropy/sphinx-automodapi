@@ -291,12 +291,14 @@ def automodsumm_to_autosummary_lines(fn, app):
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
     with open(fullfn) as fr:
-        if 'sphinx_automodapi.automodapi' in app._extensions:
-            from sphinx_automodapi.automodapi import automodapi_replace
+        # Note: we use __name__ here instead of just writing the module name in
+        #       case this extension is bundled into another package
+        from . import automodapi
+        if automodapi.__name__ in app._extensions:
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
             docname = os.path.splitext(fn)[0]
-            filestr = automodapi_replace(fr.read(), app, True, docname, False)
+            filestr = automodapi.automodapi_replace(fr.read(), app, True, docname, False)
         else:
             filestr = fr.read()
 
@@ -606,7 +608,10 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 def setup(app):
 
     # need autodoc fixes
-    app.setup_extension('sphinx_automodapi.autodoc_enhancements')
+    # Note: we use __name__ here instead of just writing the module name in
+    #       case this extension is bundled into another package
+    from . import autodoc_enhancements
+    app.setup_extension(autodoc_enhancements.__name__)
 
     # need inheritance-diagram for automod-diagram
     app.setup_extension('sphinx.ext.inheritance_diagram')
