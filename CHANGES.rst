@@ -4,7 +4,11 @@ Changes in sphinx-automodapi
 0.2 (unreleased)
 ----------------
 
-- Suppress warning about re-defining autoattribute in recent versions of Sphinx.
+- Suppress warning about re-defining autoattribute in recent versions of
+  Sphinx. [#8]
+
+- Avoid hard-coding sphinx_automodapi module name in case this extension is
+  bundled into another package. [#12]
 
 0.1 (2016-12-12)
 ----------------
