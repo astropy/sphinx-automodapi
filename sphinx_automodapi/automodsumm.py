@@ -439,7 +439,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             # a :toctree: option
             continue
 
-        path = os.path.abspath(path)
+        path = os.path.abspath(os.path.join(base_path, path))
         ensuredir(path)
 
         try:
