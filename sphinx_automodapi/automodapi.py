@@ -186,8 +186,11 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         if dotoctree:
             toctreestr = ':toctree: '
             api_dir = os.path.join(app.srcdir, app.config.automodapi_toctreedirnm)
-            doc_path = os.path.join(app.srcdir, docname)
-            toctreestr += os.path.relpath(api_dir, os.path.dirname(doc_path))
+            if docname is None:
+                toctreestr += api_dir
+            else:
+                doc_path = os.path.join(app.srcdir, docname)
+                toctreestr += os.path.relpath(api_dir, os.path.dirname(doc_path))
         else:
             toctreestr = ''
 

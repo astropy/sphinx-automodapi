@@ -9,7 +9,7 @@ Classes
 
 .. automodsumm:: sphinx_automodapi.tests.example_module.classes
     :classes-only:
-    :toctree: api/
+    :toctree: api
     :skip: Spam
 
 Class Inheritance Diagram
@@ -19,4 +19,3 @@ Class Inheritance Diagram
     :private-bases:
     :parts: 1
     :skip: Spam
-
