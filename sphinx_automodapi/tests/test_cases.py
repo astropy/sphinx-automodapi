@@ -59,7 +59,7 @@ def test_run_full_case(tmpdir, case_dir):
     input_dir = os.path.join(case_dir, 'input')
     output_dir = os.path.join(case_dir, 'output')
 
-    src_dir = tmpdir.mkdir('src').strpath
+    docs_dir = tmpdir.mkdir('docs').strpath
 
     conf = deepcopy(DEFAULT_CONF)
     conf.update({'automodapi_toctreedirnm': 'api',
@@ -69,16 +69,18 @@ def test_run_full_case(tmpdir, case_dir):
     if os.path.basename(case_dir) == 'mixed_toplevel':
         conf['extensions'].append('sphinx_automodapi.smart_resolver')
 
-    write_conf(os.path.join(src_dir, 'conf.py'), conf)
+    write_conf(os.path.join(docs_dir, 'conf.py'), conf)
 
     for input_file in glob.glob(os.path.join(input_dir, '*')):
-        shutil.copy(input_file, os.path.join(src_dir, os.path.basename(input_file)))
+        shutil.copy(input_file, os.path.join(docs_dir, os.path.basename(input_file)))
 
     start_dir = os.path.abspath('.')
 
+    src_dir = 'src' if 'source_dir' in case_dir else '.'
+
     try:
-        os.chdir(src_dir)
-        status = build_main(argv=['sphinx-build', '-W', '-b', 'html', '.', 'build/_html'])
+        os.chdir(docs_dir)
+        status = build_main(argv=['sphinx-build', '-W', '-b', 'html', src_dir, 'build/_html'])
     finally:
         os.chdir(start_dir)
 
@@ -89,7 +91,7 @@ def test_run_full_case(tmpdir, case_dir):
         for filename in filenames:
             path_reference = os.path.join(root, filename)
             path_relative = os.path.relpath(path_reference, output_dir)
-            path_actual = os.path.join(src_dir, path_relative)
+            path_actual = os.path.join(docs_dir, path_relative)
             assert os.path.exists(path_actual)
             actual = open(path_actual).read()
             reference = open(path_reference).read()
