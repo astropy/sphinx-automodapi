@@ -9,7 +9,7 @@ Classes
 
 .. automodsumm:: sphinx_automodapi.tests.example_module.classes
     :classes-only:
-    :toctree: api/
+    :toctree: api
 
 Class Inheritance Diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^

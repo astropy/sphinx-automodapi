@@ -10,6 +10,8 @@ Changes in sphinx-automodapi
 - Avoid hard-coding sphinx_automodapi module name in case this extension is
   bundled into another package. [#12]
 
+- Fix use of automodapi when source files are inside a source directory. [#16]
+
 0.1 (2016-12-12)
 ----------------
 
