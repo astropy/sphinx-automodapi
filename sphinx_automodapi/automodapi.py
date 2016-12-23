@@ -180,15 +180,17 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
     spl = _automodapirex.split(sourcestr)
     if len(spl) > 1:  # automodsumm is in this document
 
+        # Use app.srcdir because api folder should be inside source folder not
+        # at folder where sphinx is run.
+
         if dotoctree:
             toctreestr = ':toctree: '
-            dirnm = app.config.automodapi_toctreedirnm
-            if not dirnm.endswith("/"):
-                dirnm += "/"
-            if docname is not None:
-                toctreestr += '../' * docname.count('/') + dirnm
+            api_dir = os.path.join(app.srcdir, app.config.automodapi_toctreedirnm)
+            if docname is None:
+                doc_path = '.'
             else:
-                toctreestr += dirnm
+                doc_path = os.path.join(app.srcdir, docname)
+            toctreestr += os.path.relpath(api_dir, os.path.dirname(doc_path))
         else:
             toctreestr = ''
 

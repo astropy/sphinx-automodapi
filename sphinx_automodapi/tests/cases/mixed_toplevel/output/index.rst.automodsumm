@@ -1,14 +1,14 @@
 .. currentmodule:: sphinx_automodapi.tests.example_module
 
 .. autosummary::
-    :toctree: api/
+    :toctree: api
 
     add
     multiply
 .. currentmodule:: sphinx_automodapi.tests.example_module
 
 .. autosummary::
-    :toctree: api/
+    :toctree: api
 
     Egg
     Spam

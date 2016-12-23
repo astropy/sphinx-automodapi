@@ -9,14 +9,14 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.tests.example_module
     :functions-only:
-    :toctree: api/
+    :toctree: api
 
 Classes
 ^^^^^^^
 
 .. automodsumm:: sphinx_automodapi.tests.example_module
     :classes-only:
-    :toctree: api/
+    :toctree: api
 
 Class Inheritance Diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^
