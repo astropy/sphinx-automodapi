@@ -65,14 +65,14 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :functions-only:
-    :toctree: ./api
+    :toctree: api
 
 Classes
 ^^^^^^^
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :classes-only:
-    :toctree: ./api
+    :toctree: api
 
 Class Inheritance Diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -136,14 +136,14 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :functions-only:
-    :toctree: ./api
+    :toctree: api
 
 Classes
 ^^^^^^^
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :classes-only:
-    :toctree: ./api
+    :toctree: api
 
 
 This comes after
@@ -178,14 +178,14 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :functions-only:
-    :toctree: ./api
+    :toctree: api
 
 Classes
 *******
 
 .. automodsumm:: sphinx_automodapi.tests.test_automodapi
     :classes-only:
-    :toctree: ./api
+    :toctree: api
 
 Class Inheritance Diagram
 *************************
@@ -237,7 +237,7 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.automodapi
     :functions-only:
-    :toctree: ./api
+    :toctree: api
 
 
 This comes after
@@ -280,7 +280,7 @@ Functions
 
 .. automodsumm:: sphinx_automodapi.automodapi
     :functions-only:
-    :toctree: ./api
+    :toctree: api
     :skip: something1,something2
 
 
@@ -348,7 +348,7 @@ Functions
 
 .. automodsumm:: apyhtest_eva.unit02
     :functions-only:
-    :toctree: ./api
+    :toctree: api
 
 This comes after
 """.format(empty='')

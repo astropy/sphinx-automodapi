@@ -12,6 +12,7 @@ import pytest
 
 from copy import deepcopy, copy
 from sphinx import build_main
+from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
@@ -69,14 +70,20 @@ def test_run_full_case(tmpdir, case_dir):
     if os.path.basename(case_dir) == 'mixed_toplevel':
         conf['extensions'].append('sphinx_automodapi.smart_resolver')
 
-    write_conf(os.path.join(docs_dir, 'conf.py'), conf)
-
-    for input_file in glob.glob(os.path.join(input_dir, '*')):
-        shutil.copy(input_file, os.path.join(docs_dir, os.path.basename(input_file)))
-
     start_dir = os.path.abspath('.')
 
     src_dir = 'src' if 'source_dir' in case_dir else '.'
+
+    ensuredir(os.path.join(docs_dir, src_dir))
+
+    write_conf(os.path.join(os.path.join(docs_dir, src_dir), 'conf.py'), conf)
+
+    for root, dirnames, filenames in os.walk(input_dir):
+        for filename in filenames:
+            root_dir = os.path.join(docs_dir, os.path.relpath(root, input_dir))
+            ensuredir(root_dir)
+            input_file = os.path.join(root, filename)
+            shutil.copy(input_file, root_dir)
 
     try:
         os.chdir(docs_dir)
