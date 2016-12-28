@@ -14,6 +14,31 @@ else:
     def iteritems(dictionary):
         return dictionary.iteritems()
 
+SPACE_NEWLINE = " " + os.linesep
+SINGLE_NEWLINE = os.linesep
+DOUBLE_NEWLINE = os.linesep * 2
+TRIPLE_NEWLINE = os.linesep * 3
+
+
+def cleanup_whitespace(text):
+    """
+    Make sure there are never more than two consecutive newlines, and that
+    there are no trailing whitespaces.
+    """
+
+    # Get rid of overall leading/trailing whitespace
+    text = text.strip() + os.linesep
+
+    # Get rid of trailing whitespace on each line
+    while SPACE_NEWLINE in text:
+        text = text.replace(SPACE_NEWLINE, SINGLE_NEWLINE)
+
+    # Avoid too many consecutive newlines
+    while TRIPLE_NEWLINE in text:
+        text = text.replace(TRIPLE_NEWLINE, DOUBLE_NEWLINE)
+
+    return text
+
 
 def find_mod_objs(modname, onlylocals=False):
     """ Returns all the public attributes of a module referenced by name.

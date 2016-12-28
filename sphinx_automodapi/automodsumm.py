@@ -85,7 +85,7 @@ from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
-from .utils import find_mod_objs
+from .utils import find_mod_objs, cleanup_whitespace
 
 
 def _str_list_converter(argument):
@@ -568,7 +568,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
             ns['name'] = parts[-1]
 
             ns['objtype'] = doc.objtype
-            ns['underline'] = len(name) * '='
+            ns['underline'] = len(obj_name) * '='
 
             # We now check whether a file for reference footnotes exists for
             # the module being documented. We first check if the
@@ -600,7 +600,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                 ns['referencefile'] = os.path.join(*ref_file_rel_segments)
 
             rendered = template.render(**ns)
-            f.write(rendered)
+            f.write(cleanup_whitespace(rendered))
         finally:
             f.close()
 
