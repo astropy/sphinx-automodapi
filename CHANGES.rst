@@ -12,6 +12,8 @@ Changes in sphinx-automodapi
 
 - Fix use of automodapi when source files are inside a source directory. [#16]
 
+- Make sure generated rst is tidy and doesn't include extraneous whitespace. [#18]
+
 0.1 (2016-12-12)
 ----------------
 
