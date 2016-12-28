@@ -14,10 +14,10 @@ else:
     def iteritems(dictionary):
         return dictionary.iteritems()
 
-SPACE_NEWLINE = " " + os.linesep
-SINGLE_NEWLINE = os.linesep
-DOUBLE_NEWLINE = os.linesep * 2
-TRIPLE_NEWLINE = os.linesep * 3
+SPACE_NEWLINE = ' \n'
+SINGLE_NEWLINE = '\n'
+DOUBLE_NEWLINE = '\n\n'
+TRIPLE_NEWLINE = '\n\n\n'
 
 
 def cleanup_whitespace(text):
@@ -27,7 +27,7 @@ def cleanup_whitespace(text):
     """
 
     # Get rid of overall leading/trailing whitespace
-    text = text.strip() + os.linesep
+    text = text.strip() + '\n'
 
     # Get rid of trailing whitespace on each line
     while SPACE_NEWLINE in text:
