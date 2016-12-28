@@ -14,6 +14,33 @@ else:
     def iteritems(dictionary):
         return dictionary.iteritems()
 
+# We use \n instead of os.linesep because even on Windows, the generated files
+# use \n as the newline character.
+SPACE_NEWLINE = ' \n'
+SINGLE_NEWLINE = '\n'
+DOUBLE_NEWLINE = '\n\n'
+TRIPLE_NEWLINE = '\n\n\n'
+
+
+def cleanup_whitespace(text):
+    """
+    Make sure there are never more than two consecutive newlines, and that
+    there are no trailing whitespaces.
+    """
+
+    # Get rid of overall leading/trailing whitespace
+    text = text.strip() + '\n'
+
+    # Get rid of trailing whitespace on each line
+    while SPACE_NEWLINE in text:
+        text = text.replace(SPACE_NEWLINE, SINGLE_NEWLINE)
+
+    # Avoid too many consecutive newlines
+    while TRIPLE_NEWLINE in text:
+        text = text.replace(TRIPLE_NEWLINE, DOUBLE_NEWLINE)
+
+    return text
+
 
 def find_mod_objs(modname, onlylocals=False):
     """ Returns all the public attributes of a module referenced by name.

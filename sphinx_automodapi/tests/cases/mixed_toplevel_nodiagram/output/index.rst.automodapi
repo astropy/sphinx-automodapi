@@ -17,4 +17,3 @@ Classes
 .. automodsumm:: sphinx_automodapi.tests.example_module
     :classes-only:
     :toctree: api
-
