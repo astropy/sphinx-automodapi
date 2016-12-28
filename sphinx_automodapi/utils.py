@@ -14,6 +14,8 @@ else:
     def iteritems(dictionary):
         return dictionary.iteritems()
 
+# We use \n instead of os.linesep because even on Windows, the generated files
+# use \n as the newline character.
 SPACE_NEWLINE = ' \n'
 SINGLE_NEWLINE = '\n'
 DOUBLE_NEWLINE = '\n\n'
