@@ -52,7 +52,7 @@ It accepts the following options:
         allows the user to overrride the global setting.
 
 
-This extension also adds two sphinx configuration options:
+This extension also adds three sphinx configuration options:
 
 * ``automodapi_toctreedirnm``
     This must be a string that specifies the name of the directory the
