@@ -20,8 +20,10 @@ setup(
     url='http://astropy.org',
     zip_safe=False,
     packages=['sphinx_automodapi', 'sphinx_automodapi.tests', 'sphinx_automodapi.tests.example_module'],
-    package_data = {'sphinx_automodapi': ['templates/*/*.rst'],
-                    'sphinx_automodapi.tests': ['cases/*/*', 'cases/*/*/*', 'cases/*/*/*/*']},
+    package_data={
+        'sphinx_automodapi': ['templates/*/*.rst'],
+        'sphinx_automodapi.tests': [
+            'cases/*/*.*', 'cases/*/*/*.*', 'cases/*/*/*/*.*']},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
