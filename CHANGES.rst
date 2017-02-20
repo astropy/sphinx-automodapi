@@ -1,10 +1,10 @@
 Changes in sphinx-automodapi
 ============================
 
-0.3 (unreleased)
+0.3 (2017-02-20)
 ----------------
 
-- No changes yet.
+- Fixed installation on Python 3.4. [#21]
 
 0.2 (2016-12-28)
 ----------------
