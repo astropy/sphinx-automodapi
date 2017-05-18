@@ -294,7 +294,8 @@ def automodsumm_to_autosummary_lines(fn, app):
         # Note: we use __name__ here instead of just writing the module name in
         #       case this extension is bundled into another package
         from . import automodapi
-        if automodapi.__name__ in app._extensions:
+
+        if automodapi.__name__ in getattr(app, '_extensions', 'extensions'):
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
             docname = os.path.splitext(fn)[0]
