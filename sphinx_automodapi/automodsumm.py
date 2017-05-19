@@ -295,7 +295,12 @@ def automodsumm_to_autosummary_lines(fn, app):
         #       case this extension is bundled into another package
         from . import automodapi
 
-        if automodapi.__name__ in getattr(app, '_extensions', 'extensions'):
+        try:
+            extensions = app.extensions
+        except AttributeError:  # Sphinx <1.6
+            extensions = app._extensions
+
+        if automodapi.__name__ in extensions:
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
             docname = os.path.splitext(fn)[0]
