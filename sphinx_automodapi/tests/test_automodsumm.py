@@ -33,9 +33,9 @@ class FakeApp(object):
         self.builder = FakeBuilder(srcdir=srcdir)
         self.info = []
         self.warnings = []
-        self._extensions = []
+        self.extensions = []
         if automodapipresent:
-            self._extensions.append('sphinx_automodapi.automodapi')
+            self.extensions.append('sphinx_automodapi.automodapi')
 
     def info(self, msg, loc):
         self.info.append((msg, loc))
