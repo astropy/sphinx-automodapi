@@ -7,13 +7,16 @@ import os
 import sys
 import glob
 import shutil
+from distutils.version import LooseVersion
 
 import pytest
 
 from copy import deepcopy, copy
-from sphinx import build_main
+from sphinx import build_main, __version__
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
+
+SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
@@ -87,7 +90,11 @@ def test_run_full_case(tmpdir, case_dir):
 
     try:
         os.chdir(docs_dir)
-        status = build_main(argv=['sphinx-build', '-W', '-b', 'html', src_dir, 'build/_html'])
+        if SPHINX_LT_17:
+            status = build_main(argv=['sphinx-build', '-W', '-b', 'html', src_dir, 'build/_html'])
+        else:
+            # As of Sphinx 1.7, the first argument is now no longer ignored
+            status = build_main(argv=['-W', '-b', 'html', src_dir, 'build/_html'])
     finally:
         os.chdir(start_dir)
 
