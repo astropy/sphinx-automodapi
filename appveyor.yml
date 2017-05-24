@@ -41,4 +41,4 @@ install:
 build: false
 
 test_script:
-  - "%CMD_IN_ENV% py.test sphinx_automodapi"
+  - "%CMD_IN_ENV% py.test sphinx_automodapi -v"
