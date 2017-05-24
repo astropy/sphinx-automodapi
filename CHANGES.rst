@@ -6,6 +6,11 @@ Changes in sphinx-automodapi
 
 - Fix compatibility with Sphinx 1.6 and 1.7. [#22, #23]
 
+- Introduce a new ``:include-all-objects:`` option to ``automodapi`` that will
+  include not just functions and classes in a module, but also all other
+  objects. To help this, introduce a new ``:variables-only:`` option for
+  ``automodsumm``. [#24]
+
 0.3 (2017-02-20)
 ----------------
 

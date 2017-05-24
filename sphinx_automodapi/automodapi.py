@@ -9,6 +9,11 @@ module/package is desired in the documentation, use `automodule`_ instead of
 
 It accepts the following options:
 
+    * ``:include-all-objects:``
+        If present, include not just functions and classes, but all objects.
+        This includes variables, for which a possible docstring after the
+        variable definition will be shown.
+
     * ``:no-inheritance-diagram:``
         If present, the inheritance diagram will not be shown even if
         the module/package has classes.
@@ -121,6 +126,15 @@ Functions
     {clsfuncoptions}
 """
 
+automod_templ_vars = """
+Variables
+{otherhds}
+
+.. automodsumm:: {modname}
+    :variables-only:
+    {clsfuncoptions}
+"""
+
 automod_templ_inh = """
 Class Inheritance Diagram
 {clsinhsechds}
@@ -209,6 +223,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             inhdiag = maindocstr = top_head = True
             hds = '-^'
             allowedpkgnms = []
+            allowothers = False
 
             # look for actual options
             unknownops = []
@@ -230,6 +245,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     inherited_members = True
                 elif opname == 'no-inherited-members':
                     inherited_members = False
+                elif opname == 'include-all-objects':
+                    allowothers = True
                 else:
                     unknownops.append(opname)
 
@@ -256,7 +273,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 if warnings:
                     app.warn(msg, location)
 
-            ispkg, hascls, hasfuncs = _mod_info(modnm, toskip, onlylocals=onlylocals)
+            ispkg, hascls, hasfuncs, hasother = _mod_info(
+                modnm, toskip, onlylocals=onlylocals)
 
             # add automodule directive only if no-main-docstr isn't present
             if maindocstr:
@@ -304,6 +322,12 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 newstrs.append(automod_templ_classes.format(
                     modname=modnm,
                     clshds=h2 * 7,
+                    clsfuncoptions=clsfuncoptionstr))
+
+            if allowothers and hasother:
+                newstrs.append(automod_templ_vars.format(
+                    modname=modnm,
+                    otherhds=h2 * 9,
                     clsfuncoptions=clsfuncoptionstr))
 
             if inhdiag and hascls:
@@ -359,13 +383,15 @@ def _mod_info(modname, toskip=[], onlylocals=True):
     it has classes or functions.
     """
 
-    hascls = hasfunc = False
+    hascls = hasfunc = hasother = False
 
     for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=onlylocals)):
         if localnm not in toskip:
             hascls = hascls or inspect.isclass(obj)
             hasfunc = hasfunc or inspect.isroutine(obj)
-            if hascls and hasfunc:
+            hasother = hasother or (not inspect.isclass(obj) and
+                                    not inspect.isroutine(obj))
+            if hascls and hasfunc and hasother:
                 break
 
     # find_mod_objs has already imported modname
@@ -375,7 +401,7 @@ def _mod_info(modname, toskip=[], onlylocals=True):
     ispkg = (hasattr(pkg, '__file__') and isinstance(pkg.__file__, str) and
              os.path.split(pkg.__file__)[1].startswith('__init__.py'))
 
-    return ispkg, hascls, hasfunc
+    return ispkg, hascls, hasfunc, hasother
 
 
 def process_automodapi(app, docname, source):
