@@ -34,7 +34,7 @@ install:
     - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
 
 script:
-    - py.test --cov sphinx_automodapi sphinx_automodapi
+    - py.test --cov sphinx_automodapi sphinx_automodapi -v
 
 after_success:
     - coveralls
