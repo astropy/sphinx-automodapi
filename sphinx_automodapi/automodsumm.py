@@ -16,12 +16,18 @@ options:
     * ``:classes-only:``
         If present, the autosummary table will only contain entries for
         classes. This cannot be used at the same time with
-        ``:functions-only:`` .
+        ``:functions-only:`` or ``:variables-only:``.
 
     * ``:functions-only:``
         If present, the autosummary table will only contain entries for
         functions. This cannot be used at the same time with
-        ``:classes-only:`` .
+        ``:classes-only:`` or ``:variables-only:``.
+
+    * ``:variables-only:``
+        If present, the autosummary table will only contain entries for
+        variables (everything except functions and classes). This cannot
+        be used at the same time with ``:classes-only:`` or
+        ``:functions-only:``.
 
     * ``:skip: obj1, [obj2, obj3, ...]``
         If present, specifies that the listed objects should be skipped
@@ -107,6 +113,7 @@ class Automodsumm(Autosummary):
     option_spec = dict(Autosummary.option_spec)
     option_spec['functions-only'] = flag
     option_spec['classes-only'] = flag
+    option_spec['variables-only'] = flag
     option_spec['skip'] = _str_list_converter
     option_spec['allowed-package-names'] = _str_list_converter
     option_spec['inherited-members'] = flag
@@ -131,6 +138,11 @@ class Automodsumm(Autosummary):
             # Be sure to respect functions-only and classes-only.
             funconly = 'functions-only' in self.options
             clsonly = 'classes-only' in self.options
+            varonly = 'variables-only' in self.options
+            if [clsonly, funconly, varonly].count(True) > 1:
+                self.warning('more than one of functions-only, classes-only, '
+                             'or variables-only defined. Ignoring.')
+                clsonly = funconly = varonly = False
 
             skipnames = []
             if 'skip' in self.options:
@@ -144,7 +156,7 @@ class Automodsumm(Autosummary):
                               'but they were not present.  Ignoring.'
                               .format(objs=option_skipnames, mod=modname))
 
-            if funconly and not clsonly:
+            if funconly:
                 cont = []
                 for nm, obj in zip(localnames, objs):
                     if nm not in skipnames and inspect.isroutine(obj):
@@ -154,10 +166,13 @@ class Automodsumm(Autosummary):
                 for nm, obj in zip(localnames, objs):
                     if nm not in skipnames and inspect.isclass(obj):
                         cont.append(nm)
+            elif varonly:
+                cont = []
+                for nm, obj in zip(localnames, objs):
+                    if nm not in skipnames and not (inspect.isclass(obj) or
+                                                    inspect.isroutine(obj)):
+                        cont.append(nm)
             else:
-                if clsonly and funconly:
-                    self.warning('functions-only and classes-only both '
-                                 'defined. Skipping.')
                 cont = [nm for nm in localnames if nm not in skipnames]
 
             self.content = cont
@@ -325,11 +340,12 @@ def automodsumm_to_autosummary_lines(fn, app):
                                                       opssecs, remainders)):
         allindent = i1 + ('    ' if i2 is None else i2)
 
-        # filter out functions-only and classes-only options if present
+        # filter out functions-only, classes-only, and ariables-only
+        # options if present.
         oplines = ops.split('\n')
         toskip = []
         allowedpkgnms = []
-        funcsonly = clssonly = False
+        funcsonly = clssonly = varsonly = False
         for i, ln in reversed(list(enumerate(oplines))):
             if ':functions-only:' in ln:
                 funcsonly = True
@@ -337,15 +353,18 @@ def automodsumm_to_autosummary_lines(fn, app):
             if ':classes-only:' in ln:
                 clssonly = True
                 del oplines[i]
+            if ':variables-only:' in ln:
+                varsonly = True
+                del oplines[i]
             if ':skip:' in ln:
                 toskip.extend(_str_list_converter(ln.replace(':skip:', '')))
                 del oplines[i]
             if ':allowed-package-names:' in ln:
                 allowedpkgnms.extend(_str_list_converter(ln.replace(':allowed-package-names:', '')))
                 del oplines[i]
-        if funcsonly and clssonly:
-            msg = ('Defined both functions-only and classes-only options. '
-                   'Skipping this directive.')
+        if [funcsonly, clssonly, varsonly].count(True) > 1:
+            msg = ('Defined more than one of functions-only, classes-only, '
+                   'and variables-only.  Skipping this directive.')
             lnnum = sum([spl[j].count('\n') for j in range(i * 5 + 1)])
             app.warn('[automodsumm]' + msg, (fn, lnnum))
             continue
@@ -366,6 +385,8 @@ def automodsumm_to_autosummary_lines(fn, app):
             if funcsonly and not inspect.isroutine(obj):
                 continue
             if clssonly and not inspect.isclass(obj):
+                continue
+            if varsonly and (inspect.isclass(obj) or inspect.isroutine(obj)):
                 continue
             newlines.append(allindent + nm)
 
