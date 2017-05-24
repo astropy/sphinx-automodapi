@@ -1,6 +1,11 @@
 Changes in sphinx-automodapi
 ============================
 
+0.5 (unreleased)
+----------------
+
+- No changes yet.
+
 0.4 (2017-05-24)
 ----------------
 
