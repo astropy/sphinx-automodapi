@@ -8,7 +8,7 @@ Changes in sphinx-automodapi
 
 - Introduce a new ``:include-all-objects:`` option to ``automodapi`` that will
   include not just functions and classes in a module, but also all other
-  objects. To help this, introduce a new ``:global-variables-only:`` option for
+  objects. To help this, introduce a new ``:variables-only:`` option for
   ``automodsumm``. [#24]
 
 0.3 (2017-02-20)
