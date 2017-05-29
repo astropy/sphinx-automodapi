@@ -453,7 +453,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 #    info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
 
     # remove possible duplicates
-    items = dict([(item, True) for item in items]).keys()
+    items = list(set(items))
 
     # keep track of new files
     new_files = []

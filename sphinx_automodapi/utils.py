@@ -195,6 +195,7 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
             base_indent = m.group(1)
             toctree = None
             template = None
+            inherited_members = None
             continue
 
         m = automodule_re.search(line)
