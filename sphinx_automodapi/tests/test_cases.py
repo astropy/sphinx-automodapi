@@ -40,7 +40,8 @@ DEFAULT_CONF = {'source_suffix': '.rst',
                 'extensions': ['sphinx.ext.intersphinx', 'sphinx_automodapi.automodapi'],
                 'suppress_warnings': ['app.add_directive', 'app.add_node'],
                 'intersphinx_mapping': intersphinx_mapping,
-                'nitpick_ignore': [('py:class', 'sphinx_automodapi.tests.example_module.classes.BaseSpam')]}
+                'nitpick_ignore': [('py:class', 'sphinx_automodapi.tests.example_module.classes.BaseSpam'),
+                                   ('py:class', 'sphinx_automodapi.tests.example_module.other_classes.BaseFoo')]}
 
 
 
