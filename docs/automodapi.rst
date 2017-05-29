@@ -10,7 +10,7 @@ The main Sphinx directive provided by the sphinx-automodapi package is the
 ``automodapi`` directive. As described in the :ref:`quickstart` guide,
 before you use the directive, you will need to make sure the following
 extension is included in the ``extensions`` entry of your documentation's
-``conf.py`` file:
+``conf.py`` file::
 
     extensions = ['sphinx_automodapi.automodapi']
 
