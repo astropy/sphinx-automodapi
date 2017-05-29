@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.5 (unreleased)
+0.5 (2017-05-29)
 ----------------
 
 - Fix a bug that caused the :inherited-members: option to apply to all subsequent
