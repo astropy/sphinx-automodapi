@@ -36,6 +36,7 @@ env:
   global:
     - CONDA_DEPENDENCIES="setuptools sphinx cython pytest-cov"
     - PIP_DEPENDENCIES="coveralls"
+    - HOMEBREW_NO_AUTO_UPDATE=1
 
 before_install:
     - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
