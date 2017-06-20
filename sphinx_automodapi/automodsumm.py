@@ -85,7 +85,9 @@ package. It accepts no options.
 
 import inspect
 import os
+import platform
 import re
+import sys
 
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
@@ -305,7 +307,14 @@ def automodsumm_to_autosummary_lines(fn, app):
 
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
-    with open(fullfn) as fr:
+    # https://github.com/astropy/sphinx-automodapi/issues/28
+    if (platform.system().lower().startswith('win') and
+            sys.version_info[0] >= 3):
+        open_kwargs = {'encoding': 'utf8'}
+    else:
+        open_kwargs = {}
+
+    with open(fullfn, **open_kwargs) as fr:
         # Note: we use __name__ here instead of just writing the module name in
         #       case this extension is bundled into another package
         from . import automodapi
@@ -319,7 +328,8 @@ def automodsumm_to_autosummary_lines(fn, app):
             # Must do the automodapi on the source to get the automodsumm
             # that might be in there
             docname = os.path.splitext(fn)[0]
-            filestr = automodapi.automodapi_replace(fr.read(), app, True, docname, False)
+            filestr = automodapi.automodapi_replace(fr.read(), app, True,
+                                                    docname, False)
         else:
             filestr = fr.read()
 
