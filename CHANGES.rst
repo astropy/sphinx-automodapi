@@ -4,7 +4,7 @@ Changes in sphinx-automodapi
 0.6 (unreleased)
 ----------------
 
-- No changes yet.
+- Fix encoding issues on platforms that default to e.g. ASCII encoding. [#33]
 
 0.5 (2017-05-29)
 ----------------
