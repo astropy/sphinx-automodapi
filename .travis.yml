@@ -33,12 +33,23 @@ env:
     - PYTHON_VERSION=3.5 SPHINX_VERSION=1.5
     - PYTHON_VERSION=3.6 SPHINX_VERSION=1.6 CONDA_CHANNELS="conda-forge"
     - PYTHON_VERSION=3.6 SPHINX_VERSION=dev CONDA_DEPENDENCIES="setuptools cython pytest-cov"
+    - PYTHON_VERSION=3.6 LOCALE=C
   global:
+    - LOCALE=default
     - CONDA_DEPENDENCIES="setuptools sphinx cython pytest-cov"
     - PIP_DEPENDENCIES="coveralls"
     - HOMEBREW_NO_AUTO_UPDATE=1
 
 before_install:
+
+    # Make sure that things work even if the locale is set to C (which effectively means ASCII).
+    # Some of the input rst files have unicode characters and we need to deal with this gracefully.
+    - if [[ $LOCALE == C ]]; then
+        export LC_CTYPE=C;
+        export LC_ALL=C;
+        export LANG=C;
+      fi
+
     - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
 
 install:
