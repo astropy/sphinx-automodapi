@@ -86,6 +86,7 @@ package. It accepts no options.
 import inspect
 import os
 import re
+import io
 
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
@@ -305,7 +306,7 @@ def automodsumm_to_autosummary_lines(fn, app):
 
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
-    with open(fullfn) as fr:
+    with io.open(fullfn, encoding='utf8') as fr:
         # Note: we use __name__ here instead of just writing the module name in
         #       case this extension is bundled into another package
         from . import automodapi
