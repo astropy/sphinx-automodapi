@@ -114,6 +114,8 @@ def test_run_full_case(tmpdir, case_dir, parallel):
             path_relative = os.path.relpath(path_reference, output_dir)
             path_actual = os.path.join(docs_dir, path_relative)
             assert os.path.exists(path_actual)
-            actual = io.open(path_actual, encoding='utf8').read()
-            reference = io.open(path_reference, encoding='utf8').read()
+            with io.open(path_actual, encoding='utf8') as f:
+                actual = f.read()
+            with io.open(path_reference, encoding='utf8') as f:
+                reference = f.read()
             assert actual.strip() == reference.strip()

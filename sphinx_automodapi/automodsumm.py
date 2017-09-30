@@ -411,7 +411,7 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
     from sphinx.ext.autosummary import import_by_name, get_documenter
-    from sphinx.ext.autosummary.generate import (_simple_info, _simple_warn)
+    from sphinx.ext.autosummary.generate import _simple_info, _simple_warn
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
