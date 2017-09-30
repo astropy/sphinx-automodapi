@@ -421,3 +421,6 @@ def setup(app):
 
     app.add_config_value('automodapi_toctreedirnm', 'api', True)
     app.add_config_value('automodapi_writereprocessed', False, True)
+
+    return {'parallel_read_safe': True,
+            'parallel_write_safe': True}
