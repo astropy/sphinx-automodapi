@@ -650,3 +650,6 @@ def setup(app):
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
+
+    return {'parallel_read_safe': True,
+            'parallel_write_safe': True}

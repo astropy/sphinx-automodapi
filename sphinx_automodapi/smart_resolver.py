@@ -13,22 +13,58 @@ event, unresolved references are looked up in this dictionary and
 corrected if possible.
 """
 
+import os
+import glob
+import uuid
+import tempfile
 from docutils.nodes import literal, reference
+
+# NOTE: This extension originally used a dictionary stored in app.env to keep
+# the mapping - however, when running the builds in parallel, this dictionary
+# would get populated separately on each reader worker, and there was no way
+# to combine these into a single dictionary for use in missing_reference_handler
+# which is run in serial mode at the end of the build. The solution implemented
+# below is that each worker write a file with its own dictionary using key:value
+# syntax. The prefix for the files is a temporary file MAPPING_PREFIX which is
+# shared by all workers. Since the parallel builds use multiprocessing rather
+# than multi-threading, we then use the process ID as a suffix to the temporary
+# file name to avoid any clashes. In missing_reference_handler we then look for
+# all files with the MAPPING_PREFIX and the right extension. Just to make sure
+# we avoid any issues on systems that may return a filename which could be
+# similar between subsequent builds, we generate a UUID to add to the prefix.
+
+MAPPING_PREFIX = tempfile.mktemp(suffix=str(uuid.uuid4()))
 
 
 def process_docstring(app, what, name, obj, options, lines):
     if isinstance(obj, type):
-        env = app.env
-        if not hasattr(env, 'class_name_mapping'):
-            env.class_name_mapping = {}
-        mapping = env.class_name_mapping
-        mapping[obj.__module__ + '.' + obj.__name__] = name
+        with open("{0}.{1}.ref".format(MAPPING_PREFIX, os.getpid()), 'a') as f:
+            f.write("{0}:{1}\n".format(obj.__module__ + '.' + obj.__name__, name))
+
+
+# NOTE: to avoid re-reading all the files every time there is a missing
+# reference, we store this as a global dictionary. At the moment
+# missing_reference_handler is run in serial mode but if it is ever run in
+# parallel, this should still work since each process will have its own global
+# mapping object.
+
+mapping = None
 
 
 def missing_reference_handler(app, env, node, contnode):
-    if not hasattr(env, 'class_name_mapping'):
-        env.class_name_mapping = {}
-    mapping = env.class_name_mapping
+
+    # Note that this is only global within a process, not across processes,
+    # which is ok (see NOTE above).
+    global mapping
+
+    if mapping is None:
+        # Load in the dictionaries that were stored to files
+        mapping = {}
+        for filename in glob.glob("{0}.*.ref".format(MAPPING_PREFIX)):
+            for line in open(filename):
+                key, value = line.strip().split(':')
+                mapping[key] = value
+
     reftype = node['reftype']
     reftarget = node['reftarget']
     if reftype in ('obj', 'class', 'exc', 'meth'):
@@ -88,5 +124,9 @@ def missing_reference_handler(app, env, node, contnode):
 
 
 def setup(app):
+
     app.connect('autodoc-process-docstring', process_docstring)
     app.connect('missing-reference', missing_reference_handler)
+
+    return {'parallel_read_safe': True,
+            'parallel_write_safe': True}
