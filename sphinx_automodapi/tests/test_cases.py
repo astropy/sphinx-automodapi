@@ -18,6 +18,7 @@ from sphinx import __version__
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
+SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 if SPHINX_LT_17:
@@ -29,7 +30,7 @@ CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
 CASES_DIRS = glob.glob(os.path.join(CASES_ROOT, '*'))
 
-if os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
+if SPHINX_LT_16 or os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
     PARALLEL = {False}
 else:
     PARALLEL = {False, True}
