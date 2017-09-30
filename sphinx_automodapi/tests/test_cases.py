@@ -24,12 +24,16 @@ CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
 CASES_DIRS = glob.glob(os.path.join(CASES_ROOT, '*'))
 
+if os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
+    PARALLEL = {False}
+else:
+    PARALLEL = {False, True}
+
 
 def write_conf(filename, conf):
     with open(filename, 'w') as f:
         for key, value in conf.items():
             f.write("{0} = {1}\n".format(key, repr(conf[key])))
-
 
 
 intersphinx_mapping = {
@@ -46,8 +50,6 @@ DEFAULT_CONF = {'source_suffix': '.rst',
                                    ('py:class', 'sphinx_automodapi.tests.example_module.other_classes.BaseFoo')]}
 
 
-
-
 def setup_function(func):
     # This can be replaced with the docutils_namespace context manager once
     # it is in a stable release of Sphinx
@@ -60,7 +62,7 @@ def teardown_function(func):
     roles._roles = func._roles
 
 
-@pytest.mark.parametrize(('case_dir', 'parallel'), product(CASES_DIRS, (False, True)))
+@pytest.mark.parametrize(('case_dir', 'parallel'), product(CASES_DIRS, PARALLEL))
 def test_run_full_case(tmpdir, case_dir, parallel):
 
     input_dir = os.path.join(case_dir, 'input')
