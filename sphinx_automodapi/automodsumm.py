@@ -295,8 +295,8 @@ def automodsumm_to_autosummary_lines(fn, app):
     app : sphinx.application.Application
         The sphinx Application object
 
-    Return
-    ------
+    Returns
+    -------
     lines : list of str
         Lines for all `automodsumm` entries with the entries replaced by
         `autosummary` and the module's members added.
