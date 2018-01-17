@@ -87,12 +87,16 @@ import inspect
 import os
 import re
 import io
+from distutils.version import LooseVersion
 
+from sphinx import __version__
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
+
+SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 
 def _str_list_converter(argument):
@@ -262,7 +266,7 @@ def process_automodsumm_generation(app):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
             generate_automodsumm_docs(
-                lines, sfn, builder=app.builder, warn=app.warn, info=app.info,
+                lines, sfn, app=app, builder=app.builder, warn=app.warn, info=app.info,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
 
@@ -397,7 +401,7 @@ def automodsumm_to_autosummary_lines(fn, app):
     return newlines
 
 
-def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
+def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
                               info=None, base_path=None, builder=None,
                               template_dir=None,
                               inherited_members=False):
@@ -493,7 +497,11 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
         f = open(fn, 'w')
 
         try:
-            doc = get_documenter(obj, parent)
+
+            if SPHINX_LT_17:
+                doc = get_documenter(obj, parent)
+            else:
+                doc = get_documenter(app, obj, parent)
 
             if template_name is not None:
                 template = template_env.get_template(template_name)
@@ -511,8 +519,10 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
                 items = []
                 for name in dir(obj):
                     try:
-                        documenter = get_documenter(safe_getattr(obj, name),
-                                                    obj)
+                        if SPHINX_LT_17:
+                            documenter = get_documenter(safe_getattr(obj, name), obj)
+                        else:
+                            documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
                     if typ is None or documenter.objtype == typ:
@@ -541,8 +551,10 @@ def generate_automodsumm_docs(lines, srcfn, suffix='.rst', warn=None,
 
                 for name in names:
                     try:
-                        documenter = get_documenter(safe_getattr(obj, name),
-                                                    obj)
+                        if SPHINX_LT_17:
+                            documenter = get_documenter(safe_getattr(obj, name), obj)
+                        else:
+                            documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
                     if typ is None or documenter.objtype == typ:

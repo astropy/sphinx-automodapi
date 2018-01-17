@@ -13,11 +13,16 @@ from distutils.version import LooseVersion
 import pytest
 
 from copy import deepcopy, copy
-from sphinx import build_main, __version__
+from sphinx import __version__
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
+
+if SPHINX_LT_17:
+    from sphinx import build_main
+else:
+    from sphinx.cmd.build import build_main
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
