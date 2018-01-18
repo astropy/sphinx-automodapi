@@ -61,6 +61,7 @@ ams_to_asmry_expected = """\
 
     Automoddiagram
     Automodsumm
+    SPHINX_LT_17
     automodsumm_to_autosummary_lines
     generate_automodsumm_docs
     process_automodsumm_generation
