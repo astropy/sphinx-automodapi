@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.7 (unreleased)
+0.7 (2018-01-18)
 ----------------
 
 - Fix compatibility with Sphinx 1.7.x. [#43]
