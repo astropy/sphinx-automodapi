@@ -19,7 +19,7 @@ setup(
     license='BSD',
     url='http://astropy.org',
     zip_safe=False,
-    install_requires=['sphinx>1.3'],
+    install_requires=['sphinx>=1.3'],
     packages=['sphinx_automodapi', 'sphinx_automodapi.tests', 'sphinx_automodapi.tests.example_module'],
     package_data={
         'sphinx_automodapi': ['templates/*/*.rst'],
