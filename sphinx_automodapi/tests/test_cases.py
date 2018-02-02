@@ -8,6 +8,7 @@ import io
 import sys
 import glob
 import shutil
+from itertools import product
 from distutils.version import LooseVersion
 
 import pytest
@@ -17,6 +18,7 @@ from sphinx import __version__
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
+SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 if SPHINX_LT_17:
@@ -28,12 +30,16 @@ CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
 CASES_DIRS = glob.glob(os.path.join(CASES_ROOT, '*'))
 
+if SPHINX_LT_16 or os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
+    PARALLEL = {False}
+else:
+    PARALLEL = {False, True}
+
 
 def write_conf(filename, conf):
     with open(filename, 'w') as f:
         for key, value in conf.items():
             f.write("{0} = {1}\n".format(key, repr(conf[key])))
-
 
 
 intersphinx_mapping = {
@@ -50,8 +56,6 @@ DEFAULT_CONF = {'source_suffix': '.rst',
                                    ('py:class', 'sphinx_automodapi.tests.example_module.other_classes.BaseFoo')]}
 
 
-
-
 def setup_function(func):
     # This can be replaced with the docutils_namespace context manager once
     # it is in a stable release of Sphinx
@@ -64,8 +68,8 @@ def teardown_function(func):
     roles._roles = func._roles
 
 
-@pytest.mark.parametrize('case_dir', CASES_DIRS)
-def test_run_full_case(tmpdir, case_dir):
+@pytest.mark.parametrize(('case_dir', 'parallel'), product(CASES_DIRS, PARALLEL))
+def test_run_full_case(tmpdir, case_dir, parallel):
 
     input_dir = os.path.join(case_dir, 'input')
     output_dir = os.path.join(case_dir, 'output')
@@ -96,13 +100,16 @@ def test_run_full_case(tmpdir, case_dir):
             input_file = os.path.join(root, filename)
             shutil.copy(input_file, root_dir)
 
+    argv = ['-W', '-b', 'html', src_dir, '_build/html']
+    if parallel:
+        argv.insert(0, '-j 4')
+    if SPHINX_LT_17:
+        # As of Sphinx 1.7, the first argument is now no longer ignored
+        argv.insert(0, 'sphinx-build')
+
     try:
         os.chdir(docs_dir)
-        if SPHINX_LT_17:
-            status = build_main(argv=['sphinx-build', '-W', '-b', 'html', src_dir, 'build/_html'])
-        else:
-            # As of Sphinx 1.7, the first argument is now no longer ignored
-            status = build_main(argv=['-W', '-b', 'html', src_dir, 'build/_html'])
+        status = build_main(argv=argv)
     finally:
         os.chdir(start_dir)
 
@@ -115,6 +122,8 @@ def test_run_full_case(tmpdir, case_dir):
             path_relative = os.path.relpath(path_reference, output_dir)
             path_actual = os.path.join(docs_dir, path_relative)
             assert os.path.exists(path_actual)
-            actual = io.open(path_actual, encoding='utf8').read()
-            reference = io.open(path_reference, encoding='utf8').read()
+            with io.open(path_actual, encoding='utf8') as f:
+                actual = f.read()
+            with io.open(path_reference, encoding='utf8') as f:
+                reference = f.read()
             assert actual.strip() == reference.strip()

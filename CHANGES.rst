@@ -4,7 +4,7 @@ Changes in sphinx-automodapi
 0.8 (unreleased)
 ----------------
 
-- No changes yet.
+- Make all extensions parallel-friendly. [#44]
 
 0.7 (2018-01-18)
 ----------------

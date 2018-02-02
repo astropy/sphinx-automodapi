@@ -25,10 +25,20 @@ def process_docstring(app, what, name, obj, options, lines):
         mapping[obj.__module__ + '.' + obj.__name__] = name
 
 
+def merge_mapping(app, env, docnames, env_other):
+    if not hasattr(env_other, 'class_name_mapping'):
+        return
+    if not hasattr(env, 'class_name_mapping'):
+        env.class_name_mapping = {}
+    env.class_name_mapping.update(env_other.class_name_mapping)
+
+
 def missing_reference_handler(app, env, node, contnode):
+
     if not hasattr(env, 'class_name_mapping'):
         env.class_name_mapping = {}
     mapping = env.class_name_mapping
+
     reftype = node['reftype']
     reftarget = node['reftarget']
     if reftype in ('obj', 'class', 'exc', 'meth'):
@@ -88,5 +98,10 @@ def missing_reference_handler(app, env, node, contnode):
 
 
 def setup(app):
+
     app.connect('autodoc-process-docstring', process_docstring)
     app.connect('missing-reference', missing_reference_handler)
+    app.connect('env-merge-info', merge_mapping)
+
+    return {'parallel_read_safe': True,
+            'parallel_write_safe': True}

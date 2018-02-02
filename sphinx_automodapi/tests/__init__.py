@@ -1,6 +1,6 @@
 import os
-import subprocess as sp
 import sys
+import subprocess as sp
 
 from textwrap import dedent
 

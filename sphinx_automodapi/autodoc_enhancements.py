@@ -133,3 +133,6 @@ def setup(app):
             app.add_autodocumenter(AttributeDocumenter)
         finally:
             app.config.suppress_warnings = suppress_warnigns_orig
+
+    return {'parallel_read_safe': True,
+            'parallel_write_safe': True}
