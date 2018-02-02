@@ -22,6 +22,7 @@ To use this extension, you will need to add the following entry to the
 ``extensions`` list in your Sphinx ``conf.py`` file::
 
     extensions = ['sphinx_automodapi.automodapi']
+    numpydoc_show_class_members = False
 
 You can then add an ``automodapi`` block anywhere that you want to generate
 documentation for a module::
@@ -30,7 +31,8 @@ documentation for a module::
 
 This will add a section with the docstring of the module, followed by a list of
 functions, and by a list of classes. For each function and class, a full API
-page will be generated.
+page will be generated. The ``numpydoc_show_class_members=False`` option is needed
+to avoid having methods and attributes of classes being shown multiple times.
 
 By default, sphinx_automodapi will try and make a diagram showing an
 inheritance graph of all the classes in the module. This requires graphviz to
@@ -63,4 +65,3 @@ User guide
 
    automodapi.rst
    automodsumm.rst
-
