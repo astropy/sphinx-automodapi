@@ -54,8 +54,6 @@ include::
                   'sphinx_automodapi.smart_resolver']
 
 in your ``conf.py`` file.
-..
-.. TODO: disable inheritance diagram by default!
 
 User guide
 ----------
@@ -66,4 +64,3 @@ User guide
    automodapi.rst
    automodsumm.rst
 
-.. TOOD: in future, could also describe autodoc_enhancements and smart_resolver
