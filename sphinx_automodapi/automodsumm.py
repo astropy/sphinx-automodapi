@@ -91,6 +91,7 @@ from distutils.version import LooseVersion
 
 from sphinx import __version__
 from sphinx.ext.autosummary import Autosummary
+from sphinx.ext.autosummary.generate import generate_autosummary_docs
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
@@ -241,15 +242,15 @@ class Automoddiagram(InheritanceDiagram):
 
 
 # <---------------------automodsumm generation stuff-------------------------->
-def process_automodsumm_generation(app):
-    env = app.builder.env
+def process_automodsumm_generation(app, filestosearch=None):
+    if not filestosearch:
+        env = app.builder.env
 
-    filestosearch = []
-    for docname in env.found_docs:
-        filename = env.doc2path(docname)
-        if os.path.isfile(filename):
-            filestosearch.append(docname + os.path.splitext(filename)[1])
-
+        filestosearch = []
+        for docname in env.found_docs:
+            filename = env.doc2path(docname)
+            if os.path.isfile(filename):
+                filestosearch.append(docname + os.path.splitext(filename)[1])
     liness = []
     for sfn in filestosearch:
         lines = automodsumm_to_autosummary_lines(sfn, app)
@@ -400,6 +401,10 @@ def automodsumm_to_autosummary_lines(fn, app):
 
     return newlines
 
+def _underline(title, line='='):
+    if '\n' in title:
+        raise ValueError('Can only underline single lines')
+    return title + '\n' + line * len(title)
 
 def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
                               info=None, base_path=None, builder=None,
@@ -444,6 +449,8 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
             template_dirs.insert(0, template_dir)
         template_loader = FileSystemLoader(template_dirs)
     template_env = SandboxedEnvironment(loader=template_loader)
+
+    template_env.filters['underline'] = _underline
 
     # read
     # items = find_autosummary_in_files(sources)
@@ -641,8 +648,17 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
 
             rendered = template.render(**ns)
             f.write(cleanup_whitespace(rendered))
+
         finally:
             f.close()
+
+    if new_files:
+        generate_autosummary_docs(new_files, output_dir=path,
+                                  suffix=suffix, warn=warn, info=info,
+                                  base_path=base_path, builder=builder,
+                                  template_dir=template_dir, app=app)
+
+        process_automodsumm_generation(app, filestosearch=new_files)
 
 
 def setup(app):
