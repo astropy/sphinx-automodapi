@@ -9,10 +9,6 @@ available as a standalone package since it can be used for any other
 package. The documentation can be found on
 `ReadTheDocs <http://sphinx-automodapi.readthedocs.io/en/latest/>`_.
 
-*Note that packages from the Astropy project should continue to use this
-extension from the astropy-helpers rather than using this standalone
-package.*
-
 .. |Travis Status| image:: https://travis-ci.org/astropy/sphinx-automodapi.svg?branch=master
    :target: https://travis-ci.org/astropy/sphinx-automodapi
 .. |AppVeyor status| image:: https://ci.appveyor.com/api/projects/status/warwyfj06t1rkn5p/branch/master?svg=true
