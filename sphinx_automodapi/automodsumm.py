@@ -266,7 +266,7 @@ def process_automodsumm_generation(app):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
             generate_automodsumm_docs(
-                lines, sfn, app=app, builder=app.builder, warn=app.warn, info=app.info,
+                lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
 
@@ -401,8 +401,8 @@ def automodsumm_to_autosummary_lines(fn, app):
     return newlines
 
 
-def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
-                              info=None, base_path=None, builder=None,
+def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
+                              base_path=None, builder=None,
                               template_dir=None,
                               inherited_members=False):
     """
@@ -415,7 +415,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
     from sphinx.ext.autosummary import import_by_name, get_documenter
-    from sphinx.ext.autosummary.generate import _simple_info, _simple_warn
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
@@ -423,12 +422,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-    if info is None:
-        info = _simple_info
-    if warn is None:
-        warn = _simple_warn
+    from sphinx.util import logging
 
-    # info('[automodsumm] generating automodsumm for: ' + srcfn)
+    from sphinx.util import logging
+    logger = logging.getLogger(__name__)
+
+    # logger.info('[automodsumm] generating automodsumm for: ' + srcfn)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
@@ -450,12 +449,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
     items = find_autosummary_in_lines(lines, filename=srcfn)
     if len(items) > 0:
         msg = '[automodsumm] {1}: found {0} automodsumm entries to generate'
-        info(msg.format(len(items), srcfn))
+        logger.info(msg.format(len(items), srcfn))
 
 #    gennms = [item[0] for item in items]
 #    if len(gennms) > 20:
 #        gennms = gennms[:10] + ['...'] + gennms[-10:]
-#    info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
+#    logger.info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
 
     # remove possible duplicates
     items = list(set(items))
@@ -477,7 +476,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
         try:
             import_by_name_values = import_by_name(name)
         except ImportError as e:
-            warn('[automodsumm] failed to import %r: %s' % (name, e))
+            logger.warn('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 
         # if block to accommodate Sphinx's v1.2.2 and v1.2.3 respectively
