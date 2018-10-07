@@ -96,6 +96,7 @@ from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
 
+SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 
@@ -422,14 +423,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-    try:
+    if SPHINX_LT_16:
+        info = app.info
+        warn = app.warn
+    else:
         from sphinx.util import logging
         logger = logging.getLogger(__name__)
         info = logger.info
-        warn = logger.warn
-    except ImportError:  # Sphinx < 1.6
-        info = app.info
-        warn = app.warn
+        warn = logger.warning
 
     # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
