@@ -422,12 +422,16 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-    from sphinx.util import logging
+    try:
+        from sphinx.util import logging
+        logger = logging.getLogger(__name__)
+        info = logger.info
+        warn = logger.warn
+    except ImportError:  # Sphinx < 1.6
+        info = app.info
+        warn = app.warn
 
-    from sphinx.util import logging
-    logger = logging.getLogger(__name__)
-
-    # logger.info('[automodsumm] generating automodsumm for: ' + srcfn)
+    # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
@@ -449,12 +453,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     items = find_autosummary_in_lines(lines, filename=srcfn)
     if len(items) > 0:
         msg = '[automodsumm] {1}: found {0} automodsumm entries to generate'
-        logger.info(msg.format(len(items), srcfn))
+        info(msg.format(len(items), srcfn))
 
 #    gennms = [item[0] for item in items]
 #    if len(gennms) > 20:
 #        gennms = gennms[:10] + ['...'] + gennms[-10:]
-#    logger.info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
+#    info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
 
     # remove possible duplicates
     items = list(set(items))
@@ -476,7 +480,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         try:
             import_by_name_values = import_by_name(name)
         except ImportError as e:
-            logger.warn('[automodsumm] failed to import %r: %s' % (name, e))
+            warn('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 
         # if block to accommodate Sphinx's v1.2.2 and v1.2.3 respectively
