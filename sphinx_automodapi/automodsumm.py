@@ -96,6 +96,9 @@ from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
 
+__all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
+           'generate_automodsumm_docs', 'process_automodsumm_generation']
+
 SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
