@@ -96,6 +96,10 @@ from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
 
+__all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
+           'generate_automodsumm_docs', 'process_automodsumm_generation']
+
+SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
 SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 
@@ -266,7 +270,7 @@ def process_automodsumm_generation(app):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
             generate_automodsumm_docs(
-                lines, sfn, app=app, builder=app.builder, warn=app.warn, info=app.info,
+                lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
 
@@ -401,8 +405,8 @@ def automodsumm_to_autosummary_lines(fn, app):
     return newlines
 
 
-def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
-                              info=None, base_path=None, builder=None,
+def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
+                              base_path=None, builder=None,
                               template_dir=None,
                               inherited_members=False):
     """
@@ -415,7 +419,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
     from sphinx.ext.autosummary import import_by_name, get_documenter
-    from sphinx.ext.autosummary.generate import _simple_info, _simple_warn
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
@@ -423,10 +426,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst', warn=None,
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-    if info is None:
-        info = _simple_info
-    if warn is None:
-        warn = _simple_warn
+    if SPHINX_LT_16:
+        info = app.info
+        warn = app.warn
+    else:
+        from sphinx.util import logging
+        logger = logging.getLogger(__name__)
+        info = logger.info
+        warn = logger.warning
 
     # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
