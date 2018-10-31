@@ -53,7 +53,16 @@ DEFAULT_CONF = {'source_suffix': '.rst',
                 'suppress_warnings': ['app.add_directive', 'app.add_node'],
                 'intersphinx_mapping': intersphinx_mapping,
                 'nitpick_ignore': [('py:class', 'sphinx_automodapi.tests.example_module.classes.BaseSpam'),
-                                   ('py:class', 'sphinx_automodapi.tests.example_module.other_classes.BaseFoo')]}
+                                   ('py:class', 'sphinx_automodapi.tests.example_module.other_classes.BaseFoo'),
+                                   # See the following links for why these classes need to be ignored.
+                                   # This only seems to be necessary for Python 2.7.
+                                   #
+                                   # https://trac.sagemath.org/ticket/19211
+                                   # https://stackoverflow.com/q/11417221/3776794
+                                   ('py:class', '_abcoll.Sequence'),
+                                   ('py:class', '_abcoll.Iterable'),
+                                   ('py:class', '_abcoll.Container'),
+                                   ('py:class', '_abcoll.Sized')]}
 
 
 def setup_function(func):
