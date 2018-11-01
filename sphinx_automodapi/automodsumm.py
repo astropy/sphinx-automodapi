@@ -83,6 +83,7 @@ package. It accepts no options.
 .. _sphinx.ext.inheritance_diagram: http://sphinx-doc.org/latest/ext/inheritance.html
 """
 
+import abc
 import inspect
 import os
 import re
@@ -551,7 +552,18 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 if include_base:
                     names = dir(obj)
                 else:
-                    if hasattr(obj, '__slots__'):
+                    # Classes deriving from an ABC using the `abc` module will
+                    # have an empty `__slots__` attribute in Python 3, unless
+                    # other slots were declared along the inheritance chain. If
+                    # the ABC-derived class has empty slots, we'll use the
+                    # class `__dict__` instead.
+                    declares_slots = (
+                        hasattr(obj, '__slots__') and
+                        not (type(obj) is abc.ABCMeta and
+                             len(obj.__slots__) == 0)
+                    )
+
+                    if declares_slots:
                         names = tuple(getattr(obj, '__slots__'))
                     else:
                         names = getattr(obj, '__dict__').keys()

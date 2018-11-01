@@ -4,7 +4,7 @@ Changes in sphinx-automodapi
 0.9 (unreleased)
 ----------------
 
-- No changes yet.
+- Fix issue with ABC-derived classes (``abc`` and ``collections.abc`` modules) having their members ignored in Python 3. This was only an issue when ``:inherited-members:`` was not in effect. [#53]
 
 0.8 (2018-10-18)
 ----------------
