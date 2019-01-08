@@ -133,13 +133,13 @@ class Automodsumm(Autosummary):
         env = self.state.document.settings.env
         modname = self.arguments[0]
 
-        self.warnings = []
+        self.warnings[:] = []
         nodelist = []
 
         try:
             localnames, fqns, objs = find_mod_objs(modname)
         except ImportError:
-            self.warnings = []
+            self.warnings[:] = []
             self.warn("Couldn't import module " + modname)
             return self.warnings
 
