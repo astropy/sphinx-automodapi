@@ -13,7 +13,7 @@ package. The documentation can be found on
    :target: https://travis-ci.org/astropy/sphinx-automodapi
 .. |AppVeyor status| image:: https://ci.appveyor.com/api/projects/status/warwyfj06t1rkn5p/branch/master?svg=true
    :target: https://ci.appveyor.com/project/Astropy/sphinx-automodapi/branch/master
-.. |Coverage Status| image:: https://coveralls.io/repos/github/astropy/sphinx-automodapi/badge.svg?branch=master
-   :target: https://coveralls.io/github/astropy/sphinx-automodapi?branch=master
+.. |Coverage Status| image:: https://codecov.io/gh/astropy/sphinx-automodapi/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/astropy/sphinx-automodapi
 .. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
    :target: https://pypi.python.org/pypi/sphinx-automodapi
