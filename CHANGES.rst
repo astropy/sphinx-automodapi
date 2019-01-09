@@ -1,10 +1,10 @@
 Changes in sphinx-automodapi
 ============================
 
-0.10 (unreleased)
+0.10 (2019-01-09)
 -----------------
 
-- No changes yet.
+- Fixed compatibility with latest developer version of Sphinx. [#61]
 
 0.9 (2018-11-07)
 ----------------
