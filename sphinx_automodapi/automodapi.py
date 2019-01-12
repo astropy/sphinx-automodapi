@@ -204,7 +204,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 doc_path = '.'
             else:
                 doc_path = os.path.join(app.srcdir, docname)
-            toctreestr += os.path.relpath(api_dir, os.path.dirname(doc_path))
+            toctreestr += os.path.relpath(api_dir, os.path.dirname(doc_path)).replace(os.sep, '/')
         else:
             toctreestr = ''
 
