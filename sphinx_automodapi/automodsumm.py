@@ -642,12 +642,13 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
             # astropy/config/logging_helper.py) then the reference file is set
             # to ../config/references.txt
             if '.' in mod_name:
-                mod_name_dir = mod_name.replace('.', '/').split('/', 1)[1]
+                mod_name_dir = mod_name.split('.', 1)[1].replace('.', os.sep)
             else:
                 mod_name_dir = mod_name
-            if not os.path.isdir(os.path.join(base_path, mod_name_dir)) \
-               and os.path.isdir(os.path.join(base_path, mod_name_dir.rsplit('/', 1)[0])):
-                mod_name_dir = mod_name_dir.rsplit('/', 1)[0]
+
+            if (not os.path.isdir(os.path.join(base_path, mod_name_dir))
+                    and os.path.isdir(os.path.join(base_path, mod_name_dir.rsplit(os.sep, 1)[0]))):
+                mod_name_dir = mod_name_dir.rsplit(os.sep, 1)[0]
 
             # We then have to check whether it exists, and if so, we pass it
             # to the template.
@@ -655,11 +656,11 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 # An important subtlety here is that the path we pass in has
                 # to be relative to the file being generated, so we have to
                 # figure out the right number of '..'s
-                ndirsback = path.replace(base_path, '').count('/')
+                ndirsback = path.replace(base_path, '').count(os.sep)
                 ref_file_rel_segments = ['..'] * ndirsback
                 ref_file_rel_segments.append(mod_name_dir)
                 ref_file_rel_segments.append('references.txt')
-                ns['referencefile'] = os.path.join(*ref_file_rel_segments)
+                ns['referencefile'] = os.path.join(*ref_file_rel_segments).replace(os.sep, '/')
 
             rendered = template.render(**ns)
             f.write(cleanup_whitespace(rendered))
