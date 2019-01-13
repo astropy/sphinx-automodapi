@@ -1,4 +1,4 @@
 .. toctree::
    :maxdepth: 1
 
-   submodule/index
+   tests/example_module/index
