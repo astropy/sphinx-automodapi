@@ -13,6 +13,11 @@ This extension requires Sphinx 1.3 or later, and can be installed with::
 
     pip install sphinx-automodapi
 
+The extension is also available through conda-forge package management system. It can be installed through conda with::
+    
+    conda config --add channels conda-forge
+    conda install sphinx-automodapi
+
 .. _quickstart:
 
 Quick start
