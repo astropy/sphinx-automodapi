@@ -14,9 +14,10 @@ It accepts the following options:
         This includes variables, for which a possible docstring after the
         variable definition will be shown.
 
-    * ``:no-inheritance-diagram:``
-        If present, the inheritance diagram will not be shown even if
-        the module/package has classes.
+    * ``:inheritance-diagram:`` / ``:no-inheritance-diagram:``
+        Specify whether or not to show the inheritance diagram for classes. This
+        overrides the default global configuration set in
+        ``automodapi_inheritance_diagram``.
 
     * ``:skip: str``
         This option results in the
@@ -57,7 +58,13 @@ It accepts the following options:
         allows the user to overrride the global setting.
 
 
-This extension also adds three sphinx configuration options:
+This extension also adds four sphinx configuration options:
+
+* ``automodapi_inheritance_diagram``
+    Should be a boolean that indicates whether to show inheritance diagrams
+    by default. This can be overriden on a case by case basis with
+    ``:inheritance-diagram:`` and ``:no-inheritance-diagram:``. Defaults to
+    ``True``.
 
 * ``automodapi_toctreedirnm``
     This must be a string that specifies the name of the directory the
@@ -220,7 +227,9 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # initialize default options
             toskip = []
-            inhdiag = maindocstr = top_head = True
+            inhdiag = app.config.automodapi_inheritance_diagram
+            maindocstr = True
+            top_head = True
             hds = '-^'
             allowedpkgnms = []
             allowothers = False
@@ -231,6 +240,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
                     toskip.append(args.strip())
+                elif opname == 'inheritance-diagram':
+                    inhdiag = True
                 elif opname == 'no-inheritance-diagram':
                     inhdiag = False
                 elif opname == 'no-main-docstr':
@@ -419,6 +430,7 @@ def setup(app):
 
     app.connect('source-read', process_automodapi)
 
+    app.add_config_value('automodapi_inheritance_diagram', True, True)
     app.add_config_value('automodapi_toctreedirnm', 'api', True)
     app.add_config_value('automodapi_writereprocessed', False, True)
 
