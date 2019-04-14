@@ -25,7 +25,8 @@ class FakeApp(object):
 
     # Some default config values
     _defaults = {'automodapi_toctreedirnm': 'api',
-                 'automodapi_writereprocessed': False}
+                 'automodapi_writereprocessed': False,
+                 'automodapi_inheritance_diagram': True}
 
     def __init__(self, **configs):
         config = self._defaults.copy()

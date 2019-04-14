@@ -4,7 +4,8 @@ Changes in sphinx-automodapi
 0.11 (unreleased)
 -----------------
 
-- No changes yet.
+- Added a global configuration option ``automodapi_inheritance_diagram`` to
+  control whether inheritance diagrams are shown by default. [#75]
 
 0.10 (2019-01-09)
 -----------------
