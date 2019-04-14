@@ -73,7 +73,7 @@ def missing_reference_handler(app, env, node, contnode):
                 if (reftarget not in mapping and
                         prefix in inventory):
 
-                    if reftarget in inventory[prefix]['py:class']:
+                    if 'py:class' in inventory[prefix] and reftarget in inventory[prefix]['py:class']:
                         newtarget = inventory[prefix]['py:class'][reftarget][2]
                         if not node['refexplicit'] and \
                                 '~' not in node.rawsource:
