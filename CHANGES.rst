@@ -7,6 +7,9 @@ Changes in sphinx-automodapi
 - Added a global configuration option ``automodapi_inheritance_diagram`` to
   control whether inheritance diagrams are shown by default. [#75]
 
+- Fix bug with smart_resolver when intersphinx inventory doesn't include
+  any py:class entries. [#76]
+
 0.10 (2019-01-09)
 -----------------
 
