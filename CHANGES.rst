@@ -10,6 +10,8 @@ Changes in sphinx-automodapi
 - Fix bug with smart_resolver when intersphinx inventory doesn't include
   any py:class entries. [#76]
 
+- Fixed compatibility with Sphinx 2.0 and later. [#79]
+
 0.10 (2019-01-09)
 -----------------
 
