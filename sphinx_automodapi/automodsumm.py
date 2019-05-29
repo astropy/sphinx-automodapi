@@ -581,6 +581,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         continue
                     if typ is None or documenter.objtype == typ:
                         items.append(name)
+                    elif typ == 'attribute' and documenter.objtype == 'property':
+                        # In Sphinx 2.0 and above, properties have a separate
+                        # objtype, but we treat them the same here.
+                        items.append(name)
                 public = [x for x in items
                           if x in include_public or not x.startswith('_')]
                 return public, items
