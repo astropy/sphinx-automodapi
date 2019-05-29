@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.11 (unreleased)
+0.11 (2019-05-29)
 -----------------
 
 - Added a global configuration option ``automodapi_inheritance_diagram`` to
