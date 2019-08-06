@@ -6,6 +6,7 @@ language: generic
 os:
     - osx
     - linux
+    - windows
 
 # Adding notifications since this is a project we otherwise don't update
 # often, but need to make sure we see failures when they happen when
