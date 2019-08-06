@@ -1,7 +1,7 @@
 # We set the language to generic because python isn't supported on the MacOS X
 # nodes on Travis. However, the language ends up being irrelevant anyway, since
 # we install Python ourselves using conda.
-language: generic
+language: c
 
 os:
     - osx
@@ -30,7 +30,6 @@ env:
   matrix:
     - PYTHON_VERSION=2.7 TOXENV='py27-test'
     - PYTHON_VERSION=2.7 TOXENV='py27-test-clocale'
-    - PYTHON_VERSION=3.4 TOXENV='py34-test-sphinx13'
     - PYTHON_VERSION=3.5 TOXENV='py35-test-sphinx14'
     - PYTHON_VERSION=3.5 TOXENV='py35-test-sphinx15'
     - PYTHON_VERSION=3.6 TOXENV='py36-test-sphinx16'
