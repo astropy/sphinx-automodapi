@@ -29,19 +29,15 @@ addons:
 env:
   matrix:
     - PYTHON_VERSION=2.7 TOXENV='test'
+    - PYTHON_VERSION=2.7 TOXENV='test-clocale'
     - PYTHON_VERSION=3.4 TOXENV='test-sphinx13'
     - PYTHON_VERSION=3.5 TOXENV='test-sphinx14'
     - PYTHON_VERSION=3.5 TOXENV='test-sphinx15'
     - PYTHON_VERSION=3.6 TOXENV='test-sphinx16'
     - PYTHON_VERSION=3.6 TOXENV='test-sphinx17'
     - PYTHON_VERSION=3.7 TOXENV='test-sphinx18'
-    - PYTHON_VERSION=3.7 TOXENV='test-sphinx20'
+    - PYTHON_VERSION=3.7 TOXENV='test-sphinx20-clocale'
     - PYTHON_VERSION=3.7 TOXENV='test-sphinxdev'
-
-    # Make sure that things work even if the locale is set to C (which effectively means ASCII).
-    # Some of the input rst files have unicode characters and we need to deal with this gracefully.
-    - PYTHON_VERSION=2.7 TOXENV='test-clocale'
-    - PYTHON_VERSION=3.7 TOXENV='test-clocale'
 
   global:
     - PIP_DEPENDENCIES="tox"
