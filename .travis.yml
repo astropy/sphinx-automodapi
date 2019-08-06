@@ -28,16 +28,16 @@ addons:
 
 env:
   matrix:
-    - PYTHON_VERSION=2.7 TOXENV='test'
-    - PYTHON_VERSION=2.7 TOXENV='test-clocale'
-    - PYTHON_VERSION=3.4 TOXENV='test-sphinx13'
-    - PYTHON_VERSION=3.5 TOXENV='test-sphinx14'
-    - PYTHON_VERSION=3.5 TOXENV='test-sphinx15'
-    - PYTHON_VERSION=3.6 TOXENV='test-sphinx16'
-    - PYTHON_VERSION=3.6 TOXENV='test-sphinx17'
-    - PYTHON_VERSION=3.7 TOXENV='test-sphinx18'
-    - PYTHON_VERSION=3.7 TOXENV='test-sphinx20-clocale'
-    - PYTHON_VERSION=3.7 TOXENV='test-sphinxdev'
+    - PYTHON_VERSION=2.7 TOXENV='py27-test'
+    - PYTHON_VERSION=2.7 TOXENV='py27-test-clocale'
+    - PYTHON_VERSION=3.4 TOXENV='py34-test-sphinx13'
+    - PYTHON_VERSION=3.5 TOXENV='py35-test-sphinx14'
+    - PYTHON_VERSION=3.5 TOXENV='py35-test-sphinx15'
+    - PYTHON_VERSION=3.6 TOXENV='py36-test-sphinx16'
+    - PYTHON_VERSION=3.6 TOXENV='py36-test-sphinx17'
+    - PYTHON_VERSION=3.7 TOXENV='py37-test-sphinx18'
+    - PYTHON_VERSION=3.7 TOXENV='py37-test-sphinx20-clocale'
+    - PYTHON_VERSION=3.7 TOXENV='py37-test-sphinxdev'
 
   global:
     - PIP_DEPENDENCIES="tox"
