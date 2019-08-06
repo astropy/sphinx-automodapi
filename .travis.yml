@@ -1,7 +1,7 @@
-# We set the language to c because python isn't supported on the MacOS X nodes
-# on Travis. However, the language ends up being irrelevant anyway, since we
-# install Python ourselves using conda.
-language: c
+# We set the language to generic because python isn't supported on the MacOS X
+# nodes on Travis. However, the language ends up being irrelevant anyway, since
+# we install Python ourselves using conda.
+language: generic
 
 os:
     - osx
@@ -27,44 +27,32 @@ addons:
 
 env:
   matrix:
-    - PYTHON_VERSION=2.7
-    - PYTHON_VERSION=3.4 SPHINX_VERSION=1.3
-    - PYTHON_VERSION=3.5 SPHINX_VERSION=1.4
-    - PYTHON_VERSION=3.5 SPHINX_VERSION=1.5
-    - PYTHON_VERSION=3.6 SPHINX_VERSION=1.6
-    - PYTHON_VERSION=3.6 SPHINX_VERSION=1.7
-    - PYTHON_VERSION=3.7 SPHINX_VERSION=1.8
-    - PYTHON_VERSION=3.7 SPHINX_VERSION=2.0
-    - PYTHON_VERSION=3.7 SPHINX_VERSION=dev CONDA_DEPENDENCIES="setuptools cython pytest-cov"
-    - PYTHON_VERSION=2.7 LOCALE=C
-    - PYTHON_VERSION=3.7 LOCALE=C
-  global:
-    - LOCALE=default
-    - CONDA_DEPENDENCIES="setuptools sphinx cython pytest-cov"
-    - PIP_DEPENDENCIES="codecov"
-    - HOMEBREW_NO_AUTO_UPDATE=1
-
-before_install:
+    - PYTHON_VERSION=2.7 TOXENV='test'
+    - PYTHON_VERSION=3.4 TOXENV='test-sphinx13'
+    - PYTHON_VERSION=3.5 TOXENV='test-sphinx14'
+    - PYTHON_VERSION=3.5 TOXENV='test-sphinx15'
+    - PYTHON_VERSION=3.6 TOXENV='test-sphinx16'
+    - PYTHON_VERSION=3.6 TOXENV='test-sphinx17'
+    - PYTHON_VERSION=3.7 TOXENV='test-sphinx18'
+    - PYTHON_VERSION=3.7 TOXENV='test-sphinx20'
+    - PYTHON_VERSION=3.7 TOXENV='test-sphinxdev'
 
     # Make sure that things work even if the locale is set to C (which effectively means ASCII).
     # Some of the input rst files have unicode characters and we need to deal with this gracefully.
-    - if [[ $LOCALE == C ]]; then
-        export LC_CTYPE=C;
-        export LC_ALL=C;
-        export LANG=C;
-      fi
+    - PYTHON_VERSION=2.7 TOXENV='test-clocale'
+    - PYTHON_VERSION=3.7 TOXENV='test-clocale'
 
-    - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
+  global:
+    - PIP_DEPENDENCIES="tox"
+    - HOMEBREW_NO_AUTO_UPDATE=1
 
 install:
+    - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
     - git clone git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda.sh
-    - if [[ $SPHINX_VERSION == dev ]]; then
-        pip install git+https://github.com/sphinx-doc/sphinx.git;
-      fi
 
 script:
-    - py.test --cov sphinx_automodapi sphinx_automodapi -v
+    - tox -e $TOXENV
 
 after_success:
     - codecov

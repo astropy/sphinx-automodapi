@@ -11,7 +11,8 @@ environment:
                         # of 32 bit and 64 bit builds are needed, move this
                         # to the matrix section.
 
-      CONDA_DEPENDENCIES: "Cython sphinx pytest"
+      PIP_DEPENDENCIES: "tox"
+      TOXENV: "test"
 
   matrix:
       - PYTHON_VERSION: "2.7"
@@ -43,4 +44,4 @@ install:
 build: false
 
 test_script:
-  - "%CMD_IN_ENV% py.test sphinx_automodapi -v"
+  - "%CMD_IN_ENV% tox -e %TOXENV%"
