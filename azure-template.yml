@@ -1,0 +1,68 @@
+jobs:
+- job: ${{ format(parameters.name) }}
+  pool:
+    ${{ if eq(parameters.os, 'macosx') }}:
+      vmImage: macOS 10.13
+    ${{ if eq(parameters.os, 'linux') }}:
+      vmImage: Ubuntu 16.04
+    ${{ if eq(parameters.os, 'windows') }}:
+      vmImage: vs2017-win2016
+
+  steps:
+
+  - ${{ if eq(parameters.os, 'macosx') }}:
+    - script: brew install graphviz
+      displayName: Installing graphviz
+  - ${{ if eq(parameters.os, 'windows') }}:
+    - script: choco install graphviz vcpython27
+      displayName: Installing graphviz and vcpython27
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '2.7'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.5'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.7'
+      architecture: 'x64'
+
+  - script: pip install tox
+    displayName: Installing tox
+
+  - script: tox -e py27-test
+    displayName: Running tests in py27-test environment
+
+  - script: tox -e py27-test-clocale
+    displayName: Running tests in py27-test-clocale environment
+
+  - script: tox -e py35-test-sphinx14
+    displayName: Running tests in py35-test-sphinx14 environment
+
+  - script: tox -e py35-test-sphinx15
+    displayName: Running tests in py35-test-sphinx15 environment
+
+  - script: tox -e py36-test-sphinx16
+    displayName: Running tests in py36-test-sphinx16 environment
+
+  - script: tox -e py36-test-sphinx17
+    displayName: Running tests in py36-test-sphinx17 environment
+
+  - script: tox -e py37-test-sphinx18
+    displayName: Running tests in py37-test-sphinx18 environment
+
+  - script: tox -e py37-test-sphinx20
+    displayName: Running tests in py37-test-sphinx20 environment
+
+  - script: tox -e py37-test-sphinx21-clocale
+    displayName: Running tests in py37-test-sphinx21-clocale environment
