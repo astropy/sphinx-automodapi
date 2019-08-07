@@ -44,6 +44,7 @@ env:
 
 install:
     - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
+    - if [[ $TRAVIS_OS_NAME == windows ]]; then choco install vcpython27 graphviz; fi
     - git clone git://github.com/astropy/ci-helpers.git
     - source ci-helpers/travis/setup_conda.sh
 
