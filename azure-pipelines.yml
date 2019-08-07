@@ -1,3 +1,11 @@
+schedules:
+- cron: "0 0 * * 1"
+  displayName: "weekly"
+  branches:
+    include:
+    - master
+  always: "true"
+
 jobs:
 
 - template: azure-template.yml
