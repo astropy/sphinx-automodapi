@@ -133,18 +133,13 @@ class Automodsumm(Autosummary):
         env = self.state.document.settings.env
         modname = self.arguments[0]
 
-        try:
-            self.warnings[:] = []
-        except AttributeError:
-            self.warnings = []
-
         nodelist = []
 
         try:
             localnames, fqns, objs = find_mod_objs(modname)
         except ImportError:
             self.warn("Couldn't import module " + modname)
-            return self.warnings
+            return []
 
         try:
             # set self.content to trick the autosummary internals.
@@ -200,12 +195,15 @@ class Automodsumm(Autosummary):
             # super(Autosummary,self).run()
             nodelist.extend(Autosummary.run(self))
 
-            return self.warnings + nodelist
+            return nodelist
         finally:  # has_content = False for the Automodsumm
             self.content = []
 
     def get_items(self, names):
-        self.genopt['imported-members'] = True
+        try:
+            self.bridge.genopt['imported-members'] = True
+        except AttributeError:  # Sphinx < 4.0
+            self.genopt['imported-members'] = True
         return Autosummary.get_items(self, names)
 
 
@@ -223,9 +221,8 @@ class Automoddiagram(InheritanceDiagram):
 
             nms, objs = find_mod_objs(self.arguments[0], onlylocals=ols)[1:]
         except ImportError:
-            self.warnings = []
             self.warn("Couldn't import module " + self.arguments[0])
-            return self.warnings
+            return []
 
         # Check if some classes should be skipped
         skip = self.options.get('skip', [])

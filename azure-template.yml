@@ -1,0 +1,58 @@
+jobs:
+- job: ${{ format(parameters.name) }}
+  pool:
+    ${{ if eq(parameters.os, 'macosx') }}:
+      vmImage: macOS 10.13
+    ${{ if eq(parameters.os, 'linux') }}:
+      vmImage: Ubuntu 16.04
+    ${{ if eq(parameters.os, 'windows') }}:
+      vmImage: vs2017-win2016
+
+  steps:
+
+  - ${{ if eq(parameters.os, 'macosx') }}:
+    - script: brew install graphviz
+      displayName: Installing graphviz
+  - ${{ if eq(parameters.os, 'linux') }}:
+    - script: sudo apt-get install -y graphviz
+      displayName: Installing graphviz
+  - ${{ if eq(parameters.os, 'windows') }}:
+    - script: choco install graphviz vcpython27 curl codecov --no-progress
+      displayName: Installing graphviz, vcpython27, curl, and codecov
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '2.7'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.5'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+      architecture: 'x64'
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.7'
+      architecture: 'x64'
+
+  - script: pip install tox coverage
+    displayName: Installing tox and coverage
+
+  - script: tox
+    displayName: Running tests with tox
+
+  - bash: coverage combine .tmp/*/.coverage
+    displayName: Combining coverage results
+  - bash: coverage report
+    displayName: Show coverage
+
+  # As described in https://github.com/codecov/codecov-bash/issues/189, the
+  # official bash script doesn't use the correct variable names for pull
+  # requests, so we use a fork of the bash script for now.
+  - bash: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -t $(codecov.token)
+    displayName: Uploading results to codecov

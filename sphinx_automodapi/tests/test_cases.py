@@ -43,7 +43,7 @@ def write_conf(filename, conf):
 
 
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/{0}/'.format(sys.version_info[0]), None)
+    'python': ('https://docs.python.org/{0}/'.format(sys.version_info[0]), None)
     }
 
 DEFAULT_CONF = {'source_suffix': '.rst',

@@ -9,6 +9,17 @@ available as a standalone package since it can be used for any other
 package. The documentation can be found on
 `ReadTheDocs <http://sphinx-automodapi.readthedocs.io/en/latest/>`_.
 
+Running tests
+-------------
+
+To run the tests, you can either do::
+
+    pytest sphinx_automodapi
+
+or if you have `tox <https://tox.readthedocs.io/en/latest/>`_ installed::
+
+    tox -e test
+
 .. |Travis Status| image:: https://travis-ci.org/astropy/sphinx-automodapi.svg?branch=master
    :target: https://travis-ci.org/astropy/sphinx-automodapi
 .. |AppVeyor status| image:: https://ci.appveyor.com/api/projects/status/warwyfj06t1rkn5p/branch/master?svg=true
