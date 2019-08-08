@@ -4,7 +4,6 @@
 language: c
 
 os:
-    - osx
     - linux
 
 # Setting sudo to false opts in to Travis-CI container-based builds.
@@ -21,6 +20,7 @@ env:
     - PIP_DEPENDENCIES="codecov"
     - HOMEBREW_NO_AUTO_UPDATE=1
     - PYTHON_VERSION=3.7
+    - EVENT_TYPE=cron
 
 before_install:
     - if [[ $TRAVIS_OS_NAME == osx ]]; then brew install graphviz; fi
@@ -31,7 +31,4 @@ install:
     - pip install git+https://github.com/sphinx-doc/sphinx.git
 
 script:
-    - py.test --cov sphinx_automodapi sphinx_automodapi -v
-
-after_success:
-    - codecov
+    - pytest sphinx_automodapi
