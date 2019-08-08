@@ -17,8 +17,8 @@ jobs:
     - script: sudo apt-get install -y graphviz
       displayName: Installing graphviz
   - ${{ if eq(parameters.os, 'windows') }}:
-    - script: choco install graphviz vcpython27 codecov --no-progress
-      displayName: Installing graphviz, vcpython27, and codecov
+    - script: choco install graphviz vcpython27 curl codecov --no-progress
+      displayName: Installing graphviz, vcpython27, curl, and codecov
 
   - task: UsePythonVersion@0
     inputs:
@@ -51,12 +51,8 @@ jobs:
   - bash: coverage report
     displayName: Show coverage
 
-  - ${{ if ne(parameters.os, 'windows') }}:
-    # As described in https://github.com/codecov/codecov-bash/issues/189, the
-    # official bash script doesn't use the correct variable names for pull
-    # requests, so we use a fork of the bash script for now.
-    - script: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -t $(codecov.token)
-      displayName: Uploading results to codecov
-  - ${{ if eq(parameters.os, 'windows') }}:
-    - script: codecov -f .coverage -t $(codecov.token)
-      displayName: Uploading results to codecov
+  # As described in https://github.com/codecov/codecov-bash/issues/189, the
+  # official bash script doesn't use the correct variable names for pull
+  # requests, so we use a fork of the bash script for now.
+  - bash: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -t $(codecov.token)
+    displayName: Uploading results to codecov
