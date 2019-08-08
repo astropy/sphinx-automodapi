@@ -55,8 +55,8 @@ jobs:
     # As described in https://github.com/codecov/codecov-bash/issues/189, the
     # official bash script doesn't use the correct variable names for pull
     # requests, so we use a fork of the bash script for now.
-    - script: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -s .tmp -t $(codecov.token)
+    - script: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -t $(codecov.token)
       displayName: Uploading results to codecov
   - ${{ if eq(parameters.os, 'windows') }}:
-    - script: codecov -f .tmp\coverage.xml -t $(codecov.token)
+    - script: codecov -t $(codecov.token)
       displayName: Uploading results to codecov
