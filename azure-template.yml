@@ -58,5 +58,5 @@ jobs:
     - script: bash <(curl https://raw.githubusercontent.com/astrofrog/codecov-bash/fixed-azure/codecov) -t $(codecov.token)
       displayName: Uploading results to codecov
   - ${{ if eq(parameters.os, 'windows') }}:
-    - script: codecov -t $(codecov.token)
+    - script: codecov -f .coverage -t $(codecov.token)
       displayName: Uploading results to codecov
