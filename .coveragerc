@@ -2,5 +2,11 @@
 source = sphinx_automodapi
 omit = */tests/*
 
+[paths]
+source =
+    sphinx_automodapi/
+    */site-packages/sphinx_automodapi
+    *\site-packages\sphinx_automodapi
+
 [report]
 omit = */tests/*

@@ -40,11 +40,16 @@ jobs:
       versionSpec: '3.7'
       architecture: 'x64'
 
-  - script: pip install tox
-    displayName: Installing tox
+  - script: pip install tox coverage
+    displayName: Installing tox and coverage
 
   - script: tox
     displayName: Running tests with tox
+
+  - bash: coverage combine .tmp/*/.coverage
+    displayName: Combining coverage results
+  - bash: coverage report
+    displayName: Show coverage
 
   - ${{ if ne(parameters.os, 'windows') }}:
     # As described in https://github.com/codecov/codecov-bash/issues/189, the
