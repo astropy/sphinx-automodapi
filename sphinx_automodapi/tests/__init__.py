@@ -45,10 +45,9 @@ def cython_testpackage(tmpdir, request):
         )
     """.format(os.path.dirname(sphinx_automodapi.__path__[0]))))
 
-    test_pkg.chdir()
     # Build the Cython module in a subprocess; otherwise strange things can
     # happen with Cython's global module state
-    sp.call([sys.executable, 'setup.py', 'build_ext', '--inplace'])
+    sp.call([sys.executable, 'setup.py', 'build_ext', '--inplace'], cwd=test_pkg.strpath)
 
     sys.path.insert(0, str(test_pkg))
     import apyhtest_eva.unit02

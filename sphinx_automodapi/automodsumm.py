@@ -313,6 +313,13 @@ def automodsumm_to_autosummary_lines(fn, app):
 
     """
 
+    if SPHINX_LT_16:
+        warn = app.warn
+    else:
+        from sphinx.util import logging
+        logger = logging.getLogger(__name__)
+        warn = logger.warning
+
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
     with io.open(fullfn, encoding='utf8') as fr:
@@ -376,7 +383,7 @@ def automodsumm_to_autosummary_lines(fn, app):
             msg = ('Defined more than one of functions-only, classes-only, '
                    'and variables-only.  Skipping this directive.')
             lnnum = sum([spl[j].count('\n') for j in range(i * 5 + 1)])
-            app.warn('[automodsumm]' + msg, (fn, lnnum))
+            warn('[automodsumm] ' + msg, (fn, lnnum))
             continue
 
         # Use the currentmodule directive so we can just put the local names

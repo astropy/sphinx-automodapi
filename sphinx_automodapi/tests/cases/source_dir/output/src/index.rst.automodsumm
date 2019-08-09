@@ -4,4 +4,5 @@
     :toctree: api
 
     add
+    subtract
     multiply
