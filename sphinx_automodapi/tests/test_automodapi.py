@@ -203,12 +203,6 @@ def test_am_replacer_titleandhdrs(tmpdir):
     assert result == am_replacer_titleandhdrs_expected
 
 
-EXPECTED_HEADINGS_STDERR = """
-Warning, treated as error:
-Not enough headings (got 1, need 2), using default -^
-"""
-
-
 def test_am_replacer_titleandhdrs_invalid(tmpdir, capsys):
     """
     Tests replacing an ".. automodapi::" entry with title-setting and header
@@ -224,7 +218,7 @@ def test_am_replacer_titleandhdrs_invalid(tmpdir, capsys):
     run_sphinx_in_tmpdir(tmpdir, expect_error=True)
 
     stdout, stderr = capsys.readouterr()
-    assert stderr.strip() == EXPECTED_HEADINGS_STDERR.strip()
+    assert "Not enough headings (got 1, need 2), using default -^" in stderr
 
 
 am_replacer_nomain_str = """
@@ -330,11 +324,6 @@ This comes before
 This comes after
 """
 
-EXPECTED_INVALID_STDERR = """
-Warning, treated as error:
-Found additional options invalid-option in automodapi.
-"""
-
 
 def test_am_replacer_invalidop(tmpdir, capsys):
     """
@@ -347,7 +336,7 @@ def test_am_replacer_invalidop(tmpdir, capsys):
     run_sphinx_in_tmpdir(tmpdir, expect_error=True)
 
     stdout, stderr = capsys.readouterr()
-    assert stderr.strip() == EXPECTED_INVALID_STDERR.strip()
+    assert "Found additional options invalid-option in automodapi." in stderr
 
 
 am_replacer_cython_str = """

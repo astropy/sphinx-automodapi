@@ -79,11 +79,6 @@ def test_ams_to_asmry(tmpdir):
     assert result == ams_to_asmry_expected
 
 
-EXPECTED_OPTIONS_STDERR = """
-Warning, treated as error:
-[automodsumm] Defined more than one of functions-only, classes-only, and variables-only.  Skipping this directive.
-"""
-
 def test_too_many_options(tmpdir, capsys):
 
     ops = ['', ':classes-only:', ':functions-only:']
@@ -97,7 +92,8 @@ def test_too_many_options(tmpdir, capsys):
     run_sphinx_in_tmpdir(tmpdir, expect_error=True)
 
     stdout, stderr = capsys.readouterr()
-    assert stderr.strip() == EXPECTED_OPTIONS_STDERR.strip()
+    assert ("[automodsumm] Defined more than one of functions-only, "
+            "classes-only, and variables-only.  Skipping this directive." in stderr)
 
 
 
