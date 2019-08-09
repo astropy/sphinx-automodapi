@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
+import sys
+
 import pytest
 
 from . import cython_testpackage  # noqa
 from .helpers import run_sphinx_in_tmpdir
+
+if sys.version_info[0] == 2:
+    from io import open as io_open
+else:
+    io_open = open
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
@@ -63,7 +70,7 @@ def test_am_replacer_basic(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_basic_expected
@@ -85,7 +92,7 @@ def test_am_replacer_writereprocessed(tmpdir, writereprocessed):
     Tests the automodapi_writereprocessed option
     """
 
-    with open(tmpdir.join('index.rst').strpath, 'w') as f:
+    with io_open(tmpdir.join('index.rst').strpath, 'w', encoding='utf-8') as f:
         f.write(am_replacer_repr_str.format(options=''))
 
     run_sphinx_in_tmpdir(tmpdir, additional_conf={'automodapi_writereprocessed': writereprocessed})
@@ -135,7 +142,7 @@ def test_am_replacer_noinh(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_noinh_expected
@@ -190,7 +197,7 @@ def test_am_replacer_titleandhdrs(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_titleandhdrs_expected
@@ -260,7 +267,7 @@ def test_am_replacer_nomain(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_nomain_expected
@@ -308,7 +315,7 @@ def test_am_replacer_skip(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_skip_expected
@@ -382,7 +389,7 @@ def test_am_replacer_cython(tmpdir, cython_testpackage):  # noqa
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodapi')) as f:
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
         result = f.read()
 
     assert result == am_replacer_cython_expected

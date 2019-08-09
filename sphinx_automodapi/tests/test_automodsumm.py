@@ -38,11 +38,10 @@ MixedSpam
 
 def write_api_files_to_tmpdir(tmpdir):
     apidir = tmpdir.mkdir('api')
-    with open(apidir.join('sphinx_automodapi.tests.example_module.mixed.add.rst'), 'w') as f:
+    with open(apidir.join('sphinx_automodapi.tests.example_module.mixed.add.rst').strpath, 'w') as f:
         f.write(ADD_RST)
-    with open(apidir.join('sphinx_automodapi.tests.example_module.mixed.MixedSpam.rst'), 'w') as f:
+    with open(apidir.join('sphinx_automodapi.tests.example_module.mixed.MixedSpam.rst').strpath, 'w') as f:
         f.write(MIXEDSPAM_RST)
-
 
 
 ams_to_asmry_str = """
@@ -74,7 +73,7 @@ def test_ams_to_asmry(tmpdir):
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodsumm')) as f:
+    with open(tmpdir.join('index.rst.automodsumm').strpath) as f:
         result = f.read()
 
     assert result == ams_to_asmry_expected
@@ -138,12 +137,12 @@ def test_ams_cython(tmpdir, cython_testpackage):  # noqa
         f.write(ams_cython_str)
 
     apidir = tmpdir.mkdir('api')
-    with open(apidir.join('apyhtest_eva.unit02.pilot.rst'), 'w') as f:
+    with open(apidir.join('apyhtest_eva.unit02.pilot.rst').strpath, 'w') as f:
         f.write(PILOT_RST)
 
     run_sphinx_in_tmpdir(tmpdir)
 
-    with open(tmpdir.join('index.rst.automodsumm')) as f:
+    with open(tmpdir.join('index.rst.automodsumm').strpath) as f:
         result = f.read()
 
     assert result == ams_cython_expected
