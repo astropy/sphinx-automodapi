@@ -2,8 +2,10 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 import sys
+from copy import copy
 
 import pytest
+from docutils.parsers.rst import directives, roles
 
 from . import cython_testpackage  # noqa
 from .helpers import run_sphinx_in_tmpdir
@@ -14,6 +16,18 @@ else:
     io_open = open
 
 pytest.importorskip('sphinx')  # skips these tests if sphinx not present
+
+
+def setup_function(func):
+    # This can be replaced with the docutils_namespace context manager once
+    # it is in a stable release of Sphinx
+    func._directives = copy(directives._directives)
+    func._roles = copy(roles._roles)
+
+
+def teardown_function(func):
+    directives._directives = func._directives
+    roles._roles = func._roles
 
 
 am_replacer_str = """
