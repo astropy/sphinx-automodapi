@@ -443,8 +443,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         info = logger.info
         warn = logger.warning
 
-    # info('[automodsumm] generating automodsumm for: ' + srcfn)
-
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
     # allow docstrings to be shown for methods.
