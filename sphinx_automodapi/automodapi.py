@@ -106,7 +106,6 @@ from sphinx import __version__
 from .utils import find_mod_objs
 
 SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
-SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 if sys.version_info[0] == 3:
     text_type = str
