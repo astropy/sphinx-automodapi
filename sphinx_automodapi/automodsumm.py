@@ -88,20 +88,16 @@ import inspect
 import os
 import re
 import io
-from distutils.version import LooseVersion
 
-from sphinx import __version__
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
-from .utils import find_mod_objs, cleanup_whitespace
+from .utils import (SPHINX_LT_16, SPHINX_LT_17, find_mod_objs,
+                    cleanup_whitespace)
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
-
-SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
-SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 
 def _str_list_converter(argument):
@@ -275,6 +271,7 @@ def process_automodsumm_generation(app):
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
 
+
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
 #                              r'\n\1(\s*)(\S|$)', re.MULTILINE)
 _lineendrex = r'(?:\n|$)'
@@ -312,6 +309,13 @@ def automodsumm_to_autosummary_lines(fn, app):
 
 
     """
+
+    if SPHINX_LT_16:
+        warn = app.warn
+    else:
+        from sphinx.util import logging
+        logger = logging.getLogger(__name__)
+        warn = logger.warning
 
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
@@ -376,7 +380,7 @@ def automodsumm_to_autosummary_lines(fn, app):
             msg = ('Defined more than one of functions-only, classes-only, '
                    'and variables-only.  Skipping this directive.')
             lnnum = sum([spl[j].count('\n') for j in range(i * 5 + 1)])
-            app.warn('[automodsumm]' + msg, (fn, lnnum))
+            warn('[automodsumm] ' + msg, (fn, lnnum))
             continue
 
         # Use the currentmodule directive so we can just put the local names
@@ -435,8 +439,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         logger = logging.getLogger(__name__)
         info = logger.info
         warn = logger.warning
-
-    # info('[automodsumm] generating automodsumm for: ' + srcfn)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to

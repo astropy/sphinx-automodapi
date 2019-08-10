@@ -14,6 +14,7 @@ class Meta(type):
     def foo(cls):
         return 'foo'
 
+
 if sys.version_info[0] < 3:
     exec(dedent("""
         class MyClass(object):
