@@ -1,17 +1,12 @@
-# Licensed under a 3-clause BSD style license - see LICENSE.rst
-
 # -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 from copy import copy
 
-import pytest
 from docutils.parsers.rst import directives, roles
 
 from . import cython_testpackage  # noqa
 from .helpers import run_sphinx_in_tmpdir
-
-pytest.importorskip('sphinx')  # skips these tests if sphinx not present
 
 
 def setup_function(func):
@@ -110,7 +105,6 @@ def test_too_many_options(tmpdir, capsys):
     stdout, stderr = capsys.readouterr()
     assert ("[automodsumm] Defined more than one of functions-only, "
             "classes-only, and variables-only.  Skipping this directive." in stderr)
-
 
 
 PILOT_RST = """

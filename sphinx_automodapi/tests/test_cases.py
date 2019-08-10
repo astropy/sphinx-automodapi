@@ -9,22 +9,15 @@ import sys
 import glob
 import shutil
 from itertools import product
-from distutils.version import LooseVersion
 
 import pytest
 
 from copy import deepcopy, copy
-from sphinx import __version__
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
-SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
-SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
-
-if SPHINX_LT_17:
-    from sphinx import build_main
-else:
-    from sphinx.cmd.build import build_main
+from ..utils import SPHINX_LT_16, SPHINX_LT_17
+from .helpers import build_main, write_conf
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
@@ -34,12 +27,6 @@ if SPHINX_LT_16 or os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
     PARALLEL = {False}
 else:
     PARALLEL = {False, True}
-
-
-def write_conf(filename, conf):
-    with open(filename, 'w') as f:
-        for key, value in conf.items():
-            f.write("{0} = {1}\n".format(key, repr(conf[key])))
 
 
 intersphinx_mapping = {

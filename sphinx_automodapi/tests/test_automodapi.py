@@ -15,8 +15,6 @@ if sys.version_info[0] == 2:
 else:
     io_open = open
 
-pytest.importorskip('sphinx')  # skips these tests if sphinx not present
-
 
 def setup_function(func):
     # This can be replaced with the docutils_namespace context manager once

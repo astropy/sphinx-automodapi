@@ -5,18 +5,18 @@ Miscellaneous enhancements to help autodoc along.
 import inspect
 import sys
 import types
-import sphinx
-from distutils.version import LooseVersion
 
 from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
 from sphinx.util.inspect import isdescriptor
+
+from .utils import SPHINX_LT_15
+
+__all__ = []
 
 if sys.version_info[0] == 3:
     class_types = (type,)
 else:
     class_types = (type, types.ClassType)
-
-SPHINX_LT_15 = (LooseVersion(sphinx.__version__) < LooseVersion('1.5'))
 
 MethodDescriptorType = type(type.__subclasses__)
 

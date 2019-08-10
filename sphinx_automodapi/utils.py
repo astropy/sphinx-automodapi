@@ -3,9 +3,17 @@ import sys
 import re
 import os
 from warnings import warn
+from distutils.version import LooseVersion
 
+from sphinx import __version__
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 
+__all__ = ['SPHINX_LT_16', 'SPHINX_LT_17', 'cleanup_whitespace',
+           'find_mod_objs', 'find_autosummary_in_lines_for_automodsumm']
+
+SPHINX_LT_15 = LooseVersion(__version__) < LooseVersion('1.5')
+SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
+SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 if sys.version_info[0] >= 3:
     def iteritems(dictionary):

@@ -88,20 +88,16 @@ import inspect
 import os
 import re
 import io
-from distutils.version import LooseVersion
 
-from sphinx import __version__
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
-from .utils import find_mod_objs, cleanup_whitespace
+from .utils import (SPHINX_LT_16, SPHINX_LT_17, find_mod_objs,
+                    cleanup_whitespace)
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
-
-SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
-SPHINX_LT_17 = LooseVersion(__version__) < LooseVersion('1.7')
 
 
 def _str_list_converter(argument):
@@ -274,6 +270,7 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
+
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
 #                              r'\n\1(\s*)(\S|$)', re.MULTILINE)

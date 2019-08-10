@@ -22,4 +22,3 @@ class MixedSpam(object):
         Eat special spam in the required time.
         """
         pass
-

@@ -50,7 +50,7 @@ def cython_testpackage(tmpdir, request):
     sp.call([sys.executable, 'setup.py', 'build_ext', '--inplace'], cwd=test_pkg.strpath)
 
     sys.path.insert(0, str(test_pkg))
-    import apyhtest_eva.unit02
+    import apyhtest_eva.unit02  # noqa
 
     def cleanup(test_pkg=test_pkg):
         for modname in ['apyhtest_eva', 'apyhtest_eva.unit02']:

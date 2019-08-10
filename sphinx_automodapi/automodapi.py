@@ -99,19 +99,15 @@ import io
 import os
 import re
 import sys
-from distutils.version import LooseVersion
 
-from sphinx import __version__
+from .utils import SPHINX_LT_16, find_mod_objs
 
-from .utils import find_mod_objs
-
-SPHINX_LT_16 = LooseVersion(__version__) < LooseVersion('1.6')
+__all__ = []
 
 if sys.version_info[0] == 3:
     text_type = str
 else:
-    text_type = unicode
-
+    text_type = unicode  # noqa
 
 automod_templ_modheader = """
 {modname} {pkgormod}
