@@ -1,4 +1,4 @@
-|Travis Status| |AppVeyor status| |Coverage Status| |PyPI|
+|Azure Status| |Coverage Status| |PyPI|
 
 About
 =====
@@ -20,10 +20,8 @@ or if you have `tox <https://tox.readthedocs.io/en/latest/>`_ installed::
 
     tox -e test
 
-.. |Travis Status| image:: https://travis-ci.org/astropy/sphinx-automodapi.svg?branch=master
-   :target: https://travis-ci.org/astropy/sphinx-automodapi
-.. |AppVeyor status| image:: https://ci.appveyor.com/api/projects/status/warwyfj06t1rkn5p/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/Astropy/sphinx-automodapi/branch/master
+.. |Azure Status| image:: https://dev.azure.com/astropy-project/sphinx-automodapi/_apis/build/status/astropy.sphinx-automodapi?branchName=master
+   :target: https://dev.azure.com/astropy-project/sphinx-automodapi/_build/latest?definitionId=2&branchName=master
 .. |Coverage Status| image:: https://codecov.io/gh/astropy/sphinx-automodapi/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/astropy/sphinx-automodapi
 .. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
