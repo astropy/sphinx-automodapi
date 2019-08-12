@@ -74,8 +74,6 @@ def type_object_attrgetter(obj, attr, *defargs):
 def setup(app):
     # Must have the autodoc extension set up first so we can override it
     app.setup_extension('sphinx.ext.autodoc')
-    # Need to import this too since it re-registers all the documenter types
-    # =_=
 
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
 
