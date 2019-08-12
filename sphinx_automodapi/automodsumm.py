@@ -144,8 +144,8 @@ class Automodsumm(Autosummary):
             clsonly = 'classes-only' in self.options
             varonly = 'variables-only' in self.options
             if [clsonly, funconly, varonly].count(True) > 1:
-                self.warn('more than one of functions-only, classes-only, '
-                             'or variables-only defined. Ignoring.')
+                self.warn('more than one of "functions-only", "classes-only", '
+                          'or "variables-only" defined. Ignoring.')
                 clsonly = funconly = varonly = False
 
             skipnames = []
