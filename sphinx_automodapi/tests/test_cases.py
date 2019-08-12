@@ -16,17 +16,13 @@ from copy import deepcopy, copy
 from sphinx.util.osutil import ensuredir
 from docutils.parsers.rst import directives, roles
 
-from ..utils import SPHINX_LT_16, SPHINX_LT_17
 from .helpers import build_main, write_conf
 
 CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 
 CASES_DIRS = glob.glob(os.path.join(CASES_ROOT, '*'))
 
-if SPHINX_LT_16 or os.environ.get('TRAVIS_OS_NAME', None) == 'osx':
-    PARALLEL = {False}
-else:
-    PARALLEL = {False, True}
+PARALLEL = {False, True}
 
 
 intersphinx_mapping = {
@@ -99,9 +95,6 @@ def test_run_full_case(tmpdir, case_dir, parallel):
     argv = ['-W', '-b', 'html', src_dir, '_build/html']
     if parallel:
         argv.insert(0, '-j 4')
-    if SPHINX_LT_17:
-        # As of Sphinx 1.7, the first argument is now no longer ignored
-        argv.insert(0, 'sphinx-build')
 
     try:
         os.chdir(docs_dir)

@@ -9,8 +9,6 @@ import types
 from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
 from sphinx.util.inspect import isdescriptor
 
-from .utils import SPHINX_LT_15
-
 __all__ = []
 
 if sys.version_info[0] == 3:
@@ -73,66 +71,21 @@ def type_object_attrgetter(obj, attr, *defargs):
     return getattr(obj, attr, *defargs)
 
 
-if SPHINX_LT_15:
-    # Provided to work around a bug in Sphinx
-    # See https://github.com/sphinx-doc/sphinx/pull/1843
-    class AttributeDocumenter(AttributeDocumenter):
-        @classmethod
-        def can_document_member(cls, member, membername, isattr, parent):
-            non_attr_types = cls.method_types + class_types + \
-                (MethodDescriptorType,)
-            isdatadesc = isdescriptor(member) and not \
-                isinstance(member, non_attr_types) and not \
-                type(member).__name__ == "instancemethod"
-            # That last condition addresses an obscure case of C-defined
-            # methods using a deprecated type in Python 3, that is not
-            # otherwise exported anywhere by Python
-            return isdatadesc or (not isinstance(parent, ModuleDocumenter) and
-                                  not inspect.isroutine(member) and
-                                  not isinstance(member, class_types))
-
-
 def setup(app):
     # Must have the autodoc extension set up first so we can override it
     app.setup_extension('sphinx.ext.autodoc')
     # Need to import this too since it re-registers all the documenter types
     # =_=
-    import sphinx.ext.autosummary.generate
 
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
 
-    if sphinx.version_info < (1, 4, 2):
-        # this is a really ugly hack to supress a warning that sphinx 1.4
-        # generates when overriding an existing directive (which is *desired*
-        # behavior here).  As of sphinx v1.4.2, this has been fixed:
-        # https://github.com/sphinx-doc/sphinx/issues/2451
-        # But we leave it in for 1.4.0/1.4.1 .  But if the "needs_sphinx" is
-        # eventually updated to >= 1.4.2, this should be removed entirely (in
-        # favor of the line in the "else" clause)
-        _oldwarn = app._warning
-        _oldwarncount = app._warncount
-        try:
-            try:
-                # *this* is in a try/finally because we don't want to force six as
-                # a real dependency.  In sphinx 1.4, six is a prerequisite, so
-                # there's no issue. But in older sphinxes this may not be true...
-                # but the inderlying warning is absent anyway so we let it slide.
-                from six import StringIO
-                app._warning = StringIO()
-            except ImportError:
-                pass
-            app.add_autodocumenter(AttributeDocumenter)
-        finally:
-            app._warning = _oldwarn
-            app._warncount = _oldwarncount
-    else:
-        suppress_warnigns_orig = app.config.suppress_warnings[:]
-        if 'app.add_directive' not in app.config.suppress_warnings:
-            app.config.suppress_warnings.append('app.add_directive')
-        try:
-            app.add_autodocumenter(AttributeDocumenter)
-        finally:
-            app.config.suppress_warnings = suppress_warnigns_orig
+    suppress_warnings_orig = app.config.suppress_warnings[:]
+    if 'app.add_directive' not in app.config.suppress_warnings:
+        app.config.suppress_warnings.append('app.add_directive')
+    try:
+        app.add_autodocumenter(AttributeDocumenter)
+    finally:
+        app.config.suppress_warnings = suppress_warnings_orig
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}

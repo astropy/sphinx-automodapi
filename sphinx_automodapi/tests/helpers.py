@@ -5,15 +5,12 @@ import os
 import sys
 from copy import deepcopy
 
-from ..utils import SPHINX_LT_17
+from sphinx.cmd.build import build_main
+
 from . import cython_testpackage  # noqa
 
-__all__ = ['build_main', 'write_conf', 'run_sphinx_in_tmpdir']
+__all__ = ['write_conf', 'run_sphinx_in_tmpdir']
 
-if SPHINX_LT_17:
-    from sphinx import build_main
-else:
-    from sphinx.cmd.build import build_main
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/{0}/'.format(sys.version_info[0]), None)
@@ -47,9 +44,6 @@ def run_sphinx_in_tmpdir(tmpdir, additional_conf={}, expect_error=False):
     write_conf(tmpdir.join('conf.py').strpath, conf)
 
     argv = ['-W', '-b', 'html', '.', '_build/html']
-    if SPHINX_LT_17:
-        # As of Sphinx 1.7, the first argument is now no longer ignored
-        argv.insert(0, 'sphinx-build')
 
     try:
         os.chdir(tmpdir.strpath)

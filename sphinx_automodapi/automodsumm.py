@@ -89,12 +89,12 @@ import os
 import re
 import io
 
+from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram
 from docutils.parsers.rst.directives import flag
 
-from .utils import (SPHINX_LT_16, SPHINX_LT_17, find_mod_objs,
-                    cleanup_whitespace)
+from .utils import find_mod_objs, cleanup_whitespace
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
@@ -144,7 +144,7 @@ class Automodsumm(Autosummary):
             clsonly = 'classes-only' in self.options
             varonly = 'variables-only' in self.options
             if [clsonly, funconly, varonly].count(True) > 1:
-                self.warning('more than one of functions-only, classes-only, '
+                self.warn('more than one of functions-only, classes-only, '
                              'or variables-only defined. Ignoring.')
                 clsonly = funconly = varonly = False
 
@@ -310,12 +310,7 @@ def automodsumm_to_autosummary_lines(fn, app):
 
     """
 
-    if SPHINX_LT_16:
-        warn = app.warn
-    else:
-        from sphinx.util import logging
-        logger = logging.getLogger(__name__)
-        warn = logger.warning
+    logger = logging.getLogger(__name__)
 
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
@@ -380,7 +375,7 @@ def automodsumm_to_autosummary_lines(fn, app):
             msg = ('Defined more than one of functions-only, classes-only, '
                    'and variables-only.  Skipping this directive.')
             lnnum = sum([spl[j].count('\n') for j in range(i * 5 + 1)])
-            warn('[automodsumm] ' + msg, (fn, lnnum))
+            logger.warning('[automodsumm] ' + msg, (fn, lnnum))
             continue
 
         # Use the currentmodule directive so we can just put the local names
@@ -431,14 +426,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
 
-    if SPHINX_LT_16:
-        info = app.info
-        warn = app.warn
-    else:
-        from sphinx.util import logging
-        logger = logging.getLogger(__name__)
-        info = logger.info
-        warn = logger.warning
+    logger = logging.getLogger(__name__)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
@@ -460,12 +448,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     items = find_autosummary_in_lines(lines, filename=srcfn)
     if len(items) > 0:
         msg = '[automodsumm] {1}: found {0} automodsumm entries to generate'
-        info(msg.format(len(items), srcfn))
+        logger.info(msg.format(len(items), srcfn))
 
 #    gennms = [item[0] for item in items]
 #    if len(gennms) > 20:
 #        gennms = gennms[:10] + ['...'] + gennms[-10:]
-#    info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
+#    logger.info('[automodsumm] generating autosummary for: ' + ', '.join(gennms))
 
     # remove possible duplicates
     items = list(set(items))
@@ -487,7 +475,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         try:
             import_by_name_values = import_by_name(name)
         except ImportError as e:
-            warn('[automodsumm] failed to import %r: %s' % (name, e))
+            logger.warning('[automodsumm] failed to import %r: %s' % (name, e))
             continue
 
         # if block to accommodate Sphinx's v1.2.2 and v1.2.3 respectively
@@ -508,10 +496,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
         try:
 
-            if SPHINX_LT_17:
-                doc = get_documenter(obj, parent)
-            else:
-                doc = get_documenter(app, obj, parent)
+            doc = get_documenter(app, obj, parent)
 
             if template_name is not None:
                 template = template_env.get_template(template_name)
@@ -529,10 +514,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 items = []
                 for name in dir(obj):
                     try:
-                        if SPHINX_LT_17:
-                            documenter = get_documenter(safe_getattr(obj, name), obj)
-                        else:
-                            documenter = get_documenter(app, safe_getattr(obj, name), obj)
+                        documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
                     if typ is None or documenter.objtype == typ:
@@ -572,10 +554,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
                 for name in names:
                     try:
-                        if SPHINX_LT_17:
-                            documenter = get_documenter(safe_getattr(obj, name), obj)
-                        else:
-                            documenter = get_documenter(app, safe_getattr(obj, name), obj)
+                        documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
                     if typ is None or documenter.objtype == typ:
