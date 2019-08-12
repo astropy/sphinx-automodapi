@@ -5,6 +5,7 @@ Changes in sphinx-automodapi
 -----------------
 
 - Fixed compatibility with Sphinx 2.0 and later. [#86]
+- The minimum sphinx version is now 1.7. [#88]
 
 
 0.11 (2019-05-29)
