@@ -100,7 +100,9 @@ import os
 import re
 import sys
 
-from .utils import SPHINX_LT_16, find_mod_objs
+from sphinx.util import logging
+
+from .utils import find_mod_objs
 
 __all__ = []
 
@@ -199,12 +201,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         sphinx markup.
     """
 
-    if SPHINX_LT_16:
-        warn = app.warn
-    else:
-        from sphinx.util import logging
-        logger = logging.getLogger(__name__)
-        warn = logger.warning
+    logger = logging.getLogger(__name__)
 
     spl = _automodapirex.split(sourcestr)
     if len(spl) > 1:  # automodsumm is in this document
@@ -282,7 +279,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             if len(hds) < 2:
                 msg = 'Not enough headings (got {0}, need 2), using default -^'
                 if warnings:
-                    warn(msg.format(len(hds)), location)
+                    logger.warning(msg.format(len(hds)), location)
                 hds = '-^'
             h1, h2 = hds[:2]
 
@@ -291,7 +288,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 opsstrs = ','.join(unknownops)
                 msg = 'Found additional options ' + opsstrs + ' in automodapi.'
                 if warnings:
-                    warn(msg, location)
+                    logger.warning(msg, location)
 
             ispkg, hascls, hasfuncs, hasother = _mod_info(
                 modnm, toskip, onlylocals=onlylocals)

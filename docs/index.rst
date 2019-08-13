@@ -9,13 +9,15 @@ standalone package that can be used for any project.
 Installation
 ------------
 
-This extension requires Sphinx 1.3 or later, and can be installed with::
+This extension requires Sphinx 1.7 or later, and can be installed with::
 
     pip install sphinx-automodapi
 
 The extension is also available through conda package management system. It can be installed with::
 
     conda install -c astropy sphinx-automodapi
+
+
 
 .. _quickstart:
 
@@ -69,3 +71,11 @@ User guide
 
    automodapi.rst
    automodsumm.rst
+
+Dependency Version Guidelines
+-----------------------------
+
+As a general guideline, automodapi dependencies (at the time of writing, just
+Sphinx) aim to maintain compatibility with versions <= 2 years old. Dependencies
+may be newer, however, if specific features become important to help automodapi
+work better or be more maintainable.
