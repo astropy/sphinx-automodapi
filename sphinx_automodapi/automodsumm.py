@@ -99,6 +99,10 @@ from .utils import find_mod_objs, cleanup_whitespace
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
 
+api_ignore_methods = []
+api_class_methods = ['__init__', '__call__', '__bool__', '__len__',
+        '__getitem__', '__setitem__', '__setattr__',
+        '__getattr__', '__getattribute__']
 
 def _str_list_converter(argument):
     """
@@ -512,7 +516,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 typ = None -> all
                 """
                 items = []
+                # Add back? Seems fragile to rely on automodapi to ignore
+                # random variables you declare or classes you import on the
+                # top-level module. Better to use the :skip: directive *or*
+                # omit objects from __all__.
                 for name in dir(obj):
+                    # docstring = getattr(safe_getattr(obj, name), '__doc__')
+                    # if not docstring and typ in ('function', 'class', 'exception'):
+                    #     continue
                     try:
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
@@ -523,7 +534,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                           if x in include_public or not x.startswith('_')]
                 return public, items
 
-            def get_members_class(obj, typ, include_public=[],
+            def get_members_class(obj, typ, include_public=[], exclude_public=[],
                                   include_base=False):
                 """
                 typ = None -> all
@@ -552,10 +563,15 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     else:
                         names = getattr(obj, '__dict__').keys()
 
+                # Modification here, only document something if it has a
+                # docstring! Do not inherit if empty, similar to
+                # :inherited-members: option
                 for name in names:
                     try:
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
+                        continue
+                    if documenter.objtype == 'method' and not getattr(safe_getattr(obj, name), '__doc__', ''):
                         continue
                     if typ is None or documenter.objtype == typ:
                         items.append(name)
@@ -563,8 +579,8 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         # In Sphinx 2.0 and above, properties have a separate
                         # objtype, but we treat them the same here.
                         items.append(name)
-                public = [x for x in items
-                          if x in include_public or not x.startswith('_')]
+                public = [x for x in items if x not in exclude_public and
+                            (x in include_public or not x.startswith('_'))]
                 return public, items
 
             ns = {}
@@ -585,17 +601,16 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     # use default value
                     include_base = inherited_members
 
-                api_class_methods = ['__init__', '__call__']
                 ns['members'] = get_members_class(obj, None,
                                                   include_base=include_base)
                 ns['methods'], ns['all_methods'] = \
-                    get_members_class(obj, 'method', api_class_methods,
+                    get_members_class(obj, 'method', api_class_methods, api_ignore_methods,
                                       include_base=include_base)
                 ns['attributes'], ns['all_attributes'] = \
                     get_members_class(obj, 'attribute',
                                       include_base=include_base)
-                ns['methods'].sort()
-                ns['attributes'].sort()
+                ns['methods'] = sorted(ns['methods'])
+                ns['attributes'] = sorted(ns['attributes'])
 
             parts = name.split('.')
             if doc.objtype in ('method', 'attribute'):
