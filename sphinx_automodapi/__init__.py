@@ -1,1 +1,1 @@
-__version__ = '0.3.proplot-mods'
+__version__ = '0.4.proplot-mods'
