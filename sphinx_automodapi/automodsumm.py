@@ -275,6 +275,7 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
+            print('NEW FILES!', new_files)
             for f in new_files:
                 env.found_docs.add(env.path2doc(f))
 
