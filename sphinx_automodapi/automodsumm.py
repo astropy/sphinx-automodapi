@@ -276,7 +276,7 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
-            logger.info('New files: ' + ', '.join(os.path.basenam(file)
+            logger.info('Files: ' + ', '.join(os.path.basename(file)
                 for file in new_files))
             for f in new_files:
                 env.found_docs.add(env.path2doc(f))
@@ -504,10 +504,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         fn = os.path.join(path, name + suffix)
 
         # skip it if it exists
+        # always add to new_files so we can add them to env.found_docs
+        new_files.append(fn)
         if os.path.isfile(fn):
             continue
-
-        new_files.append(fn)
 
         f = open(fn, 'w')
 
