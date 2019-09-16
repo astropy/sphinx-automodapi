@@ -9,7 +9,7 @@ available as a standalone package since it can be used for any other
 package. The documentation can be found on
 `ReadTheDocs <http://sphinx-automodapi.readthedocs.io/en/latest/>`_.
 
-This extension was forked from the Astropy project for use with the ProPlot project, in order to change a few hard-coded settings that could not be changed with the existing API.
+This extension was forked from the Astropy project for use with the ProPlot project, in order to change a few hard-coded settings that could not be changed with the existing API. ProPlot documentation can also be found on `ReadTheDocs <https://proplot.readthedocs.io/en/latest>`_.
 
 
 Running tests
