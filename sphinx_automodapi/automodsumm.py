@@ -100,9 +100,10 @@ __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
 
 api_ignore_methods = []
-api_class_methods = ['__init__', '__call__', '__bool__', '__len__',
-        '__getitem__', '__setitem__', '__setattr__',
-        '__getattr__', '__getattribute__']
+api_class_methods = [
+    '__init__', '__call__', # default
+    '__getitem__', '__setitem__', '__setattr__', '__getattr__', # custom
+    ]
 
 def _str_list_converter(argument):
     """
@@ -270,10 +271,12 @@ def process_automodsumm_generation(app):
     for sfn, lines in zip(filestosearch, liness):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
-            generate_automodsumm_docs(
+            new_files = generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
+            for f in new_files:
+                env.found_docs.add(env.path2doc(f))
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -435,10 +438,17 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
     # allow docstrings to be shown for methods.
-    template_dirs = [os.path.join(os.path.dirname(__file__), 'templates'),
-                     os.path.join(base_path, '_templates')]
+    local_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    default_dir = os.path.join(base_path, '_templates')
+    template_dirs = [local_dir, default_dir]
     if builder is not None:
         # allow the user to override the templates
+        # also add to the templates_path
+        # TODO: messes up usage for some users? for time being IDGAF
+        local_dir_full = os.path.join(local_dir, 'autosummary_core')
+        templates_path = builder.config.templates_path
+        if local_dir_full not in templates_path:
+            templates_path.insert(0, local_dir_full)
         template_loader = BuiltinTemplateLoader()
         template_loader.init(builder, dirs=template_dirs)
     else:
@@ -664,6 +674,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         finally:
             f.close()
 
+    return new_files
 
 def setup(app):
 
@@ -680,6 +691,20 @@ def setup(app):
     app.add_directive('automodsumm', Automodsumm)
     app.connect('builder-inited', process_automodsumm_generation)
 
+    # insert event *before* the autosummary hook so autosummary will read
+    # from the updated app.builder.env.found_docs attribute
+    # try to use as much of API as possible here
+    from sphinx.ext.autosummary import process_generate_options
+    listener_id = None
+    for lid, func in app.events.listeners['builder-inited'].items():
+        if func is process_generate_options:
+            listener_id = lid
+            break
+    if listener_id is not None:
+        app.disconnect(listener_id)
+        app.connect('builder-inited', process_generate_options)
+
+    # original
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
 
