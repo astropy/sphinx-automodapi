@@ -268,6 +268,7 @@ def process_automodsumm_generation(app):
                         f.write(l)
                         f.write('\n')
 
+    logger = logging.getLogger(__name__)
     for sfn, lines in zip(filestosearch, liness):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
@@ -275,7 +276,8 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
-            print('NEW FILES!', new_files)
+            logger.info('New files: ' + ', '.join(os.path.basenam(file)
+                for file in new_files))
             for f in new_files:
                 env.found_docs.add(env.path2doc(f))
 
