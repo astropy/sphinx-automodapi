@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#-----------------------------------------------------------------------------#
+# Post commit hook that looks for __version__ variable in __init__.py file,
+# compares it to the current tag, and updates the commit if the __version__ was
+# also updated. Copy to .git/hooks/post-commit to add this to any project.
+# See also: https://stackoverflow.com/a/27332476/4970632
+# See also: https://stackoverflow.com/a/46972376/4970632
+# This is currently very lightweight and assumes workflow where users
+# manually increment tag number, which is probably appropriate
+#-----------------------------------------------------------------------------#
+# Helper
+raise() {
+  echo "Error: $@"
+  exit 1
+}
+
+# Bail if we are in middle of rebase
+base=$(git rev-parse --show-toplevel)
+[ $? -ne 0 ] && raise "Not in git repository."
+[ -d $base/.git/rebase-merge ] && exit 0
+
+# Get head dir
+init=($(git ls-files | grep __init__.py | grep -v 'tests'))
+[ ${#init[@]} -eq 0 ] && raise "__init__.py not found."
+[ ${#init[@]} -gt 1 ] && raise "Multiple candidates for __init__.py: ${init[@]}"
+
+# Get version string
+version=$(cat $init | grep -E '^version|^__version')
+[ -z "$version" ] && raise "$init version string not found."
+[ $(echo "$version" | wc -l) -gt 1 ] && raise "Ambiguous version string in $init."
+version=$(echo "$version" | awk -F"['\"]" '{print $2}') # first string on line
+
+# Prompt user action
+# NOTE: Currently git suppresses interactivity but that's fine, just means
+# default action of adding tag is taken
+tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+if [ $? -ne 0 ] || [ "$tag" != "v$version" ]; then
+  while true; do
+    read -r -p "Increment tag from $tag --> v$version? ([y]/n) " response
+    if [ -n "$response" ] && ! [[ "$response" =~  ^[NnYy]$ ]]; then
+      echo "Invalid response."
+      continue # invalid, so try again
+    fi
+    if ! [[ "$response" =~ ^[Nn]$ ]]; then
+      git tag "v$version"
+      [ $? -eq 0 ] && echo "Incremented tag from $tag --> v$version"
+    fi
+    break
+  done
+fi
