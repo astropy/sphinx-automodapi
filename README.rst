@@ -15,7 +15,7 @@ This extension was forked from the Astropy project for use with the `proplot <ht
 
 * Adds ``__getitem__``, ``__getattr__``, ``__setitem__``, and ``__setattr__`` to the list of builtin methods that are *not* ignored by the documentation generator.
 * Skips over class methods that are public, but do *not* have their own ``__doc__`` attributes, to prevent inheriting and displaying documentation from external projects.
-* Gives class methods and attributes their own stub pages, instead of putting all class methods and attributes on a single page. This also requires reordering the event hooks so ``sphinx_automodapi`` is called before ``autosummary``, so that ``autosummary`` detects the automatically generated class pages.
+* Gives class methods and attributes their own stub pages, instead of putting all class methods and attributes on a single page. This also requires adding the new files to ``env.found_docs`` and reordering the event hooks so ``sphinx_automodapi`` is called before ``autosummary``. This way ``autosummary`` will read the automatically generated class pages and generate the corresponding stubs.
 
 
 Running tests
