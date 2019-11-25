@@ -11,7 +11,7 @@ package. The documentation can be found on
 
 Proplot modifications
 ---------------------
-Not sure if you guys will necessarily want to merge this as it changes some core behavior, but I forked this for use with my `proplot <https://github.com/lukelbd/proplot>`__ project and added the following features:
+I forked this repo for use with my `proplot <https://github.com/lukelbd/proplot>`__ project and added the following features:
 
 * Skip over class methods that are public, but do *not* have their own ``__doc__`` attributes. This prevents inheriting and displaying documentation from external projects, namely matplotlib.
 * Include ``__getitem__``, ``__getattr__``, ``__setitem__``, and ``__setattr__`` in the list of builtin methods that are *not* ignored by the documentation generator. I use these to document some dictionary/list subclasses.
