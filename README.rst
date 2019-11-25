@@ -11,11 +11,11 @@ package. The documentation can be found on
 
 Proplot modifications
 ---------------------
-This extension was forked from the Astropy project for use with the `proplot <https://github.com/lukelbd/proplot>`__ project in order to add some features. The following changes were made:
+Not sure if you guys will necessarily want to merge this as it changes some core behavior, but I forked this for use with my `proplot <https://github.com/lukelbd/proplot>`__ project and added the following features:
 
-* Adds ``__getitem__``, ``__getattr__``, ``__setitem__``, and ``__setattr__`` to the list of builtin methods that are *not* ignored by the documentation generator.
-* Skips over class methods that are public, but do *not* have their own ``__doc__`` attributes, to prevent inheriting and displaying documentation from external projects.
-* Gives class methods and attributes their own stub pages, instead of putting all class methods and attributes on a single page. This also requires adding the new files to ``env.found_docs`` and reordering the event hooks so ``sphinx_automodapi`` is called before ``autosummary``. This way ``autosummary`` will read the automatically generated class pages and generate the corresponding stubs.
+* Skip over class methods that are public, but do *not* have their own ``__doc__`` attributes. This prevents inheriting and displaying documentation from external projects, namely matplotlib.
+* Include ``__getitem__``, ``__getattr__``, ``__setitem__``, and ``__setattr__`` in the list of builtin methods that are *not* ignored by the documentation generator. I use these to document some dictionary/list subclasses.
+* Give class methods and attributes their own stub pages, instead of putting all class methods and attributes on a single page. This also required adding the new files to ``env.found_docs`` and reordering the event hooks in ``automodsumm.py`` so that ``sphinx_automodapi`` is called before ``autosummary``. This way ``autosummary`` sees the new class pages and can build the appropriate stubs.
 
 
 Running tests
