@@ -447,7 +447,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     if builder is not None:
         # allow the user to override the templates
         # also add to the templates_path
-        # TODO: messes up usage for some users? for time being IDGAF
+        # TODO: messes up usage for some users?
         local_dir_full = os.path.join(local_dir, 'autosummary_core')
         templates_path = builder.config.templates_path
         if local_dir_full not in templates_path:
