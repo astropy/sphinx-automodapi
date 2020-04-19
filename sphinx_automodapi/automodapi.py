@@ -166,7 +166,7 @@ _automodapiargsrex = re.compile(r':([a-zA-Z_\-]+):(.*)$', flags=re.MULTILINE)
 def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                        warnings=True):
     """
-    Replaces `sourcestr`'s entries of ".. automdapi::" with the
+    Replaces `sourcestr`'s entries of ".. automodapi::" with the
     automodapi template form based on provided options.
 
     This is used with the sphinx event 'source-read' to replace
