@@ -42,7 +42,6 @@ def missing_reference_handler(app, env, node, contnode):
     reftype = node['reftype']
     reftarget = node['reftarget']
     if reftype in ('obj', 'class', 'exc', 'meth'):
-        reftarget = node['reftarget']
         suffix = ''
         if reftarget not in mapping:
             if '.' in reftarget:
