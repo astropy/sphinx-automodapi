@@ -72,6 +72,8 @@ def missing_reference_handler(app, env, node, contnode):
 
     reftype = node['reftype']
     reftarget = node['reftarget']
+    refexplicit = node.get('refexplicit')  # default: None
+    refdoc = node.get('refdoc', env.docname)
     if reftype in ('obj', 'class', 'exc', 'meth'):
         suffix = ''
         if reftarget not in mapping:
@@ -105,8 +107,7 @@ def missing_reference_handler(app, env, node, contnode):
 
                     if 'py:class' in inventory[prefix] and reftarget in inventory[prefix]['py:class']:
                         newtarget = inventory[prefix]['py:class'][reftarget][2]
-                        if not node['refexplicit'] and \
-                                '~' not in node.rawsource:
+                        if not refexplicit and '~' not in node.rawsource:
                             contnode = literal(text=reftarget)
                         newnode = reference('', '', internal=True)
                         newnode['reftitle'] = reftarget
@@ -117,11 +118,10 @@ def missing_reference_handler(app, env, node, contnode):
 
         if reftarget in mapping:
             newtarget = mapping[reftarget] + suffix
-            if not node['refexplicit'] and '~' not in node.rawsource:
+            if not refexplicit and '~' not in node.rawsource:
                 contnode = literal(text=newtarget)
-            newnode = env.domains['py'].resolve_xref(
-                env, node['refdoc'], app.builder, 'class', newtarget,
-                node, contnode)
+            newnode = env.domains['py'].resolve_xref(env, refdoc, app.builder, 'class',
+                                                     newtarget, node, contnode)
             if newnode is not None:
                 newnode['reftitle'] = reftarget
             return newnode
