@@ -34,6 +34,37 @@ def merge_mapping(app, env, docnames, env_other):
 
 
 def missing_reference_handler(app, env, node, contnode):
+    """
+    Handler to be connect to the sphinx 'missing-reference' event.  The handler a
+    resolves reference (node) and returns a new node when sphinx could not
+    originally resolve the reference.
+
+    see `missing-reference in sphinx documentation
+    <https://www.sphinx-doc.org/en/master/extdev/appapi.html#event-missing-reference>`_
+
+    :param app: The Sphinx application object
+    :param env: The build environment (``app.builder.env`)
+    :param node: The ``pending_xref`` node to be resolved. Its attributes reftype,
+                 reftarget, modname and classname attributes determine the type and
+                 target of the reference.
+    :param contnode: The node that carries the text and formatting inside the
+                     future reference and should be a child of the returned
+                     reference node.
+    """
+    # a good example of how a missing reference handle works look to
+    #  https://github.com/sphinx-doc/sphinx/issues/1572#issuecomment-68590981
+    #
+    # Important attributes of the "node":
+    #
+    #      example role:  :ref:`title <target>`
+    #
+    #  'reftype'     - role name (in the example above 'ref' is the reftype)
+    #  'reftarget'   - target of the role, as given in the role content
+    #                  (in the example 'target' is the reftarget
+    #  'refexplicit' - the explicite title of the role
+    #                  (in the example 'title' is the refexplicit)
+    #  'refdoc'      - document in which the role appeared
+    #  'refdomain'   - domain of the role, in our case emtpy
 
     if not hasattr(env, 'class_name_mapping'):
         env.class_name_mapping = {}
