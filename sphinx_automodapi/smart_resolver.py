@@ -80,6 +80,7 @@ def missing_reference_handler(app, env, node, contnode):
             if '.' in reftarget:
                 front, suffix = reftarget.rsplit('.', 1)
             else:
+                front = None
                 suffix = reftarget
 
             if suffix.startswith('_') and not suffix.startswith('__'):
@@ -88,7 +89,7 @@ def missing_reference_handler(app, env, node, contnode):
                 # nitpick warning.
                 return node[0].deepcopy()
 
-            if reftype in ('obj', 'meth') and '.' in reftarget:
+            if reftype in ('obj', 'meth') and front is not None:
                 if front in mapping:
                     reftarget = front
                     suffix = '.' + suffix
