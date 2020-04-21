@@ -61,7 +61,7 @@ def missing_reference_handler(app, env, node, contnode):
     #  'reftype'     - role name (in the example above 'ref' is the reftype)
     #  'reftarget'   - target of the role, as given in the role content
     #                  (in the example 'target' is the reftarget
-    #  'refexplicit' - the explicite title of the role
+    #  'refexplicit' - the explicit title of the role
     #                  (in the example 'title' is the refexplicit)
     #  'refdoc'      - document in which the role appeared
     #  'refdomain'   - domain of the role, in our case emtpy
