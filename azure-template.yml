@@ -40,7 +40,7 @@ jobs:
       versionSpec: '3.7'
       architecture: 'x64'
 
-  - script: pip install tox coverage
+  - script: pip install tox "coverage<5.0"
     displayName: Installing tox and coverage
 
   - script: tox
