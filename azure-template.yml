@@ -2,11 +2,11 @@ jobs:
 - job: ${{ format(parameters.name) }}
   pool:
     ${{ if eq(parameters.os, 'macosx') }}:
-      vmImage: macOS 10.13
+      vmImage: 'macOS-latest'
     ${{ if eq(parameters.os, 'linux') }}:
-      vmImage: Ubuntu 16.04
+      vmImage: 'ubuntu-latest'
     ${{ if eq(parameters.os, 'windows') }}:
-      vmImage: vs2017-win2016
+      vmImage: 'vs2017-win2016'
 
   steps:
 
@@ -40,7 +40,7 @@ jobs:
       versionSpec: '3.7'
       architecture: 'x64'
 
-  - script: pip install tox coverage
+  - script: pip install tox "coverage<5.0"
     displayName: Installing tox and coverage
 
   - script: tox
