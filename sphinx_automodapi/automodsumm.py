@@ -699,10 +699,12 @@ def setup(app):
     # try to use as much of API as possible here
     from sphinx.ext.autosummary import process_generate_options
     listener_id = None
-    for lid, func in app.events.listeners['builder-inited'].items():
-        if func is process_generate_options:
-            listener_id = lid
-            break
+    listeners = app.events.listeners['builder-inherited']
+    if listeners and isinstance(listeners, dict):  # in case API changes
+        for lid, func in listeners.items():
+            if func is process_generate_options:
+                listener_id = lid
+                break
     if listener_id is not None:
         app.disconnect(listener_id)
         app.connect('builder-inited', process_generate_options)
