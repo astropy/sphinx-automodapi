@@ -434,7 +434,7 @@ def setup(app):
     from . import automodsumm
     app.setup_extension(automodsumm.__name__)
 
-    app.connect('source-read', process_automodapi)
+    app.connect('source-read', process_automodapi, priority=100)
 
     app.add_config_value('automodapi_inheritance_diagram', True, True)
     app.add_config_value('automodapi_toctreedirnm', 'api', True)

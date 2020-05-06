@@ -692,24 +692,8 @@ def setup(app):
 
     app.add_directive('automod-diagram', Automoddiagram)
     app.add_directive('automodsumm', Automodsumm)
-    app.connect('builder-inited', process_automodsumm_generation)
+    app.connect('builder-inited', process_automodsumm_generation, priority=100)
 
-    # insert event *before* the autosummary hook so autosummary will read
-    # from the updated app.builder.env.found_docs attribute
-    # try to use as much of API as possible here
-    from sphinx.ext.autosummary import process_generate_options
-    listener_id = None
-    listeners = app.events.listeners['builder-inherited']
-    if listeners and isinstance(listeners, dict):  # in case API changes
-        for lid, func in listeners.items():
-            if func is process_generate_options:
-                listener_id = lid
-                break
-    if listener_id is not None:
-        app.disconnect(listener_id)
-        app.connect('builder-inited', process_generate_options)
-
-    # original
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
 
