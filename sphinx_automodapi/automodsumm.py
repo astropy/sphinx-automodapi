@@ -46,7 +46,7 @@ options:
         in the generated documentation. The flags ``:inherited-members:`` or
         ``:no-inherited-members:`` allows overrriding this global setting.
 
-This extension also adds two sphinx configuration options:
+This extension also adds three sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
     Should be a bool, and if ``True``, will cause `automodsumm`_ to write files
@@ -61,6 +61,12 @@ This extension also adds two sphinx configuration options:
     overriden for any particular automodsumm directive by including the
     ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
     ``False``.
+
+* ``automodsumm_included_members``
+    A list of strings containing the names of hidden class members that should be
+    included in the documentation. This is most commonly used to add special class
+    methods like ``__getitem__`` and ``__setitem__``. Defaults to
+    ``['__init__', '__call__']``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
@@ -295,7 +301,8 @@ def process_automodsumm_generation(app):
             generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
                 base_path=app.srcdir,
-                inherited_members=app.config.automodsumm_inherited_members)
+                inherited_members=app.config.automodsumm_inherited_members,
+                included_members=app.config.automodsumm_included_members)
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -432,7 +439,8 @@ def automodsumm_to_autosummary_lines(fn, app):
 def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
-                              inherited_members=False):
+                              inherited_members=False,
+                              included_members=('__init__', '__call__')):
     """
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
@@ -593,11 +601,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     # use default value
                     include_base = inherited_members
 
-                api_class_methods = ['__init__', '__call__']
                 ns['members'] = get_members_class(obj, None,
                                                   include_base=include_base)
                 ns['methods'], ns['all_methods'] = \
-                    get_members_class(obj, 'method', api_class_methods,
+                    get_members_class(obj, 'method', included_members,
                                       include_base=include_base)
                 ns['attributes'], ns['all_attributes'] = \
                     get_members_class(obj, 'attribute',
@@ -676,6 +683,8 @@ def setup(app):
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
+    app.add_config_value(
+        'automodsumm_included_members', ['__init__', '__call__'], 'env')
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
