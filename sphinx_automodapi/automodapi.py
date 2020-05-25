@@ -59,10 +59,9 @@ It accepts the following options:
 
     * ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:``
         The global sphinx configuration option ``automodsumm_ignore_emptydoc``
-        decides if functions, classes, and class methods with empty
-        ``__doc__`` attributes are included in the generated documentation. The flags
-        ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:`` allow the user to override
-        the global setting.
+        decides if class methods with empty ``__doc__`` attributes are included
+        in the generated documentation. The flags ``:ignore-emptydoc:`` or
+        ``:no-ignore-emptydoc:`` allow the user to override the global setting.
 
 
 This extension also adds four sphinx configuration options:
@@ -333,15 +332,15 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:
                 clsfuncoptions.append(allowedpkgnms)
-            if ignore_emptydoc is True:
-                clsfuncoptions.append(':ignore-emptydoc:')
-            if ignore_emptydoc is False:
-                clsfuncoptions.append(':no-ignore-emptydoc:')
             if hascls:  # This makes no sense unless there are classes.
                 if inherited_members is True:
                     clsfuncoptions.append(':inherited-members:')
                 if inherited_members is False:
                     clsfuncoptions.append(':no-inherited-members:')
+                if ignore_emptydoc is True:
+                    clsfuncoptions.append(':ignore-emptydoc:')
+                if ignore_emptydoc is False:
+                    clsfuncoptions.append(':no-ignore-emptydoc:')
             clsfuncoptionstr = '\n    '.join(clsfuncoptions)
 
             if hasfuncs:

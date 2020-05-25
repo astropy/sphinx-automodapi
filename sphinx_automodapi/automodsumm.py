@@ -48,10 +48,9 @@ options:
 
     * ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:``
         The global sphinx configuration option ``automodsumm_ignore_emptydoc``
-        decides if functions, classes, and class methods with empty
-        ``__doc__`` attributes are included in the generated documentation. The flags
-        ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:`` allows overrriding this
-        global setting.
+        decides if class methods with empty ``__doc__`` attributes are included
+        in the generated documentation. The flags ``:ignore-emptydoc:`` or
+        ``:no-ignore-emptydoc:`` allows overrriding this global setting.
 
 This extension also adds three sphinx configuration options:
 
@@ -70,11 +69,10 @@ This extension also adds three sphinx configuration options:
     ``False``.
 
 * ``automodsumm_ignore_emptydoc``
-    Should be a bool, and if ``True``, will cause `automodsumm`_ to ignore
-    functions, classes, and class methods with empty ``__doc__`` attributes.
-    This value can be overridden for any particular automodsumm directive by including
-    the ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:`` options. Defaults to
-    ``False``.
+    Should be a bool, and if ``True``, will cause `automodsumm`_ to ignore class
+    methods with empty ``__doc__`` attributes. This value can be overridden for any
+    particular automodsumm directive by including the ``:ignore-emptydoc:`` or
+    ``:no-ignore-emptydoc:`` options. Defaults to ``False``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
@@ -577,7 +575,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         continue
                     if (
                         ignore_emptydoc
-                        and documenter.objtype in ('method', 'class', 'function')
+                        and documenter.objtype == 'method'
                         and not getattr(safe_getattr(obj, name), '__doc__', '')
                     ):
                         continue
