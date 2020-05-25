@@ -55,6 +55,12 @@ This extension also adds two sphinx configuration options:
     actually used by sphinx, so this option is only for figuring out the
     cause of sphinx warnings or other debugging.  Defaults to ``False``.
 
+* ``automodsumm_stub_pages``
+    Should be a bool, and if ``True``, will cause `automodsumm`_ to
+    generate individual stub pages for class attributes and class methods
+    rather than documenting all class methods and attributes on the same
+    page. Defaults to ``False``.
+
 * ``automodsumm_inherited_members``
     Should be a bool and if ``True``, will cause `automodsumm`_ to document
     class members that are inherited from a base class. This value can be
@@ -266,10 +272,13 @@ def process_automodsumm_generation(app):
     for sfn, lines in zip(filestosearch, liness):
         suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
-            generate_automodsumm_docs(
+            new_files = generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
+                stub_pages=app.config.automodsumm_stub_pages,
                 inherited_members=app.config.automodsumm_inherited_members)
+            for f in new_files:
+                env.found_docs.add(env.path2doc(f))
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -408,6 +417,7 @@ def automodsumm_to_autosummary_lines(fn, app):
 def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
+                              stub_pages=False,
                               inherited_members=False):
     """
     This function is adapted from
@@ -487,10 +497,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         fn = os.path.join(path, name + suffix)
 
         # skip it if it exists
+        # always add to new_files so we can add them to env.found_docs
+        new_files.append(fn)
         if os.path.isfile(fn):
             continue
-
-        new_files.append(fn)
 
         f = open(fn, 'w')
 
@@ -502,8 +512,11 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 template = template_env.get_template(template_name)
             else:
                 tmplstr = 'autosummary_core/%s.rst'
+                tmplname = doc.objtype
+                if tmplname == 'class':
+                    tmplname = 'class-stubs' if stub_pages else 'class-flat'
                 try:
-                    template = template_env.get_template(tmplstr % doc.objtype)
+                    template = template_env.get_template(tmplstr % tmplname)
                 except TemplateNotFound:
                     template = template_env.get_template(tmplstr % 'base')
 
@@ -649,6 +662,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         finally:
             f.close()
 
+    return new_files
 
 def setup(app):
 
@@ -663,9 +677,10 @@ def setup(app):
 
     app.add_directive('automod-diagram', Automoddiagram)
     app.add_directive('automodsumm', Automodsumm)
-    app.connect('builder-inited', process_automodsumm_generation)
+    app.connect('builder-inited', process_automodsumm_generation, priority=100)
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
+    app.add_config_value('automodsumm_stub_pages', False, 'env')
     app.add_config_value('automodsumm_inherited_members', False, 'env')
 
     return {'parallel_read_safe': True,

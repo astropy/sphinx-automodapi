@@ -33,6 +33,7 @@ develop-eggs
 distribute-*.tar.gz
 
 # Other
+.vimsession
 .cache
 .tox
 .*.swp
