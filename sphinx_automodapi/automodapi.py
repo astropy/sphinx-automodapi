@@ -58,7 +58,7 @@ It accepts the following options:
         allows the user to overrride the global setting.
 
 
-This extension also adds four sphinx configuration options:
+This extension also adds five sphinx configuration options:
 
 * ``automodapi_inheritance_diagram``
     Should be a boolean that indicates whether to show inheritance diagrams
@@ -82,6 +82,12 @@ This extension also adds four sphinx configuration options:
 * ``automodsumm_inherited_members``
     Should be a bool and if ``True`` members that a class inherits from a base
     class are included in the generated documentation. Defaults to ``False``.
+
+* ``automodsumm_included_members``
+    A list of strings containing the names of hidden class members that should be
+    included in the documentation. This is most commonly used to add special class
+    methods like ``__getitem__`` and ``__setitem__``. Defaults to
+    ``['__init__', '__call__']``.
 
 .. _automodule: http://sphinx-doc.org/latest/ext/autodoc.html?highlight=automodule#directive-automodule
 """
