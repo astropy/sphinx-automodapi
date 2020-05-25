@@ -54,8 +54,14 @@ It accepts the following options:
         The global sphinx configuration option
         ``automodsumm_inherited_members`` decides if members that a class
         inherits from a base class are included in the generated
-        documentation. The option ``:inherited-members:`` or ``:no-inherited-members:``
-        allows the user to overrride the global setting.
+        documentation. The flags ``:inherited-members:`` or ``:no-inherited-members:``
+        allow the user to overrride the global setting.
+
+    * ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:``
+        The global sphinx configuration option ``automodsumm_ignore_emptydoc``
+        decides if class methods with empty ``__doc__`` attributes are included
+        in the generated documentation. The flags ``:ignore-emptydoc:`` or
+        ``:no-ignore-emptydoc:`` allow the user to override the global setting.
 
 
 This extension also adds four sphinx configuration options:
@@ -241,7 +247,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # look for actual options
             unknownops = []
-            inherited_members = None
+            inherited_members = ignore_emptydoc = None
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
                     toskip.append(args.strip())
@@ -261,6 +267,10 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     inherited_members = True
                 elif opname == 'no-inherited-members':
                     inherited_members = False
+                elif opname == 'ignore-emptydoc':
+                    ignore_emptydoc = True
+                elif opname == 'no-ignore-emptydoc':
+                    ignore_emptydoc = False
                 elif opname == 'include-all-objects':
                     allowothers = True
                 else:
@@ -327,6 +337,10 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     clsfuncoptions.append(':inherited-members:')
                 if inherited_members is False:
                     clsfuncoptions.append(':no-inherited-members:')
+                if ignore_emptydoc is True:
+                    clsfuncoptions.append(':ignore-emptydoc:')
+                if ignore_emptydoc is False:
+                    clsfuncoptions.append(':no-ignore-emptydoc:')
             clsfuncoptionstr = '\n    '.join(clsfuncoptions)
 
             if hasfuncs:
