@@ -444,7 +444,13 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     template_dirs = [os.path.join(os.path.dirname(__file__), 'templates'),
                      os.path.join(base_path, '_templates')]
     if builder is not None:
-        # allow the user to override the templates
+        # allow the user to override the templates and ensure class stub
+        # pages read the automodsumm base.rst
+        # TODO: Will this override user base.rst files?
+        local_dir_full = os.path.join(template_dirs[0], 'autosummary_core')
+        templates_path = builder.config.templates_path
+        if local_dir_full not in templates_path:
+            templates_path.append(local_dir_full)
         template_loader = BuiltinTemplateLoader()
         template_loader.init(builder, dirs=template_dirs)
     else:
