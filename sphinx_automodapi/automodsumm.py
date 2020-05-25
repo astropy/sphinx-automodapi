@@ -46,7 +46,14 @@ options:
         in the generated documentation. The flags ``:inherited-members:`` or
         ``:no-inherited-members:`` allows overrriding this global setting.
 
-This extension also adds two sphinx configuration options:
+    * ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:``
+        The global sphinx configuration option ``automodsumm_ignore_emptydoc``
+        decides if functions, classes, and class methods with empty
+        ``__doc__`` attributes are included in the generated documentation. The flags
+        ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:`` allows overrriding this
+        global setting.
+
+This extension also adds three sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
     Should be a bool, and if ``True``, will cause `automodsumm`_ to write files
@@ -56,10 +63,17 @@ This extension also adds two sphinx configuration options:
     cause of sphinx warnings or other debugging.  Defaults to ``False``.
 
 * ``automodsumm_inherited_members``
-    Should be a bool and if ``True``, will cause `automodsumm`_ to document
+    Should be a bool, and if ``True``, will cause `automodsumm`_ to document
     class members that are inherited from a base class. This value can be
     overriden for any particular automodsumm directive by including the
     ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
+    ``False``.
+
+* ``automodsumm_ignore_emptydoc``
+    Should be a bool, and if ``True``, will cause `automodsumm`_ to ignore
+    functions, classes, and class methods with empty ``__doc__`` attributes.
+    This value can be overridden for any particular automodsumm directive by including
+    the ``:ignore-emptydoc:`` or ``:no-ignore-emptydoc:`` options. Defaults to
     ``False``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
@@ -124,6 +138,8 @@ class Automodsumm(Autosummary):
     option_spec['allowed-package-names'] = _str_list_converter
     option_spec['inherited-members'] = flag
     option_spec['no-inherited-members'] = flag
+    option_spec['ignore-emptydoc'] = flag
+    option_spec['no-ignore-emptydoc'] = flag
 
     def run(self):
         env = self.state.document.settings.env
@@ -269,6 +285,7 @@ def process_automodsumm_generation(app):
             generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
                 suffix=suffix, base_path=app.srcdir,
+                ignore_emptydoc=app.config.automodsumm_ignore_emptydoc,
                 inherited_members=app.config.automodsumm_inherited_members)
 
 
@@ -408,6 +425,7 @@ def automodsumm_to_autosummary_lines(fn, app):
 def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
+                              ignore_emptydoc=False,
                               inherited_members=False):
     """
     This function is adapted from
@@ -557,6 +575,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
+                    if (
+                        ignore_emptydoc
+                        and documenter.objtype in ('method', 'class', 'function')
+                        and not getattr(safe_getattr(obj, name), '__doc__', '')
+                    ):
+                        continue
                     if typ is None or documenter.objtype == typ:
                         items.append(name)
                     elif typ == 'attribute' and documenter.objtype == 'property':
@@ -667,6 +691,7 @@ def setup(app):
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
+    app.add_config_value('automodsumm_ignore_emptydoc', False, 'env')
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
