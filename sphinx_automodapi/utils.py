@@ -3,9 +3,7 @@ import sys
 import re
 import os
 from warnings import warn
-from distutils.version import LooseVersion
 
-from sphinx import __version__
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 
 __all__ = ['cleanup_whitespace',
@@ -58,9 +56,10 @@ def find_mod_objs(modname, onlylocals=False):
     ----------
     modname : str
         The name of the module to search.
-    onlylocals : bool
+    onlylocals : bool or list
         If True, only attributes that are either members of `modname` OR one of
-        its modules or subpackages will be included.
+        its modules or subpackages will be included.  If a list, only members
+        of packages in the list are included. If `False`, selection is done.
 
     Returns
     -------
@@ -82,10 +81,12 @@ def find_mod_objs(modname, onlylocals=False):
     __import__(modname)
     mod = sys.modules[modname]
 
+    # Note: use getattr instead of mod.__dict__[k] for modules that
+    # define their own __getattr__ and __dir__.
     if hasattr(mod, '__all__'):
-        pkgitems = [(k, mod.__dict__[k]) for k in mod.__all__]
+        pkgitems = [(k, getattr(mod, k)) for k in mod.__all__]
     else:
-        pkgitems = [(k, mod.__dict__[k]) for k in dir(mod) if k[0] != '_']
+        pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != '_']
 
     # filter out modules and pull the names and objs out
     ismodule = inspect.ismodule
@@ -101,6 +102,8 @@ def find_mod_objs(modname, onlylocals=False):
             fqnames.append(modname + '.' + lnm)
 
     if onlylocals:
+        if isinstance(onlylocals, (tuple, list)):
+            modname = tuple(onlylocals)
         valids = [fqn.startswith(modname) for fqn in fqnames]
         localnames = [e for i, e in enumerate(localnames) if valids[i]]
         fqnames = [e for i, e in enumerate(fqnames) if valids[i]]
