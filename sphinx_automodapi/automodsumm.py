@@ -264,11 +264,10 @@ def process_automodsumm_generation(app):
                         f.write('\n')
 
     for sfn, lines in zip(filestosearch, liness):
-        suffix = os.path.splitext(sfn)[1]
         if len(lines) > 0:
             generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
-                suffix=suffix, base_path=app.srcdir,
+                base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members)
 
 
