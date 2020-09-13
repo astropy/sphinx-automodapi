@@ -22,3 +22,24 @@ def test_find_mod_objs():
     assert 'namedtuple' not in lnms
     assert 'collections.namedtuple' not in fqns
     assert namedtuple not in objs
+
+
+def test_find_mod_objs_with_list_of_modules():
+    lnms, fqns, objs = find_mod_objs(
+        'sphinx_automodapi.tests.test_utils', onlylocals=['sphinx_automodapi'])
+
+    assert namedtuple not in objs
+    assert find_mod_objs in objs
+
+    lnms, fqns, objs = find_mod_objs(
+        'sphinx_automodapi.tests.test_utils', onlylocals=['collections'])
+
+    assert namedtuple in objs
+    assert find_mod_objs not in objs
+
+    lnms, fqns, objs = find_mod_objs(
+        'sphinx_automodapi.tests.test_utils', onlylocals=['collections',
+                                                          'sphinx_automodapi'])
+
+    assert namedtuple in objs
+    assert find_mod_objs in objs

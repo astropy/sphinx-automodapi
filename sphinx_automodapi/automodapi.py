@@ -256,7 +256,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 elif opname == 'no-heading':
                     top_head = False
                 elif opname == 'allowed-package-names':
-                    allowedpkgnms.append(args.strip())
+                    allowedpkgnms.extend(arg.strip() for arg in args.split(','))
                 elif opname == 'inherited-members':
                     inherited_members = True
                 elif opname == 'no-inherited-members':
@@ -271,8 +271,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 allowedpkgnms = ''
                 onlylocals = True
             else:
-                allowedpkgnms = ':allowed-package-names: ' + ','.join(allowedpkgnms)
                 onlylocals = allowedpkgnms
+                allowedpkgnms = ':allowed-package-names: ' + ','.join(allowedpkgnms)
 
             # get the two heading chars
             hds = hds.strip()
