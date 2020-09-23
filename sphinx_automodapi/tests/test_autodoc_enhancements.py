@@ -41,3 +41,20 @@ def test_type_attrgetter():
 
     assert type_object_attrgetter(MyClass, 'susy', 'default') == 'default'
     assert type_object_attrgetter(MyClass, '__dict__') == MyClass.__dict__
+
+
+def test_type_attrgetter_for_dataclass():
+    """
+    This tests the attribute getter for non-default dataclass fields
+    """
+    import dataclasses
+
+    @dataclasses.dataclass
+    class MyDataclass:
+        foo: int
+        bar: str = "bar value"
+
+    with pytest.raises(AttributeError):
+        getattr(MyDataclass, 'foo')
+    assert type_object_attrgetter(MyDataclass, 'foo') == 'foo'
+    assert getattr(MyDataclass, 'bar') == 'bar value'
