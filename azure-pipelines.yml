@@ -6,19 +6,42 @@ schedules:
     - master
   always: 'true'
 
+resources:
+  repositories:
+  - repository: OpenAstronomy
+    type: github
+    endpoint: astropy
+    name: OpenAstronomy/azure-pipelines-templates
+    ref: master
+
 jobs:
 
-- template: azure-template.yml
+- template: run-tox-env.yml@OpenAstronomy
   parameters:
-    name: Linux
-    os: linux
 
-- template: azure-template.yml
-  parameters:
-    name: MacOSX
-    os: macosx
+    coverage: codecov
 
-- template: azure-template.yml
-  parameters:
-    name: Windows
-    os: windows
+    envs:
+
+    # Linux builds - test all Sphinx versions
+    - linux: py36-test-sphinx17
+    - linux: py36-test-sphinx18
+    - linux: py36-test-sphinx20
+    - linux: py37-test-sphinx21
+    - linux: py37-test-sphinx22
+    - linux: py37-test-sphinx23
+    - linux: py37-test-sphinx24
+    - linux: py37-test-sphinx30
+    - linux: py38-test-sphinx31
+    - linux: py38-test-sphinx32-clocale
+    - linux: py38-test-sphinxdev
+
+    # MacOS X - just the oldest, most recent stable, and dev
+    - macosx: py36-test-sphinx17
+    - macosx: py37-test-sphinx32-clocale
+    - macosx: py38-test-sphinxdev
+
+    # Windows - just the oldest, most recent stable, and dev
+    - windows: py36-test-sphinx17
+    - windows: py37-test-sphinx32-clocale
+    - windows: py38-test-sphinxdev
