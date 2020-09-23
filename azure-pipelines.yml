@@ -21,6 +21,14 @@ jobs:
 
     coverage: codecov
 
+    libraries:
+      apt:
+        - graphviz
+      brew:
+        - graphviz
+      choco:
+        - graphviz
+
     envs:
 
     # Linux builds - test all Sphinx versions
