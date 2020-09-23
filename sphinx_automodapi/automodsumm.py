@@ -103,6 +103,7 @@ package. It accepts no options.
 import inspect
 import os
 import re
+import dataclasses
 
 import sphinx
 from docutils.parsers.rst.directives import flag
@@ -595,11 +596,22 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 else:
                     names = getattr(obj, '__dict__').keys()
 
+                    # add dataclass_field names for dataclass classes
+                    if dataclasses.is_dataclass(obj):
+                        dataclass_fieldnames = getattr(obj, '__dataclass_fields__').keys()
+                        names = list(set(list(names) + list(dataclass_fieldnames)))
+
                 for name in names:
                     try:
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
                     except AttributeError:
-                        continue
+                        # for dataclasses try to get the attribute from the __dataclass_fields__
+                        if dataclasses.is_dataclass(obj):
+                            try:
+                                attr = obj.__dataclass_fields__[name]
+                                documenter = get_documenter(app, attr, obj)
+                            except KeyError:
+                                continue
                     if typ is None or documenter.objtype == typ:
                         items.append(name)
                     # elif typ == 'attribute' and documenter.objtype == 'property':
