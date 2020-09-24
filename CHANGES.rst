@@ -7,6 +7,8 @@ Changes in sphinx-automodapi
 - Fixed implementation of ``allowed-package-names`` option (which did
   not work at all). [#111]
 
+- Update minimum required Python version to 3.6. [#117]
+
 0.12 (2019-08-15)
 -----------------
 
