@@ -1,13 +1,17 @@
 Changes in sphinx-automodapi
 ============================
 
-0.13 (unreleased)
+0.13 (2020-09-24)
 -----------------
 
 - Fixed implementation of ``allowed-package-names`` option (which did
   not work at all). [#111]
 
+- Ensure that generated files are always in .rst. [#112]
+
 - Update minimum required Python version to 3.6. [#117]
+
+- Fixed compatibility with Sphinx 3.0 and later. [#100]
 
 0.12 (2019-08-15)
 -----------------
