@@ -1,6 +1,11 @@
 Changes in sphinx-automodapi
 ============================
 
+0.14 (unreleased)
+-----------------
+
+- No changes yet.
+
 0.13 (2020-09-24)
 -----------------
 
