@@ -15,7 +15,7 @@ This extension requires Sphinx 1.7 or later, and can be installed with::
 
 The extension is also available through conda package management system. It can be installed with::
 
-    conda install -c astropy sphinx-automodapi
+    conda install -c conda-forge sphinx-automodapi
 
 
 
