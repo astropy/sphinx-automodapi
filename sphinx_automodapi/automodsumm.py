@@ -46,7 +46,7 @@ options:
         in the generated documentation. The flags ``:inherited-members:`` or
         ``:no-inherited-members:`` allows overrriding this global setting.
 
-This extension also adds three sphinx configuration options:
+This extension also adds four sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
     Should be a bool, and if ``True``, will cause `automodsumm`_ to write files
@@ -66,6 +66,11 @@ This extension also adds three sphinx configuration options:
     Should be a list of fully qualified names of classes where all of its
     private methods (i.e., method names beginning with an underscore, but
     not ending with a double underscore) should be documented. Defaults to ``[]``.
+
+* ``automodsumm_special_methods_of``
+    Should be a list of fully qualified names of classes where all of its
+    special methods (i.e., method names beginning with a double underscore and
+    ending with a double underscore) should be documented. Defaults to ``[]``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
@@ -275,7 +280,8 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members,
-                private_methods_of=app.config.automodsumm_private_methods_of)
+                private_methods_of=app.config.automodsumm_private_methods_of,
+                special_methods_of=app.config.automodsumm_special_methods_of)
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -413,7 +419,8 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
                               inherited_members=False,
-                              private_methods_of=[]):
+                              private_methods_of=[],
+                              special_methods_of=[]):
     """
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
@@ -528,11 +535,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
             def get_members_class(obj, typ, include_public=[],
                                   include_base=False,
-                                  private_methods=False):
+                                  private_methods=False, special_methods=False):
                 """
                 typ = None -> all
                 include_base -> include attrs that are from a base class
                 private_methods -> include all private methods
+                special_methods -> include all special methods
                 """
                 items = []
 
@@ -577,6 +585,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     private = [x for x in methods if x not in public
                                and x.startswith('_') and not x.endswith('__')]
                     public.extend(private)
+                if special_methods:  # Include all special methods
+                    special = [x for x in methods if x not in public
+                               and x.startswith('__') and x.endswith('__')]
+                    public.extend(special)
                 return public, items
 
             ns = {}
@@ -598,10 +610,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     include_base = inherited_members
 
                 private_methods = True if name in private_methods_of else False
+                special_methods = True if name in special_methods_of else False
 
                 class_kwargs = {
                     'include_base': include_base,
                     'private_methods': private_methods,
+                    'special_methods': special_methods,
                 }
 
                 api_class_methods = ['__init__', '__call__']
@@ -686,6 +700,7 @@ def setup(app):
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
     app.add_config_value('automodsumm_private_methods_of', [], 'env')
+    app.add_config_value('automodsumm_special_methods_of', [], 'env')
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
