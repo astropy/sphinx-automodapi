@@ -1,0 +1,9 @@
+.. currentmodule:: sphinx_automodapi.tests.example_module.private_classes
+
+.. autosummary::
+    :toctree: api
+
+    Fruit
+    Banana
+    Orange
+
