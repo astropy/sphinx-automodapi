@@ -76,6 +76,11 @@ def test_run_full_case(tmpdir, case_dir, parallel):
                                       'allowed_names'):
         conf['extensions'].append('sphinx_automodapi.smart_resolver')
 
+    if os.path.basename(case_dir) == 'private_methods':
+        conf['automodsumm_private_methods_of'] = [
+            'sphinx_automodapi.tests.example_module.private_classes.Fruit',
+            'sphinx_automodapi.tests.example_module.private_classes.Banana',
+        ]
     start_dir = os.path.abspath('.')
 
     src_dir = 'src' if 'source_dir' in case_dir else '.'
