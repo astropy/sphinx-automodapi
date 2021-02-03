@@ -46,7 +46,7 @@ options:
         in the generated documentation. The flags ``:inherited-members:`` or
         ``:no-inherited-members:`` allows overrriding this global setting.
 
-This extension also adds two sphinx configuration options:
+This extension also adds three sphinx configuration options:
 
 * ``automodsumm_writereprocessed``
     Should be a bool, and if ``True``, will cause `automodsumm`_ to write files
@@ -61,6 +61,11 @@ This extension also adds two sphinx configuration options:
     overriden for any particular automodsumm directive by including the
     ``:inherited-members:`` or ``:no-inherited-members:`` options.  Defaults to
     ``False``.
+
+* ``automodsumm_private_methods_of``
+    Should be a list of fully qualified names of classes where all of its
+    private methods (i.e., method names beginning with an underscore, but
+    not ending with a double underscore) should be documented. Defaults to ``[]``.
 
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
@@ -269,7 +274,8 @@ def process_automodsumm_generation(app):
             generate_automodsumm_docs(
                 lines, sfn, app=app, builder=app.builder,
                 base_path=app.srcdir,
-                inherited_members=app.config.automodsumm_inherited_members)
+                inherited_members=app.config.automodsumm_inherited_members,
+                private_methods_of=app.config.automodsumm_private_methods_of)
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -406,7 +412,8 @@ def automodsumm_to_autosummary_lines(fn, app):
 def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
-                              inherited_members=False):
+                              inherited_members=False,
+                              private_methods_of=[]):
     """
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
@@ -520,10 +527,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 return public, items
 
             def get_members_class(obj, typ, include_public=[],
-                                  include_base=False):
+                                  include_base=False,
+                                  private_methods=False):
                 """
                 typ = None -> all
                 include_base -> include attrs that are from a base class
+                private_methods -> include all private methods
                 """
                 items = []
 
@@ -548,6 +557,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     else:
                         names = getattr(obj, '__dict__').keys()
 
+                methods = []
                 for name in names:
                     try:
                         documenter = get_documenter(app, safe_getattr(obj, name), obj)
@@ -559,8 +569,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         # In Sphinx 2.0 and above, properties have a separate
                         # objtype, but we treat them the same here.
                         items.append(name)
+                    if typ in (None, 'method') and documenter.objtype == 'method':
+                        methods.append(name)
                 public = [x for x in items
                           if x in include_public or not x.startswith('_')]
+                if private_methods:  # Include all private methods
+                    private = [x for x in methods if x not in public
+                               and x.startswith('_') and not x.endswith('__')]
+                    public.extend(private)
                 return public, items
 
             ns = {}
@@ -581,12 +597,17 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     # use default value
                     include_base = inherited_members
 
+                private_methods = True if name in private_methods_of else False
+
+                class_kwargs = {
+                    'include_base': include_base,
+                    'private_methods': private_methods,
+                }
+
                 api_class_methods = ['__init__', '__call__']
-                ns['members'] = get_members_class(obj, None,
-                                                  include_base=include_base)
+                ns['members'] = get_members_class(obj, None, **class_kwargs)
                 ns['methods'], ns['all_methods'] = \
-                    get_members_class(obj, 'method', api_class_methods,
-                                      include_base=include_base)
+                    get_members_class(obj, 'method', api_class_methods, **class_kwargs)
                 ns['attributes'], ns['all_attributes'] = \
                     get_members_class(obj, 'attribute',
                                       include_base=include_base)
@@ -664,6 +685,7 @@ def setup(app):
 
     app.add_config_value('automodsumm_writereprocessed', False, True)
     app.add_config_value('automodsumm_inherited_members', False, 'env')
+    app.add_config_value('automodsumm_private_methods_of', [], 'env')
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
