@@ -3,7 +3,7 @@ schedules:
   displayName: 'Monthly cron'
   branches:
     include:
-    - master
+    - main
   always: 'true'
 
 resources:
