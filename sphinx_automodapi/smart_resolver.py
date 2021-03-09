@@ -40,7 +40,7 @@ def missing_reference_handler(app, env, node, contnode):
     originally resolve the reference.
 
     see `missing-reference in sphinx documentation
-    <https://www.sphinx-doc.org/en/master/extdev/appapi.html#event-missing-reference>`_
+    <https://www.sphinx-doc.org/en/main/extdev/appapi.html#event-missing-reference>`_
 
     :param app: The Sphinx application object
     :param env: The build environment (``app.builder.env`)

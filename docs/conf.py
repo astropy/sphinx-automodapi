@@ -15,8 +15,8 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 source_suffix = '.rst'
 
-# The master toctree document.
-master_doc = 'index'
+# The main toctree document.
+main_doc = 'index'
 
 # General information about the project.
 project = 'sphinx-automodapi'

@@ -20,9 +20,9 @@ or if you have `tox <https://tox.readthedocs.io/en/latest/>`_ installed::
 
     tox -e test
 
-.. |Azure Status| image:: https://dev.azure.com/astropy-project/sphinx-automodapi/_apis/build/status/astropy.sphinx-automodapi?branchName=master
-   :target: https://dev.azure.com/astropy-project/sphinx-automodapi/_build/latest?definitionId=2&branchName=master
-.. |Coverage Status| image:: https://codecov.io/gh/astropy/sphinx-automodapi/branch/master/graph/badge.svg
+.. |Azure Status| image:: https://dev.azure.com/astropy-project/sphinx-automodapi/_apis/build/status/astropy.sphinx-automodapi?branchName=main
+   :target: https://dev.azure.com/astropy-project/sphinx-automodapi/_build/latest?definitionId=2&branchName=main
+.. |Coverage Status| image:: https://codecov.io/gh/astropy/sphinx-automodapi/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/astropy/sphinx-automodapi
 .. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
    :target: https://pypi.python.org/pypi/sphinx-automodapi

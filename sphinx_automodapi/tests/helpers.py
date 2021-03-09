@@ -17,7 +17,7 @@ intersphinx_mapping = {
     }
 
 DEFAULT_CONF = {'source_suffix': '.rst',
-                'master_doc': 'index',
+                'main_doc': 'index',
                 'nitpicky': True,
                 'extensions': ['sphinx.ext.intersphinx', 'sphinx_automodapi.automodapi'],
                 'suppress_warnings': ['app.add_directive', 'app.add_node'],
