@@ -1,21 +1,11 @@
 """
 Miscellaneous enhancements to help autodoc along.
 """
-
-import inspect
-import sys
-import types
-
-from sphinx.ext.autodoc import AttributeDocumenter, ModuleDocumenter
-from sphinx.util.inspect import isdescriptor
+from sphinx.ext.autodoc import AttributeDocumenter
 
 __all__ = []
 
-if sys.version_info[0] == 3:
-    class_types = (type,)
-else:
-    class_types = (type, types.ClassType)
-
+class_types = (type,)
 MethodDescriptorType = type(type.__subclasses__)
 
 
