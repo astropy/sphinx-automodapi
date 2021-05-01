@@ -25,6 +25,12 @@ It accepts the following options:
         included in the generated documentation. This option may appear
         any number of times to skip multiple objects.
 
+    * ``:include: str``
+        This option is the opposite of :skip: -- if specified, only the object
+        names that match any of the names passed to :include: will be included
+        in the generated documentation. This option may appear multiple times
+        to include multiple objects.
+
     * ``:no-main-docstr:``
         If present, the docstring for the module/package will not be generated.
         The function and class tables will still be used, however.
@@ -232,6 +238,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # initialize default options
             toskip = []
+            includes = []
             inhdiag = app.config.automodapi_inheritance_diagram
             maindocstr = True
             top_head = True
@@ -245,6 +252,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             for opname, args in _automodapiargsrex.findall(spl[grp * 3 + 2]):
                 if opname == 'skip':
                     toskip.append(args.strip())
+                elif opname == 'include':
+                    includes.append(args.strip())
                 elif opname == 'inheritance-diagram':
                     inhdiag = True
                 elif opname == 'no-inheritance-diagram':
@@ -290,8 +299,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 if warnings:
                     logger.warning(msg, location)
 
-            ispkg, hascls, hasfuncs, hasother = _mod_info(
-                modnm, toskip, onlylocals=onlylocals)
+            ispkg, hascls, hasfuncs, hasother, toskip = _mod_info(
+                modnm, toskip, includes, onlylocals=onlylocals)
 
             # add automodule directive only if no-main-docstr isn't present
             if maindocstr:
@@ -394,7 +403,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         return sourcestr
 
 
-def _mod_info(modname, toskip=[], onlylocals=True):
+def _mod_info(modname, toskip=[], include=[], onlylocals=True):
     """
     Determines if a module is a module or a package and whether or not
     it has classes or functions.
@@ -402,8 +411,12 @@ def _mod_info(modname, toskip=[], onlylocals=True):
 
     hascls = hasfunc = hasother = False
 
+    skips = []
     for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=onlylocals)):
-        if localnm not in toskip:
+        if localnm in toskip or (include and localnm not in include):
+            skips.append(localnm)
+
+        else:
             hascls = hascls or inspect.isclass(obj)
             hasfunc = hasfunc or inspect.isroutine(obj)
             hasother = hasother or (not inspect.isclass(obj) and
@@ -418,7 +431,7 @@ def _mod_info(modname, toskip=[], onlylocals=True):
     ispkg = (hasattr(pkg, '__file__') and isinstance(pkg.__file__, str) and
              os.path.split(pkg.__file__)[1].startswith('__init__.py'))
 
-    return ispkg, hascls, hasfunc, hasother
+    return ispkg, hascls, hasfunc, hasother, skips
 
 
 def process_automodapi(app, docname, source):
