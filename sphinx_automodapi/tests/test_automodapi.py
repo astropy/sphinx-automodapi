@@ -327,6 +327,54 @@ def test_am_replacer_skip(tmpdir):
     assert result == am_replacer_skip_expected
 
 
+am_replacer_include_str = """
+This comes before
+
+.. automodapi:: sphinx_automodapi.tests.example_module.functions
+    :include: add
+    :include: subtract
+
+This comes after
+"""
+
+am_replacer_include_expected = """
+This comes before
+
+
+sphinx_automodapi.tests.example_module.functions Module
+-------------------------------------------------------
+
+.. automodule:: sphinx_automodapi.tests.example_module.functions
+
+Functions
+^^^^^^^^^
+
+.. automodsumm:: sphinx_automodapi.tests.example_module.functions
+    :functions-only:
+    :toctree: api
+    :skip: multiply
+
+
+This comes after
+""".format(empty='')
+
+
+def test_am_replacer_include(tmpdir):
+    """
+    Tests using the ":include: option in an ".. automodapi::" .
+    """
+
+    with open(tmpdir.join('index.rst').strpath, 'w') as f:
+        f.write(am_replacer_include_str.format(options=''))
+
+    run_sphinx_in_tmpdir(tmpdir)
+
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
+        result = f.read()
+
+    assert result == am_replacer_include_expected
+
+
 am_replacer_invalidop_str = """
 This comes before
 
