@@ -98,6 +98,7 @@ from .utils import find_mod_objs, cleanup_whitespace
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
+logger = logging.getLogger(__name__)
 
 
 def _str_list_converter(argument):
@@ -134,7 +135,7 @@ class Automodsumm(Autosummary):
         try:
             localnames, fqns, objs = find_mod_objs(modname)
         except ImportError:
-            self.warn("Couldn't import module " + modname)
+            logger.warning("Couldn't import module " + modname)
             return []
 
         try:
@@ -144,8 +145,8 @@ class Automodsumm(Autosummary):
             clsonly = 'classes-only' in self.options
             varonly = 'variables-only' in self.options
             if [clsonly, funconly, varonly].count(True) > 1:
-                self.warn('more than one of "functions-only", "classes-only", '
-                          'or "variables-only" defined. Ignoring.')
+                logger.warning('more than one of "functions-only", "classes-only", '
+                               'or "variables-only" defined. Ignoring.')
                 clsonly = funconly = varonly = False
 
             skipnames = []
@@ -156,9 +157,9 @@ class Automodsumm(Autosummary):
                         option_skipnames.remove(lnm)
                         skipnames.append(lnm)
                 if len(option_skipnames) > 0:
-                    self.warn('Tried to skip objects {objs} in module {mod}, '
-                              'but they were not present.  Ignoring.'
-                              .format(objs=option_skipnames, mod=modname))
+                    logger.warning('Tried to skip objects {objs} in module {mod}, '
+                                   'but they were not present. Ignoring.'
+                                   .format(objs=option_skipnames, mod=modname))
 
             if funconly:
                 cont = []
@@ -217,7 +218,7 @@ class Automoddiagram(InheritanceDiagram):
 
             nms, objs = find_mod_objs(self.arguments[0], onlylocals=ols)[1:]
         except ImportError:
-            self.warn("Couldn't import module " + self.arguments[0])
+            logger.warning("Couldn't import module " + self.arguments[0])
             return []
 
         # Check if some classes should be skipped
@@ -308,8 +309,6 @@ def automodsumm_to_autosummary_lines(fn, app):
 
 
     """
-
-    logger = logging.getLogger(__name__)
 
     fullfn = os.path.join(app.builder.env.srcdir, fn)
 
@@ -424,8 +423,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     from jinja2.sandbox import SandboxedEnvironment
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
-
-    logger = logging.getLogger(__name__)
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
