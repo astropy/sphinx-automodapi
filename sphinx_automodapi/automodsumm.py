@@ -539,7 +539,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     # class `__dict__` instead.
                     declares_slots = (
                         hasattr(obj, '__slots__') and
-                        not (type(obj) is abc.ABCMeta and
+                        not (issubclass(type(obj), abc.ABCMeta) and
                              len(obj.__slots__) == 0)
                     )
 
