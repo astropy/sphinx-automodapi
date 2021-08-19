@@ -1,6 +1,7 @@
 """
 Miscellaneous enhancements to help autodoc along.
 """
+import warnings
 from sphinx.ext.autodoc import AttributeDocumenter
 
 __all__ = []
@@ -58,7 +59,13 @@ def type_object_attrgetter(obj, attr, *defargs):
                 return base.__dict__[attr]
             break
 
-    return getattr(obj, attr, *defargs)
+    # In some cases, getting attributes with getattr can lead to warnings, e.g.
+    # deprecation warnings (this is not normally the case with methods and
+    # regular properties since we don't execute them but using getattr does run
+    # the code inside those properties, so we filter out any warnings.
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        return getattr(obj, attr, *defargs)
 
 
 def setup(app):

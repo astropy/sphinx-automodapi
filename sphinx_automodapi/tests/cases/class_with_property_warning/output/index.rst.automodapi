@@ -1,0 +1,19 @@
+
+sphinx_automodapi.tests.example_module.class_with_property_warning Module
+-------------------------------------------------------------------------
+
+.. automodule:: sphinx_automodapi.tests.example_module.class_with_property_warning
+
+Classes
+^^^^^^^
+
+.. automodsumm:: sphinx_automodapi.tests.example_module.class_with_property_warning
+    :classes-only:
+    :toctree: api
+
+Class Inheritance Diagram
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automod-diagram:: sphinx_automodapi.tests.example_module.class_with_property_warning
+    :private-bases:
+    :parts: 1
