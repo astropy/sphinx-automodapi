@@ -63,7 +63,7 @@ def type_object_attrgetter(obj, attr, *defargs):
     # deprecation warnings (this is not normally the case with methods and
     # regular properties since we don't execute them but using getattr does run
     # the code inside those properties, so we filter out any warnings.
-    with warnings.catch_warnings():
+    with warnings.catch_warnings(record=False):
         warnings.simplefilter('ignore')
         return getattr(obj, attr, *defargs)
 

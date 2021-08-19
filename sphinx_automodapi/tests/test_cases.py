@@ -8,6 +8,7 @@ import io
 import sys
 import glob
 import shutil
+import warnings
 from itertools import product
 
 import pytest
@@ -99,20 +100,15 @@ def test_run_full_case(tmpdir, case_dir, parallel):
 
     try:
         os.chdir(docs_dir)
-        with pytest.warns(None) as record:
+        # Make sure there are no warnings - this is needed to catch warnings that
+        # Sphinx might not capture.
+        with warnings.catch_warnings(record=True) as record:
+            warnings.simplefilter('error')
             status = build_main(argv=argv)
     finally:
         os.chdir(start_dir)
 
     assert status == 0
-
-    # Make sure there are no warnings - if there are we print them out for debugging
-    if len(record) > 0:
-        print('Build emitted the following unexpected warnings:')
-        for warning in record:
-            print('  ' + str(warning))
-
-    assert len(record) == 0
 
     # Check that all expected output files are there and match the reference files
     for root, dirnames, filenames in os.walk(output_dir):
