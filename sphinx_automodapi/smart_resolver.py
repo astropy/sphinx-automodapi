@@ -102,7 +102,7 @@ def missing_reference_handler(app, env, node, contnode):
                     suffix = '.' + suffix
                 reftarget = reftarget + suffix
                 prefix = reftarget.rsplit('.')[0]
-                inventory = env.intersphinx_named_inventory
+                inventory = getattr(env, 'intersphinx_named_inventory', {})
                 if (reftarget not in mapping and
                         prefix in inventory):
 
