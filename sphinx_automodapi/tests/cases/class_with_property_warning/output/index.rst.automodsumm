@@ -1,0 +1,6 @@
+.. currentmodule:: sphinx_automodapi.tests.example_module.class_with_property_warning
+
+.. autosummary::
+    :toctree: api
+
+    Camelot

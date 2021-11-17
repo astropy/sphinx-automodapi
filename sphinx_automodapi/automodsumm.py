@@ -88,6 +88,7 @@ import inspect
 import os
 import re
 import io
+import warnings
 
 from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
@@ -201,7 +202,12 @@ class Automodsumm(Autosummary):
             self.bridge.genopt['imported-members'] = True
         except AttributeError:  # Sphinx < 4.0
             self.genopt['imported-members'] = True
-        return Autosummary.get_items(self, names)
+        # Autosummary.get_items relies on getattr to get attributes from classes.
+        # In some cases, getting attributes with getattr can lead to warnings, e.g.
+        # deprecation warnings, so we filter out any warnings.
+        with warnings.catch_warnings(record=False):
+            warnings.simplefilter('ignore')
+            return Autosummary.get_items(self, names)
 
 
 # <-------------------automod-diagram stuff----------------------------------->
@@ -469,7 +475,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         ensuredir(path)
 
         try:
-            import_by_name_values = import_by_name(name)
+            import warnings
+            with warnings.catch_warnings(record=False):
+                warnings.simplefilter('ignore')
+                import_by_name_values = import_by_name(name)
         except ImportError as e:
             logger.warning('[automodsumm] failed to import %r: %s' % (name, e))
             continue
