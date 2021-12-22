@@ -26,3 +26,14 @@ or if you have `tox <https://tox.readthedocs.io/en/latest/>`_ installed::
   :target: https://codecov.io/gh/astropy/sphinx-automodapi
 .. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
    :target: https://pypi.python.org/pypi/sphinx-automodapi
+
+Development status
+------------------
+
+Due to the limitations of FOSS development model, the Astropy Project
+does not have enough bandwidth to add new features or fixes to this
+package beyond what is necessary for the project itself. Therefore,
+we apologize for any inconvenience caused by unresolved open issues
+and unmerged stale pull requests. If you have any questions or concerns,
+please contact the project via https://www.astropy.org/help .
+Thank you for your interest in this package!
