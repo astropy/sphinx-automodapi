@@ -17,6 +17,11 @@ jobs:
       fail-fast: true
       matrix:
         include:
+          - name: Code style checks
+            os: ubuntu-latest
+            python-version: 3.x
+            toxenv: codestyle
+
           # Linux - test different Sphinx versions
           - os: ubuntu-latest
             python-version: 3.7
