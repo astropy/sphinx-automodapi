@@ -11,7 +11,8 @@ Changes in sphinx-automodapi
 - Add ``:include:`` option to do the opposite of ``:skip:``. [#127]
 
 - Various infrastructure/packaging updates and code clean-ups.
-  [#120, #124, #126, #133]
+  Minimum supported Python version is now 3.7 and Sphinx 2.
+  [#120, #124, #126, #133, #139]
 
 0.13 (2020-09-24)
 -----------------

@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+    tags:
+  workflow_dispatch:
+  schedule:
+    # Monthly cron
+    - cron: '0 8 1 * *'
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - name: Code style checks
+            os: ubuntu-latest
+            python-version: 3.x
+            toxenv: codestyle
+
+          # Linux - test different Sphinx versions
+          - os: ubuntu-latest
+            python-version: 3.7
+            toxenv: py37-test-sphinx24
+          - os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-test-sphinx35
+          - os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-test-sphinx40
+          - os: ubuntu-latest
+            python-version: 3.9
+            toxenv: py39-test-sphinx41
+          - os: ubuntu-latest
+            python-version: 3.9
+            toxenv: py39-test-sphinx42
+          - os: ubuntu-latest
+            python-version: '3.10'
+            toxenv: py310-test-sphinx43-cov-clocale
+          - os: ubuntu-latest
+            python-version: '3.10'
+            toxenv: py310-test-sphinxdev
+
+          # MacOS X - just the oldest, stable, and dev
+          - os: macos-latest
+            python-version: 3.7
+            toxenv: py37-test-sphinx24
+          - os: macos-latest
+            python-version: 3.8
+            toxenv: py38-test-sphinx43-clocale
+          - os: macos-latest
+            python-version: 3.9
+            toxenv: py39-test-sphinxdev
+
+          # Windows - just the oldest, stable, and dev
+          - os: windows-latest
+            python-version: 3.7
+            toxenv: py37-test-sphinx24
+          - os: windows-latest
+            python-version: 3.8
+            toxenv: py38-test-sphinx43-clocale
+          - os: windows-latest
+            python-version: 3.9
+            toxenv: py39-test-sphinxdev
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install graphviz on Linux
+      if: startsWith(matrix.os, 'ubuntu')
+      run: |
+        sudo apt-get update
+        sudo apt-get install graphviz
+    - name: Install graphviz on OSX
+      if: startsWith(matrix.os, 'macos')
+      run: |
+        brew update
+        brew install graphviz
+    - name: Install graphviz on Windows
+      if: startsWith(matrix.os, 'windows')
+      run: choco install graphviz
+    - name: Install tox
+      run: python -m pip install tox
+    - name: Install codecov
+      if: ${{ contains(matrix.toxenv,'-cov') }}
+      run: python -m pip install codecov
+    - name: Run tox
+      run: tox ${{ matrix.toxargs }} -v -e ${{ matrix.toxenv }}
+    - name: Upload coverage to codecov
+      if: ${{ contains(matrix.toxenv,'-cov') }}
+      uses: codecov/codecov-action@v2
+      with:
+        file: ./coverage.xml
