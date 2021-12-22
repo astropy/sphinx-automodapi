@@ -1,10 +1,17 @@
 Changes in sphinx-automodapi
 ============================
 
-0.14 (unreleased)
------------------
+0.14.0 (unreleased)
+-------------------
 
-- No changes yet.
+- Set default value for ``env.intersphinx_named_inventory``. [#136]
+
+- Sphinx 4 compatibility w.r.t. logger warning. [#129]
+
+- Add ``:include:`` option to do the opposite of ``:skip:``. [#127]
+
+- Various infrastructure/packaging updates and code clean-ups.
+  [#120, #124, #126, #133]
 
 0.13 (2020-09-24)
 -----------------
