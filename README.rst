@@ -1,4 +1,4 @@
-|CI Status| |Coverage Status| |PyPI|
+|DOI| |PyPI| |Docs| |CI Status| |Coverage Status|
 
 About
 =====
@@ -20,12 +20,16 @@ or if you have `tox <https://tox.readthedocs.io/en/latest/>`_ installed::
 
     tox -e test
 
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5799977.svg
+  :target: https://doi.org/10.5281/zenodo.5799977
+.. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
+  :target: https://pypi.python.org/pypi/sphinx-automodapi
+.. |Docs| image:: https://readthedocs.org/projects/sphinx-automodapi/badge/?version=latest
+    :target: https://sphinx-automodapi.readthedocs.io/en/latest/?badge=latest
 .. |CI Status| image:: https://github.com/astropy/sphinx-automodapi/workflows/CI/badge.svg
   :target: https://github.com/astropy/sphinx-automodapi/actions
 .. |Coverage Status| image:: https://codecov.io/gh/astropy/sphinx-automodapi/branch/main/graph/badge.svg
   :target: https://codecov.io/gh/astropy/sphinx-automodapi
-.. |PyPI| image:: https://img.shields.io/pypi/v/sphinx-automodapi.svg
-  :target: https://pypi.python.org/pypi/sphinx-automodapi
 
 Development status
 ------------------
