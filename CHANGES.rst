@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.14.0 (unreleased)
+0.14.0 (2021-12-22)
 -------------------
 
 - Set default value for ``env.intersphinx_named_inventory``. [#136]
