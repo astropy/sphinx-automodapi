@@ -2,5 +2,7 @@ include README.rst
 include CHANGES.rst
 include LICENSE.rst
 
+include setup.cfg
+
 exclude *.pyc *.o
 prune build
