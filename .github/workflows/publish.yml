@@ -20,8 +20,11 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install python-build and twine
-      run: python -m pip install pip build "twine>=3.3" -U
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install graphviz
+        python -m pip install pip build "twine>=3.3" -U
 
     - name: Build package
       run: python -m build --sdist --wheel .
@@ -36,8 +39,9 @@ jobs:
       run: |
         cd ..
         python -m venv testenv
-        testenv/bin/pip install pytest sphinx_automodapi/dist/*.whl
-        testenv/bin/pytest sphinx_automodapi
+        testenv/bin/pip install pip -U
+        testenv/bin/pip install pytest cython sphinx-automodapi/dist/*.whl
+        testenv/bin/pytest sphinx-automodapi/sphinx_automodapi/tests
 
     - name: Publish distribution 📦 to PyPI
       if: startsWith(github.ref, 'refs/tags')
