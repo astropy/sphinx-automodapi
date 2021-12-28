@@ -364,6 +364,7 @@ def test_am_replacer_skip_stdlib(tmpdir):
     """
     Tests using the ":skip:" option in an ".. automodapi::"
     that skips objects imported from the standard library.
+    This is a regression test for #141
     """
 
     with open(tmpdir.join('index.rst').strpath, 'w') as f:
