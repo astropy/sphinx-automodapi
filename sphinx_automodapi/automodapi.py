@@ -411,12 +411,12 @@ def _mod_info(modname, toskip=[], include=[], onlylocals=True):
 
     hascls = hasfunc = hasother = False
 
-    skips = []
+    skips = toskip.copy()
     for localnm, fqnm, obj in zip(*find_mod_objs(modname, onlylocals=onlylocals)):
-        if localnm in toskip or (include and localnm not in include):
+        if include and localnm not in include and localnm not in skips:
             skips.append(localnm)
 
-        else:
+        elif localnm not in toskip:
             hascls = hascls or inspect.isclass(obj)
             hasfunc = hasfunc or inspect.isroutine(obj)
             hasother = hasother or (not inspect.isclass(obj) and

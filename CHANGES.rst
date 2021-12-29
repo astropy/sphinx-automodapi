@@ -4,6 +4,8 @@ Changes in sphinx-automodapi
 0.15.0 (unreleased)
 -------------------
 
+- Fixed issue with ``:skip:`` introduced by ``:include:`` feature. [#142]
+
 0.14.0 (2021-12-22)
 -------------------
 
