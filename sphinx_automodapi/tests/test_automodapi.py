@@ -378,6 +378,56 @@ def test_am_replacer_skip_stdlib(tmpdir):
     assert result == am_replacer_skip_stdlib_expected
 
 
+am_replacer_include_stdlib_str = """
+This comes before
+
+.. automodapi:: sphinx_automodapi.tests.example_module.stdlib
+    :include: add
+    :allowed-package-names: pathlib, datetime, sphinx_automodapi
+
+This comes after
+"""
+
+am_replacer_include_stdlib_expected = """
+This comes before
+
+
+sphinx_automodapi.tests.example_module.stdlib Module
+----------------------------------------------------
+
+.. automodule:: sphinx_automodapi.tests.example_module.stdlib
+
+Functions
+^^^^^^^^^
+
+.. automodsumm:: sphinx_automodapi.tests.example_module.stdlib
+    :functions-only:
+    :toctree: api
+    :skip: Path,time
+    :allowed-package-names: pathlib,datetime,sphinx_automodapi
+
+
+This comes after
+""".format(empty='')
+
+
+def test_am_replacer_include_stdlib(tmpdir):
+    """
+    Tests using the ":include: option in an ".. automodapi::"
+    in the presence of objects imported from the standard library.
+    """
+
+    with open(tmpdir.join('index.rst').strpath, 'w') as f:
+        f.write(am_replacer_include_stdlib_str.format(options=''))
+
+    run_sphinx_in_tmpdir(tmpdir)
+
+    with open(tmpdir.join('index.rst.automodapi').strpath) as f:
+        result = f.read()
+
+    assert result == am_replacer_include_stdlib_expected
+
+
 am_replacer_include_str = """
 This comes before
 
