@@ -1,5 +1,3 @@
-import sys
-
 from textwrap import dedent
 
 import pytest
@@ -15,23 +13,11 @@ class Meta(type):
         return 'foo'
 
 
-if sys.version_info[0] < 3:
-    exec(dedent("""
-        class MyClass(object):
-            __metaclass__ = Meta
-            @property
-            def foo(self):
-                \"\"\"Docstring for MyClass.foo property.\"\"\"
-                return 'myfoo'
-    """))
-else:
-    exec(dedent("""
-        class MyClass(metaclass=Meta):
-            @property
-            def foo(self):
-                \"\"\"Docstring for MyClass.foo property.\"\"\"
-                return 'myfoo'
-    """))
+class MyClass(metaclass=Meta):
+    @property
+    def foo(self):
+        """Docstring for MyClass.foo property."""
+        return 'myfoo'
 
 
 def test_type_attrgetter():

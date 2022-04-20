@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-import sys
 from copy import copy
 
 import pytest
@@ -9,11 +8,6 @@ from docutils.parsers.rst import directives, roles
 
 from . import cython_testpackage  # noqa
 from .helpers import run_sphinx_in_tmpdir
-
-if sys.version_info[0] == 2:
-    from io import open as io_open
-else:
-    io_open = open
 
 
 def setup_function(func):
@@ -104,7 +98,7 @@ def test_am_replacer_writereprocessed(tmpdir, writereprocessed):
     Tests the automodapi_writereprocessed option
     """
 
-    with io_open(tmpdir.join('index.rst').strpath, 'w', encoding='utf-8') as f:
+    with open(tmpdir.join('index.rst').strpath, 'w', encoding='utf-8') as f:
         f.write(am_replacer_repr_str.format(options=''))
 
     run_sphinx_in_tmpdir(tmpdir, additional_conf={'automodapi_writereprocessed': writereprocessed})

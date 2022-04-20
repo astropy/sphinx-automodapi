@@ -101,7 +101,6 @@ This extension also adds four sphinx configuration options:
 # actually built.
 
 import inspect
-import io
 import os
 import re
 import sys
@@ -111,11 +110,6 @@ from sphinx.util import logging
 from .utils import find_mod_objs
 
 __all__ = []
-
-if sys.version_info[0] == 3:
-    text_type = str
-else:
-    text_type = unicode  # noqa
 
 automod_templ_modheader = """
 {modname} {pkgormod}
@@ -377,14 +371,14 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
         if app.config.automodapi_writereprocessed:
             # sometimes they are unicode, sometimes not, depending on how
             # sphinx has processed things
-            if isinstance(newsourcestr, text_type):
+            if isinstance(newsourcestr, str):
                 ustr = newsourcestr
             else:
                 ustr = newsourcestr.decode(app.config.source_encoding)
 
             if docname is None:
-                with io.open(os.path.join(app.srcdir, 'unknown.automodapi'),
-                             'a', encoding='utf8') as f:
+                with open(os.path.join(app.srcdir, 'unknown.automodapi'),
+                          'a', encoding='utf8') as f:
                     f.write(u'\n**NEW DOC**\n\n')
                     f.write(ustr)
             else:
@@ -394,8 +388,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 filename = docname + os.path.splitext(env.doc2path(docname))[1]
                 filename += '.automodapi'
 
-                with io.open(os.path.join(app.srcdir, filename), 'w',
-                             encoding='utf8') as f:
+                with open(os.path.join(app.srcdir, filename), 'w',
+                          encoding='utf8') as f:
                     f.write(ustr)
 
         return newsourcestr
