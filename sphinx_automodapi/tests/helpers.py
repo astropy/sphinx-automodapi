@@ -2,7 +2,6 @@
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 import os
-import sys
 from copy import deepcopy
 
 from sphinx.cmd.build import build_main
@@ -13,8 +12,8 @@ __all__ = ['write_conf', 'run_sphinx_in_tmpdir']
 
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/{0}/'.format(sys.version_info[0]), None)
-    }
+    'python': ('https://docs.python.org/3/', None)
+}
 
 DEFAULT_CONF = {'source_suffix': '.rst',
                 'master_doc': 'index',

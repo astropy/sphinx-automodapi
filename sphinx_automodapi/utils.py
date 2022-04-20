@@ -9,13 +9,6 @@ from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 __all__ = ['cleanup_whitespace',
            'find_mod_objs', 'find_autosummary_in_lines_for_automodsumm']
 
-if sys.version_info[0] >= 3:
-    def iteritems(dictionary):
-        return dictionary.items()
-else:
-    def iteritems(dictionary):
-        return dictionary.iteritems()
-
 # We use \n instead of os.linesep because even on Windows, the generated files
 # use \n as the newline character.
 SPACE_NEWLINE = ' \n'

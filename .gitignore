@@ -12,6 +12,7 @@ __pycache__
 
 # Other generated files
 MANIFEST
+sphinx_automodapi/version.py
 
 # Sphinx
 _build

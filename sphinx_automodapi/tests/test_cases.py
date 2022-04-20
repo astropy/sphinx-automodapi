@@ -4,8 +4,6 @@
 # We store different cases in the cases sub-directory of the tests directory
 
 import os
-import io
-import sys
 import glob
 import shutil
 from itertools import product
@@ -26,8 +24,8 @@ PARALLEL = {False, True}
 
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/{0}/'.format(sys.version_info[0]), None)
-    }
+    'python': ('https://docs.python.org/3/', None)
+}
 
 DEFAULT_CONF = {'source_suffix': '.rst',
                 'master_doc': 'index',
@@ -112,8 +110,8 @@ def test_run_full_case(tmpdir, case_dir, parallel):
             path_relative = os.path.relpath(path_reference, output_dir)
             path_actual = os.path.join(docs_dir, path_relative)
             assert os.path.exists(path_actual)
-            with io.open(path_actual, encoding='utf8') as f:
+            with open(path_actual, encoding='utf8') as f:
                 actual = f.read()
-            with io.open(path_reference, encoding='utf8') as f:
+            with open(path_reference, encoding='utf8') as f:
                 reference = f.read()
             assert actual.strip() == reference.strip()
