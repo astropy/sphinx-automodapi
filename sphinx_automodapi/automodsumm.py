@@ -124,6 +124,7 @@ class Automodsumm(Autosummary):
     option_spec['allowed-package-names'] = _str_list_converter
     option_spec['inherited-members'] = flag
     option_spec['no-inherited-members'] = flag
+    option_spec['noindex'] = flag
 
     def run(self):
         env = self.state.document.settings.env
@@ -457,7 +458,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     new_files = []
 
     # write
-    for name, path, template_name, inherited_mem in sorted(items):
+    for name, path, template_name, inherited_mem, noindex in sorted(items):
 
         if path is None:
             # The corresponding autosummary:: directive did not have
@@ -601,6 +602,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
             else:
                 mod_name, obj_name = '.'.join(parts[:-1]), parts[-1]
 
+            ns['noindex'] = noindex
             ns['fullname'] = name
             ns['module'] = mod_name
             ns['objname'] = obj_name
