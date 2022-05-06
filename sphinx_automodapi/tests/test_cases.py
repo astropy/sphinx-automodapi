@@ -121,11 +121,6 @@ def test_duplicated_warning(tmpdir):
     input_dir = os.path.join(os.path.dirname(__file__), 'duplicated_warning', 'docs')
     docs_dir = tmpdir.mkdir('docs').strpath
 
-    conf = deepcopy(DEFAULT_CONF)
-    conf.update({'automodapi_toctreedirnm': 'api',
-                 'automodapi_writereprocessed': True,
-                 'automodsumm_writereprocessed': True})
-
     start_dir = os.path.abspath('.')
     src_dir = '.'
 
