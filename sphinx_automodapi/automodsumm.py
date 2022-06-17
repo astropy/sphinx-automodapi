@@ -90,7 +90,7 @@ import re
 
 from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
-from sphinx.ext.inheritance_diagram import InheritanceDiagram
+from sphinx.ext.inheritance_diagram import InheritanceDiagram, InheritanceGraph
 from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
@@ -236,9 +236,31 @@ class Automoddiagram(InheritanceDiagram):
         try:
             if len(clsnms) > 0:
                 self.arguments = [' '.join(clsnms)]
-            return InheritanceDiagram.run(self)
+            node = InheritanceDiagram.run(self)[0]
+            node['graph'].__class__ = AutomodGraph  # cast to a custom subclass
+            return [node]
         finally:
             self.arguments = oldargs
+
+
+class AutomodGraph(InheritanceGraph):
+    """
+    Subclass of `sphinx.ext.inheritance_diagram.InheritanceGraph` that fixes the
+    URLs of the inheritance diagram when generated for SVG output.
+    """
+    def generate_dot(self, name, urls={}, env=None,
+                     graph_attrs={}, node_attrs={}, edge_attrs={}):
+        # For SVG output, sphinx.ext.inheritance_diagram.html_visit_inheritance_diagram()
+        # will prepend '../' in front of every URL, which breaks the links given how
+        # sphinx_automodapi embeds inheritance diagrams.  Therefore, we reverse the
+        # prepending before generating the inheritance diagram.
+        if env is not None:
+            graphviz_output_format = env.config.graphviz_output_format.upper()
+            if graphviz_output_format == 'SVG':
+                urls = {k: v[3:] for k, v in urls.items()}
+
+        return super().generate_dot(name, urls=urls, env=env, graph_attrs=graph_attrs,
+                                    node_attrs=node_attrs, edge_attrs=edge_attrs)
 
 
 # <---------------------automodsumm generation stuff-------------------------->
