@@ -6,3 +6,10 @@
     add
     subtract
     multiply
+.. currentmodule:: sphinx_automodapi.tests.example_module.nonascii
+
+.. autosummary::
+    :toctree: api
+
+    NonAscii
+
