@@ -1,5 +1,6 @@
 __all__ = ['NonAscii']
 
+
 class NonAscii(object):
     def get_äöü(self):
         """
