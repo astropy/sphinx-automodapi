@@ -4,6 +4,8 @@ Changes in sphinx-automodapi
 0.15.0 (unreleased)
 -------------------
 
+- Fixed issue with non-ascii characters in object members on Windows as the default encoding there is not ``utf8`` [#153]
+
 0.14.1 (2022-01-12)
 -------------------
 
