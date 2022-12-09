@@ -115,3 +115,28 @@ def test_run_full_case(tmpdir, case_dir, parallel):
             with open(path_reference, encoding='utf8') as f:
                 reference = f.read()
             assert actual.strip() == reference.strip()
+
+
+def test_duplicated_warning(tmpdir):
+    input_dir = os.path.join(os.path.dirname(__file__), 'duplicated_warning', 'docs')
+    docs_dir = tmpdir.mkdir('docs').strpath
+
+    start_dir = os.path.abspath('.')
+    src_dir = '.'
+
+    for root, dirnames, filenames in os.walk(input_dir):
+        for filename in filenames:
+            root_dir = os.path.join(docs_dir, os.path.relpath(root, input_dir))
+            ensuredir(root_dir)
+            input_file = os.path.join(root, filename)
+            shutil.copy(input_file, root_dir)
+
+    argv = ['-W', '-b', 'html', src_dir, '_build/html']
+
+    try:
+        os.chdir(docs_dir)
+        status = build_main(argv=argv)
+    finally:
+        os.chdir(start_dir)
+
+    assert status == 0

@@ -1,10 +1,4 @@
-try:
-    # Python 3
-    from collections.abc import Sequence
-except ImportError:
-    # Python 2 (this import also works in Python <= 3.7, but will be removed in
-    # Python 3.8)
-    from collections import Sequence
+from collections.abc import Sequence
 
 __all__ = ['SequenceSubclass']
 

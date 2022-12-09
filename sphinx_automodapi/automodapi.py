@@ -63,6 +63,10 @@ It accepts the following options:
         documentation. The option ``:inherited-members:`` or ``:no-inherited-members:``
         allows the user to overrride the global setting.
 
+    * ``:noindex:``
+        Propagates the ``noindex`` flag to autodoc. Use it to avoid duplicate
+        objects warnings.
+
 
 This extension also adds four sphinx configuration options:
 
@@ -239,6 +243,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             hds = '-^'
             allowedpkgnms = []
             allowothers = False
+            noindex = False
 
             # look for actual options
             unknownops = []
@@ -266,6 +271,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     inherited_members = False
                 elif opname == 'include-all-objects':
                     allowothers = True
+                elif opname == 'noindex':
+                    noindex = True
                 else:
                     unknownops.append(opname)
 
@@ -321,6 +328,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             clsfuncoptions = []
             if toctreestr:
                 clsfuncoptions.append(toctreestr)
+            if noindex:
+                clsfuncoptions.append(':noindex:')
             if toskip:
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:

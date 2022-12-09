@@ -108,7 +108,7 @@ def find_mod_objs(modname, onlylocals=False):
 def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None):
     """Find out what items appear in autosummary:: directives in the
     given lines.
-    Returns a list of (name, toctree, template, inherited_members)
+    Returns a list of (name, toctree, template, inherited_members, noindex)
     where *name* is a name
     of an object and *toctree* the :toctree: path of the corresponding
     autosummary directive (relative to the root of the file name),
@@ -133,12 +133,14 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
     template_arg_re = re.compile(r'^\s+:template:\s*(.*?)\s*$')
     inherited_members_arg_re = re.compile(r'^\s+:inherited-members:\s*$')
     no_inherited_members_arg_re = re.compile(r'^\s+:no-inherited-members:\s*$')
+    noindex_arg_re = re.compile(r'^\s+:noindex:\s*$')
 
     documented = []
 
     toctree = None
     template = None
     inherited_members = None
+    noindex = None
     current_module = module
     in_autosummary = False
     base_indent = ""
@@ -168,6 +170,11 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
                 inherited_members = False
                 continue
 
+            m = noindex_arg_re.match(line)
+            if m:
+                noindex = True
+                continue
+
             if line.strip().startswith(':'):
                 warn(line)
                 continue  # skip options
@@ -181,7 +188,7 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
                    not name.startswith(current_module + '.'):
                     name = "%s.%s" % (current_module, name)
                 documented.append((name, toctree, template,
-                                   inherited_members))
+                                   inherited_members, noindex))
                 continue
 
             if not line.strip() or line.startswith(base_indent + " "):

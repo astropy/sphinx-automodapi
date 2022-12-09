@@ -9,6 +9,9 @@
 
 .. autoclass:: {{ objname }}
    :show-inheritance:
+   {% if noindex -%}
+   :noindex:
+   {%- endif %}
 
    {% if '__init__' in methods %}
      {% set caught_result = methods.remove('__init__') %}
