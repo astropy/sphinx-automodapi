@@ -488,7 +488,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
         new_files.append(fn)
 
-        f = open(fn, 'w')
+        f = open(fn, 'w', encoding='utf8')
 
         try:
 
