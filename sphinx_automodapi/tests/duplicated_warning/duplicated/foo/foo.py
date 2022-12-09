@@ -14,4 +14,4 @@ class Bar:
 
 
 def baz():
-    '''Aweomse baz function'''
+    '''Awesome baz function'''

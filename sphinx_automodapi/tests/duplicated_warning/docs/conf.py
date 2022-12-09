@@ -1,6 +1,6 @@
 project = 'duplicated'
-copyright = '2022, Maximilian Nöthe'
-author = 'Maximilian Nöthe'
+copyright = '2022, Maximilian Linhoff'
+author = 'Maximilian Linhoff'
 release = '0.1'
 
 
