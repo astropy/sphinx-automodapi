@@ -1,10 +1,13 @@
 Changes in sphinx-automodapi
 ============================
 
-0.15.0 (unreleased)
+0.15.0 (2023-01-06)
 -------------------
 
-- Fixed issue with non-ascii characters in object members when the encoding is not ``utf8`` [#153]
+- Fixed issue with non-ascii characters in object members when the encoding is
+  not ``utf8``. [#153]
+
+- Allow use of ``:noindex:``, propagating this flag to autodoc. [#150]
 
 0.14.1 (2022-01-12)
 -------------------
