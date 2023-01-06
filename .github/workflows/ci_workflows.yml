@@ -89,7 +89,7 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       run: choco install graphviz
     - name: Install tox
-      run: python -m pip install tox
+      run: python -m pip install tox<4
     - name: Install codecov
       if: ${{ contains(matrix.toxenv,'-cov') }}
       run: python -m pip install codecov
