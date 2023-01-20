@@ -42,7 +42,7 @@ def run_sphinx_in_tmpdir(tmpdir, additional_conf={}, expect_error=False):
 
     write_conf(tmpdir.join('conf.py').strpath, conf)
 
-    argv = ['-b', 'html', '.', '_build/html']
+    argv = ['-W', '-b', 'html', '.', '_build/html']
 
     try:
         os.chdir(tmpdir.strpath)
