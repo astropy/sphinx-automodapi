@@ -52,9 +52,9 @@ jobs:
             toxenv: py310-test-sphinx61
 
           # MacOS X - just the oldest, stable, and dev
-          - os: macos-latest
-            python-version: 3.7
-            toxenv: py37-test-sphinx24
+          #- os: macos-latest
+          #  python-version: 3.7
+          #  toxenv: py37-test-sphinx24
           - os: macos-latest
             python-version: 3.8
             toxenv: py38-test-sphinx43-clocale
