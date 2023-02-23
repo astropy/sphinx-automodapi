@@ -134,6 +134,7 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
     inherited_members_arg_re = re.compile(r'^\s+:inherited-members:\s*$')
     no_inherited_members_arg_re = re.compile(r'^\s+:no-inherited-members:\s*$')
     noindex_arg_re = re.compile(r'^\s+:noindex:\s*$')
+    other_options_re = re.compile(r'^\s+:nosignatures:\s*$')
 
     documented = []
 
@@ -176,8 +177,10 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
                 continue
 
             if line.strip().startswith(':'):
-                warn(line)
-                continue  # skip options
+                if other_options_re.match(line):
+                    continue  # skip known options
+                else:
+                    warn(line)  # warn about unknown options
 
             m = autosummary_item_re.match(line)
             if m:
