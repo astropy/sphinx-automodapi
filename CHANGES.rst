@@ -1,8 +1,10 @@
 Changes in sphinx-automodapi
 ============================
 
-0.15.0 (2023-01-06)
+0.15.0 (2023-03-13)
 -------------------
+
+- Silenced spurious warnings on configuring ``:nosignatures:``. [#158]
 
 - Fixed issue with non-ascii characters in object members when the encoding is
   not ``utf8``. [#153]
