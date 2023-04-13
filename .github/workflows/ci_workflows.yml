@@ -7,8 +7,8 @@ on:
     tags: '*'
   workflow_dispatch:
   schedule:
-    # Monthly cron
-    - cron: '0 8 1 * *'
+    # Weekly cron
+    - cron: '0 8 * * 1'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
