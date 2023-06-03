@@ -83,7 +83,6 @@ package. It accepts no options.
 .. _sphinx.ext.inheritance_diagram: http://sphinx-doc.org/latest/ext/inheritance.html
 """
 
-import abc
 import inspect
 import os
 import re
