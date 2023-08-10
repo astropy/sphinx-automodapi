@@ -90,7 +90,7 @@ import re
 
 from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
-from sphinx.ext.inheritance_diagram import InheritanceDiagram
+from sphinx.ext.inheritance_diagram import InheritanceDiagram, InheritanceGraph, try_import
 from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
@@ -240,6 +240,33 @@ class Automoddiagram(InheritanceDiagram):
             return InheritanceDiagram.run(self)
         finally:
             self.arguments = oldargs
+
+
+# sphinx.ext.inheritance_diagram generates a list of class full names and
+# generates a mapping from class full names to documentation URLs.  However, the
+# smart resolver in sphinx-automodapi causes the generated mapping to be instead
+# from class documented name to documentation URLs.  The class documented name
+# can be different from the class full name if the class is not documented where
+# it is defined, but rather at some other location where it is imported.  In
+# such situations, the code will fail to find the URL that for the class.
+
+# The following code monkey-patches the method that receives the mapping and
+# converts the keys from class documented names to class full names.
+
+old_generate_dot = InheritanceGraph.generate_dot
+
+
+def patched_generate_dot(self, name, urls={}, env=None,
+                         graph_attrs={}, node_attrs={}, edge_attrs={}):
+    # Make a new mapping dictionary that uses class full names by importing each
+    # class documented name
+    fullname_urls = {self.class_name(try_import(name), 0, None): url
+                     for name, url in urls.items() if try_import(name) is not None}
+    return old_generate_dot(self, name, urls=fullname_urls, env=env,
+                            graph_attrs=graph_attrs, node_attrs=node_attrs, edge_attrs=edge_attrs)
+
+
+InheritanceGraph.generate_dot = patched_generate_dot
 
 
 # <---------------------automodsumm generation stuff-------------------------->
@@ -635,7 +662,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 # An important subtlety here is that the path we pass in has
                 # to be relative to the file being generated, so we have to
                 # figure out the right number of '..'s
-                ndirsback = path.replace(base_path, '').count(os.sep)
+                ndirsback = path.replace(str(base_path), '').count(os.sep)
                 ref_file_rel_segments = ['..'] * ndirsback
                 ref_file_rel_segments.append(mod_name_dir)
                 ref_file_rel_segments.append('references.txt')
