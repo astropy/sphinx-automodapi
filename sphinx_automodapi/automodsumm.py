@@ -635,7 +635,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 # An important subtlety here is that the path we pass in has
                 # to be relative to the file being generated, so we have to
                 # figure out the right number of '..'s
-                ndirsback = path.replace(base_path, '').count(os.sep)
+                ndirsback = path.replace(str(base_path), '').count(os.sep)
                 ref_file_rel_segments = ['..'] * ndirsback
                 ref_file_rel_segments.append(mod_name_dir)
                 ref_file_rel_segments.append('references.txt')
