@@ -43,8 +43,8 @@ jobs:
             python-version: '3.11'
             toxenv: py311-test-sphinx71-cov-clocale
           - os: ubuntu-latest
-            python-version: '3.11'
-            toxenv: py311-test-sphinxdev
+            python-version: '3.12-dev'
+            toxenv: py312-test-sphinxdev
 
           # MacOS X - just the stable and dev
           - os: macos-latest
