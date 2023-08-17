@@ -28,11 +28,11 @@ jobs:
 
           # Linux - test different Sphinx versions
           - os: ubuntu-latest
-            python-version: 3.7
-            toxenv: py37-test-sphinx40
-          - os: ubuntu-latest
             python-version: 3.8
-            toxenv: py38-test-sphinx53
+            toxenv: py38-test-sphinx40
+          - os: ubuntu-latest
+            python-version: 3.9
+            toxenv: py39-test-sphinx53
           - os: ubuntu-latest
             python-version: 3.9
             toxenv: py39-test-sphinx62
@@ -41,7 +41,7 @@ jobs:
             toxenv: py310-test-sphinx70
           - os: ubuntu-latest
             python-version: '3.11'
-            toxenv: py311-test-sphinx71-cov-clocale
+            toxenv: py311-test-sphinx72-cov-clocale
           - os: ubuntu-latest
             python-version: '3.12-dev'
             toxenv: py312-test-sphinxdev
@@ -49,18 +49,18 @@ jobs:
           # MacOS X - just the stable and dev
           - os: macos-latest
             python-version: '3.10'
-            toxenv: py310-test-sphinx71-clocale
+            toxenv: py310-test-sphinx72-clocale
           - os: macos-latest
             python-version: '3.11'
             toxenv: py311-test-sphinxdev
 
           # Windows - just the oldest, stable, and dev
           - os: windows-latest
-            python-version: 3.7
-            toxenv: py37-test-sphinx40
+            python-version: 3.8
+            toxenv: py38-test-sphinx40
           - os: windows-latest
             python-version: '3.10'
-            toxenv: py310-test-sphinx71
+            toxenv: py310-test-sphinx72
           - os: windows-latest
             python-version: '3.11'
             toxenv: py311-test-sphinxdev
