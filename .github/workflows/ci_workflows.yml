@@ -29,7 +29,7 @@ jobs:
           # Linux - test different Sphinx versions
           - os: ubuntu-latest
             python-version: 3.8
-            toxenv: py38-test-sphinx40
+            toxenv: py38-test-sphinx_oldest
           - os: ubuntu-latest
             python-version: 3.8
             toxenv: py38-test-sphinx53
