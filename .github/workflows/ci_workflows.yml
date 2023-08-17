@@ -31,6 +31,9 @@ jobs:
             python-version: 3.8
             toxenv: py38-test-sphinx40
           - os: ubuntu-latest
+            python-version: 3.8
+            toxenv: py38-test-sphinx53
+          - os: ubuntu-latest
             python-version: 3.9
             toxenv: py39-test-sphinx62
           - os: ubuntu-latest
