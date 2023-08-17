@@ -1,10 +1,12 @@
 Changes in sphinx-automodapi
 ============================
 
-0.16.0 (unreleased)
+0.16.0 (2023-08-17)
 -------------------
 
 - Fixed broken inheritance-diagram links due to the smart resolver. [#172]
+
+- Compatibility with Sphinx 7.2. [#172]
 
 - Minimum supported Sphinx version is now 4. [#170]
 
