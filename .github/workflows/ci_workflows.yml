@@ -60,7 +60,7 @@ jobs:
           # Windows - just the oldest, stable, and dev
           - os: windows-latest
             python-version: 3.8
-            toxenv: py38-test-sphinx40
+            toxenv: py38-test-sphinx_oldest
           - os: windows-latest
             python-version: '3.10'
             toxenv: py310-test-sphinx72
