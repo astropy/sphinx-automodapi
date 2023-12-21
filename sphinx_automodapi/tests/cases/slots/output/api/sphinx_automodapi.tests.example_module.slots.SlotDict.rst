@@ -10,7 +10,8 @@ SlotDict
 
    .. autosummary::
 
-      ~SlotDict.param
+      ~SlotDict.class_attr
+      ~SlotDict.instance_attr
 
    .. rubric:: Methods Summary
 
@@ -20,7 +21,8 @@ SlotDict
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: param
+   .. autoattribute:: class_attr
+   .. autoattribute:: instance_attr
 
    .. rubric:: Methods Documentation
 

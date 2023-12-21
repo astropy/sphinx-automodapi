@@ -10,7 +10,7 @@ DerivedSlotParam
 
    .. autosummary::
 
-      ~DerivedSlotParam.extra_param
+      ~DerivedSlotParam.extra_attr
 
    .. rubric:: Methods Summary
 
@@ -20,7 +20,7 @@ DerivedSlotParam
 
    .. rubric:: Attributes Documentation
 
-   .. autoattribute:: extra_param
+   .. autoattribute:: extra_attr
 
    .. rubric:: Methods Documentation
 
