@@ -68,9 +68,9 @@ It accepts the following options:
         objects warnings.
 
     * ``:sort:``
-        Sort the objects in the module alphabetically. The default is to
-        sort by the order they appear in the module (as specified by `__all__`
-        or `dir`).
+        If the module contains ``__all__``, sort the module's objects
+        alphabetically (if ``__all__`` is not present, the objects are found
+        using `dir`, which always gives a sorted list).
 
 
 This extension also adds five sphinx configuration options:

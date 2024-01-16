@@ -78,11 +78,12 @@ def find_mod_objs(modname, onlylocals=False, sort=False):
     # define their own __getattr__ and __dir__.
     if hasattr(mod, '__all__'):
         pkgitems = [(k, getattr(mod, k)) for k in mod.__all__]
-    else:
-        pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != '_']
+        # Optionally sort the items alphabetically
+        if sort:
+            pkgitems.sort()
 
-    if sort:
-        pkgitems.sort()
+    else:
+        pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != "_"]
 
     # filter out modules and pull the names and objs out
     ismodule = inspect.ismodule
