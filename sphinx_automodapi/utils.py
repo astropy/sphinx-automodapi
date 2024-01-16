@@ -1,7 +1,7 @@
-import inspect
 import sys
 import re
 import os
+from inspect import ismodule
 from warnings import warn
 
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
@@ -86,7 +86,6 @@ def find_mod_objs(modname, onlylocals=False, sort=False):
         pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != "_"]
 
     # filter out modules and pull the names and objs out
-    ismodule = inspect.ismodule
     localnames = [k for k, v in pkgitems if not ismodule(v)]
     objs = [v for k, v in pkgitems if not ismodule(v)]
 
