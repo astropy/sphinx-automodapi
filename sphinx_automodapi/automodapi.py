@@ -67,6 +67,11 @@ It accepts the following options:
         Propagates the ``noindex`` flag to autodoc. Use it to avoid duplicate
         objects warnings.
 
+    * ``:sort:``
+        Sort the objects in the module alphabetically. The default is to
+        sort by the order they appear in the module (as specified by `__all__`
+        or `dir`).
+
 
 This extension also adds five sphinx configuration options:
 
@@ -250,6 +255,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             allowedpkgnms = []
             allowothers = False
             noindex = False
+            sort = False
 
             # look for actual options
             unknownops = []
@@ -279,6 +285,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                     allowothers = True
                 elif opname == 'noindex':
                     noindex = True
+                elif opname == 'sort':
+                    sort = True
                 else:
                     unknownops.append(opname)
 
@@ -336,6 +344,8 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
                 clsfuncoptions.append(toctreestr)
             if noindex:
                 clsfuncoptions.append(':noindex:')
+            if sort:
+                clsfuncoptions.append(':sort:')
             if toskip:
                 clsfuncoptions.append(':skip: ' + ','.join(toskip))
             if allowedpkgnms:

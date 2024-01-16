@@ -37,7 +37,7 @@ def cleanup_whitespace(text):
     return text
 
 
-def find_mod_objs(modname, onlylocals=False):
+def find_mod_objs(modname, onlylocals=False, sort=False):
     """ Returns all the public attributes of a module referenced by name.
 
     .. note::
@@ -80,6 +80,9 @@ def find_mod_objs(modname, onlylocals=False):
         pkgitems = [(k, getattr(mod, k)) for k in mod.__all__]
     else:
         pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != '_']
+
+    if sort:
+        pkgitems.sort()
 
     # filter out modules and pull the names and objs out
     ismodule = inspect.ismodule

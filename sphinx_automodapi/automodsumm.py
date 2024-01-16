@@ -130,6 +130,7 @@ class Automodsumm(Autosummary):
     option_spec['inherited-members'] = flag
     option_spec['no-inherited-members'] = flag
     option_spec['noindex'] = flag
+    option_spec['sort'] = flag
 
     def run(self):
         env = self.state.document.settings.env
@@ -138,7 +139,7 @@ class Automodsumm(Autosummary):
         nodelist = []
 
         try:
-            localnames, fqns, objs = find_mod_objs(modname)
+            localnames, fqns, objs = find_mod_objs(modname, sort='sort' in self.options)
         except ImportError:
             logger.warning("Couldn't import module " + modname)
             return []
