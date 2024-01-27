@@ -140,3 +140,13 @@ def test_duplicated_warning(tmpdir):
         os.chdir(start_dir)
 
     assert status == 0
+
+
+def test_slots_example():
+    """Basic tests for slots example module"""
+    from sphinx_automodapi.tests.example_module.slots import (
+        SlotDict, DerivedParam, DerivedSlotParam
+    )
+    SlotDict('param', 'other_param').my_method()
+    DerivedParam('param', 'other_param', 'extra_param').derived_from_slot_class_method()
+    DerivedSlotParam('param', 'other_param', 'extra_param').derived_from_slot_class_method()
