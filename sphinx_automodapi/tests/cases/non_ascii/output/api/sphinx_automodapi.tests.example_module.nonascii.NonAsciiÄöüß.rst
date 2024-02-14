@@ -1,17 +1,17 @@
-NonAscii
-========
+NonAsciiÄöüß
+============
 
 .. currentmodule:: sphinx_automodapi.tests.example_module.nonascii
 
-.. autoclass:: NonAscii
+.. autoclass:: NonAsciiÄöüß
    :show-inheritance:
 
    .. rubric:: Methods Summary
 
    .. autosummary::
 
-      ~NonAscii.get_ß
-      ~NonAscii.get_äöü
+      ~NonAsciiÄöüß.get_ß
+      ~NonAsciiÄöüß.get_äöü
 
    .. rubric:: Methods Documentation
 
