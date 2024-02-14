@@ -8,7 +8,7 @@ Changes in sphinx-automodapi
 
 - Minimum supported Python version is now 3.8. [#177]
 
-- Fixed issue with non-ascii characters in object names [#184]
+- Fixed issue with non-ascii characters in object names. [#184]
 
 0.16.0 (2023-08-17)
 -------------------
