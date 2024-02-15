@@ -1,7 +1,7 @@
-__all__ = ['NonAsciiÄöüß']
+__all__ = ['NonAsciiÄöüßő']
 
 
-class NonAsciiÄöüß(object):
+class NonAsciiÄöüßő(object):
     def get_äöü(self):
         """
         Return a string with common umlauts like äöüß

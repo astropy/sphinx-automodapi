@@ -125,10 +125,10 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
     """
     autosummary_re = re.compile(r'^(\s*)\.\.\s+autosummary::\s*')
     automodule_re = re.compile(
-        r'^\s*\.\.\s+automodule::\s*([A-Za-zäüöÄÜÖß0-9_.]+)\s*$')
+        r'^\s*\.\.\s+automodule::\s*([A-Za-zäüöÄÜÖßő0-9_.]+)\s*$')
     module_re = re.compile(
-        r'^\s*\.\.\s+(current)?module::\s*([a-zA-ZäüöÄÜÖß0-9_.]+)\s*$')
-    autosummary_item_re = re.compile(r'^\s+(~?[_a-zA-ZäüöÄÜÖß][a-zA-ZäüöÄÜÖß0-9_.]*)\s*.*?')
+        r'^\s*\.\.\s+(current)?module::\s*([a-zA-ZäüöÄÜÖßő0-9_.]+)\s*$')
+    autosummary_item_re = re.compile(r'^\s+(~?[_a-zA-ZäüöÄÜÖßő][a-zA-ZäüöÄÜÖßő0-9_.]*)\s*.*?')
     toctree_arg_re = re.compile(r'^\s+:toctree:\s*(.*?)\s*$')
     template_arg_re = re.compile(r'^\s+:template:\s*(.*?)\s*$')
     inherited_members_arg_re = re.compile(r'^\s+:inherited-members:\s*$')
