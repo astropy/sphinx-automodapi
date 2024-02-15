@@ -291,7 +291,7 @@ def process_automodsumm_generation(app):
         if app.config.automodsumm_writereprocessed:
             if lines:  # empty list means no automodsumm entry is in the file
                 outfn = os.path.join(app.srcdir, sfn) + '.automodsumm'
-                with open(outfn, 'w') as f:
+                with open(outfn, 'w', encoding='utf8') as f:
                     for l in lines:  # noqa: E741
                         f.write(l)
                         f.write('\n')
