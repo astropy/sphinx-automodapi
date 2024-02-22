@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.17.0 (unreleased)
+0.17.0 (2024-02-22)
 -------------------
 
 - Fixes issue where ``__slots__`` hides class variables. [#181]
