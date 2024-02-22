@@ -201,3 +201,39 @@ def test_ams_cython(tmpdir, cython_testpackage):  # noqa
         result = f.read()
 
     assert result == ams_cython_expected
+
+
+# =============================================================================
+
+sorted_str = """
+Before
+
+.. automodsumm:: sphinx_automodapi.tests.example_module.classes
+    :sort:
+
+And After
+"""
+
+sorted_expected = """\
+.. currentmodule:: sphinx_automodapi.tests.example_module.classes
+
+.. autosummary::
+
+    Egg
+    Spam
+
+"""
+
+
+def test_sort(tmpdir):
+    with open(tmpdir.join("index.rst").strpath, "w") as f:
+        f.write(sorted_str)
+
+    write_api_files_to_tmpdir(tmpdir)
+
+    run_sphinx_in_tmpdir(tmpdir)
+
+    with open(tmpdir.join("index.rst.automodsumm").strpath) as f:
+        result = f.read()
+
+    assert result == sorted_expected
