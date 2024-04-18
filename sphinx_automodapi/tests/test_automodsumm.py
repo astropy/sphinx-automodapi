@@ -205,6 +205,14 @@ def test_ams_cython(tmpdir, cython_testpackage):  # noqa
 
 # =============================================================================
 
+CLASS_RST = """
+:orphan:
+
+.. currentmodule:: {mod}
+
+.. autoclass:: {cls}
+""".strip()
+
 sorted_str = """
 Before
 
@@ -229,7 +237,11 @@ def test_sort(tmpdir):
     with open(tmpdir.join("index.rst").strpath, "w") as f:
         f.write(sorted_str)
 
-    write_api_files_to_tmpdir(tmpdir)
+    apidir = tmpdir.mkdir('api')
+    mod = 'sphinx_automodapi.tests.example_module.classes'
+    for cls in "Spam", "Egg":
+        with open(apidir.join(f'{mod}.{cls}.rst').strpath, 'w') as f:
+            f.write(CLASS_RST.format(mod=mod, cls=cls))
 
     run_sphinx_in_tmpdir(tmpdir)
 
