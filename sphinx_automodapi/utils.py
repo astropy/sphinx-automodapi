@@ -1,7 +1,7 @@
-import inspect
 import sys
 import re
 import os
+from inspect import ismodule
 from warnings import warn
 
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
@@ -37,7 +37,7 @@ def cleanup_whitespace(text):
     return text
 
 
-def find_mod_objs(modname, onlylocals=False):
+def find_mod_objs(modname, onlylocals=False, sort=False):
     """ Returns all the public attributes of a module referenced by name.
 
     .. note::
@@ -78,11 +78,14 @@ def find_mod_objs(modname, onlylocals=False):
     # define their own __getattr__ and __dir__.
     if hasattr(mod, '__all__'):
         pkgitems = [(k, getattr(mod, k)) for k in mod.__all__]
+        # Optionally sort the items alphabetically
+        if sort:
+            pkgitems.sort()
+
     else:
-        pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != '_']
+        pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != "_"]
 
     # filter out modules and pull the names and objs out
-    ismodule = inspect.ismodule
     localnames = [k for k, v in pkgitems if not ismodule(v)]
     objs = [v for k, v in pkgitems if not ismodule(v)]
 
