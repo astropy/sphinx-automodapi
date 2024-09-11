@@ -50,9 +50,11 @@ def find_mod_objs(modname, onlylocals=False, sort=False):
     modname : str
         The name of the module to search.
     onlylocals : bool or list
-        If True, only attributes that are either members of `modname` OR one of
+        If `True`, only attributes that are either members of `modname` OR one of
         its modules or subpackages will be included.  If a list, only members
         of packages in the list are included. If `False`, selection is done.
+        This option is ignored if a module defines __all__ - in that case, __all__
+        is used to determine whether objects are public.
 
     Returns
     -------
@@ -81,7 +83,7 @@ def find_mod_objs(modname, onlylocals=False, sort=False):
         # Optionally sort the items alphabetically
         if sort:
             pkgitems.sort()
-
+        onlylocals = False
     else:
         pkgitems = [(k, getattr(mod, k)) for k in dir(mod) if k[0] != "_"]
 
