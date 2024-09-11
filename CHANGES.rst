@@ -4,6 +4,9 @@ Changes in sphinx-automodapi
 0.18.0 (unreleased)
 -------------------
 
+- Fixed an issue where items defined in ``__all__`` but originally imported
+  from elsewhere, e.g. a private module, were not documented. [#190]
+
 0.17.0 (2024-02-22)
 -------------------
 
