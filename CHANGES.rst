@@ -1,7 +1,7 @@
 Changes in sphinx-automodapi
 ============================
 
-0.18.0 (unreleased)
+0.18.0 (2024-09-13)
 -------------------
 
 - Fixed an issue where items defined in ``__all__`` but originally imported
