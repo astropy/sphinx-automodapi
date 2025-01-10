@@ -321,7 +321,8 @@ def process_automodsumm_generation(app):
                 lines, sfn, app=app, builder=app.builder,
                 base_path=app.srcdir,
                 inherited_members=app.config.automodsumm_inherited_members,
-                included_members=app.config.automodsumm_included_members)
+                included_members=app.config.automodsumm_included_members,
+                properties_are_attributes=app.config.automodsumm_properties_are_attributes)
 
 
 # _automodsummrex = re.compile(r'^(\s*)\.\. automodsumm::\s*([A-Za-z0-9_.]+)\s*'
@@ -462,7 +463,8 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                               base_path=None, builder=None,
                               template_dir=None,
                               inherited_members=False,
-                              included_members=('__init__', '__call__')):
+                              included_members=('__init__', '__call__'),
+                              *, properties_are_attributes=True):
     """
     This function is adapted from
     `sphinx.ext.autosummary.generate.generate_autosummmary_docs` to
@@ -595,10 +597,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         continue
                     if typ is None or documenter.objtype == typ:
                         items.append(name)
-                    elif typ == 'attribute' and documenter.objtype == 'property':
-                        # In Sphinx 2.0 and above, properties have a separate
-                        # objtype, but we treat them the same here.
-                        items.append(name)
+                    # elif typ == 'attribute' and documenter.objtype == 'property':
+                    #     # In Sphinx 2.0 and above, properties have a separate
+                    #     # objtype, but we treat them the same here.
+                    #     items.append(name)
                 public = [x for x in items
                           if x in include_public or not x.startswith('_')]
                 return public, items
@@ -629,6 +631,15 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 ns['attributes'], ns['all_attributes'] = \
                     get_members_class(obj, 'attribute',
                                       include_base=include_base)
+                public_properties, all_properties = \
+                    get_members_class(obj, 'property',
+                                      include_base=include_base)
+                if properties_are_attributes:
+                    ns['attributes'].extend(public_properties)
+                    ns['all_attributes'].extend(all_properties)
+                else:
+                    ns['properties'] = public_properties
+                    ns['all_properties'] = all_properties
                 ns['methods'].sort()
                 ns['attributes'].sort()
 
@@ -703,6 +714,7 @@ def setup(app):
     app.add_config_value('automodsumm_inherited_members', False, 'env')
     app.add_config_value(
         'automodsumm_included_members', ['__init__', '__call__'], 'env')
+    app.add_config_value('automodsumm_properties_are_attributes', True, 'env')
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
