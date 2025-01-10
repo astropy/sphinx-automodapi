@@ -271,7 +271,7 @@ class Automoddiagram(InheritanceDiagram):
 old_generate_dot = InheritanceGraph.generate_dot
 
 if SPHINX_LT_8_2:
-    def patched_generate_dot(self, name, *, urls={}, env=None,
+    def patched_generate_dot(self, name, urls={}, env=None,
                              graph_attrs={}, node_attrs={}, edge_attrs={}):
         # Make a new mapping dictionary that uses class full names by importing each
         # class documented name
@@ -280,7 +280,7 @@ if SPHINX_LT_8_2:
         return old_generate_dot(self, name, urls=fullname_urls, env=env,
                                 graph_attrs=graph_attrs, node_attrs=node_attrs, edge_attrs=edge_attrs)
 else:
-    def patched_generate_dot(self, name, *, urls={}, config=None,
+    def patched_generate_dot(self, name, urls={}, config=None,
                              graph_attrs={}, node_attrs={}, edge_attrs={}):
         # Make a new mapping dictionary that uses class full names by importing each
         # class documented name
