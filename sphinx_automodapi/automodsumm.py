@@ -532,9 +532,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
         new_files.append(fn)
 
-        f = open(fn, 'w', encoding='utf8')
-
-        try:
+        with open(fn, 'w', encoding='utf8') as f:
 
             doc = get_documenter(app, obj, parent)
 
@@ -672,8 +670,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
             rendered = template.render(**ns)
             f.write(cleanup_whitespace(rendered))
-        finally:
-            f.close()
 
 
 def setup(app):
