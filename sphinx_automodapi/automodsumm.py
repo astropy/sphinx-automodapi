@@ -111,7 +111,7 @@ from .utils import find_mod_objs, cleanup_whitespace
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
 logger = logging.getLogger(__name__)
-SPHINX_LT_8_2 = Version(sphinx.__version__) > Version("8.2.dev")
+SPHINX_LT_8_2 = Version(sphinx.__version__) < Version("8.2.dev")
 
 
 def _str_list_converter(argument):
