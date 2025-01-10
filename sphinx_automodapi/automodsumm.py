@@ -74,6 +74,11 @@ This extension also adds three sphinx configuration options:
     methods like ``__getitem__`` and ``__setitem__``. Defaults to
     ``['__init__', '__call__']``.
 
+* ``automodsumm_properties_are_attributes``
+    Should be a bool and if ``True`` properties are treated as attributes in the
+    documentation meaning that no property specific documentation is generated.
+    Defaults to ``True``.
+
 .. _sphinx.ext.autosummary: http://sphinx-doc.org/latest/ext/autosummary.html
 .. _autosummary: http://sphinx-doc.org/latest/ext/autosummary.html#directive-autosummary
 
