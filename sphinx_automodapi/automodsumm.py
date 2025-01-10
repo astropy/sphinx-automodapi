@@ -99,16 +99,19 @@ import inspect
 import os
 import re
 
+import sphinx
+from docutils.parsers.rst.directives import flag
+from packaging.version import Version
 from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram, InheritanceGraph, try_import
-from docutils.parsers.rst.directives import flag
 
 from .utils import find_mod_objs, cleanup_whitespace
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
 logger = logging.getLogger(__name__)
+SPHINX_LT_8_2 = Version(sphinx.__version__) < Version("8.2.dev")
 
 
 def _str_list_converter(argument):
@@ -267,15 +270,24 @@ class Automoddiagram(InheritanceDiagram):
 
 old_generate_dot = InheritanceGraph.generate_dot
 
-
-def patched_generate_dot(self, name, urls={}, env=None,
-                         graph_attrs={}, node_attrs={}, edge_attrs={}):
-    # Make a new mapping dictionary that uses class full names by importing each
-    # class documented name
-    fullname_urls = {self.class_name(try_import(name), 0, None): url
-                     for name, url in urls.items() if try_import(name) is not None}
-    return old_generate_dot(self, name, urls=fullname_urls, env=env,
-                            graph_attrs=graph_attrs, node_attrs=node_attrs, edge_attrs=edge_attrs)
+if SPHINX_LT_8_2:
+    def patched_generate_dot(self, name, urls={}, env=None,
+                             graph_attrs={}, node_attrs={}, edge_attrs={}):
+        # Make a new mapping dictionary that uses class full names by importing each
+        # class documented name
+        fullname_urls = {self.class_name(try_import(name), 0, None): url
+                         for name, url in urls.items() if try_import(name) is not None}
+        return old_generate_dot(self, name, urls=fullname_urls, env=env,
+                                graph_attrs=graph_attrs, node_attrs=node_attrs, edge_attrs=edge_attrs)
+else:
+    def patched_generate_dot(self, name, urls={}, config=None,
+                             graph_attrs={}, node_attrs={}, edge_attrs={}):
+        # Make a new mapping dictionary that uses class full names by importing each
+        # class documented name
+        fullname_urls = {self.class_name(try_import(name), 0, None): url
+                         for name, url in urls.items() if try_import(name) is not None}
+        return old_generate_dot(self, name, urls=fullname_urls, config=config,
+                                graph_attrs=graph_attrs, node_attrs=node_attrs, edge_attrs=edge_attrs)
 
 
 InheritanceGraph.generate_dot = patched_generate_dot
@@ -532,9 +544,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
         new_files.append(fn)
 
-        f = open(fn, 'w', encoding='utf8')
-
-        try:
+        with open(fn, 'w', encoding='utf8') as f:
 
             doc = get_documenter(app, obj, parent)
 
@@ -672,8 +682,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
             rendered = template.render(**ns)
             f.write(cleanup_whitespace(rendered))
-        finally:
-            f.close()
 
 
 def setup(app):
