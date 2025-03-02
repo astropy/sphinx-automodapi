@@ -21,6 +21,7 @@ CASES_ROOT = os.path.join(os.path.dirname(__file__), 'cases')
 CASES_DIRS = glob.glob(os.path.join(CASES_ROOT, '*'))
 
 PARALLEL = {False, True}
+PROP_ATTR = {True, False}
 
 
 intersphinx_mapping = {
@@ -58,18 +59,23 @@ def teardown_function(func):
     roles._roles = func._roles
 
 
-@pytest.mark.parametrize(('case_dir', 'parallel'), product(CASES_DIRS, PARALLEL))
-def test_run_full_case(tmpdir, case_dir, parallel):
+@pytest.mark.parametrize(('case_dir', 'parallel', 'prop_attr'), product(CASES_DIRS, PARALLEL, PROP_ATTR))
+def test_run_full_case(tmpdir, case_dir, parallel, prop_attr):
 
     input_dir = os.path.join(case_dir, 'input')
-    output_dir = os.path.join(case_dir, 'output')
+
+    output_folder = "output_prop_is_attr" if prop_attr else "output_prop_is_not_attr"
+    output_dir = os.path.join(case_dir, output_folder)
+    if not os.path.isdir(output_dir):
+        output_dir = os.path.join(case_dir, 'output')
 
     docs_dir = tmpdir.mkdir('docs').strpath
 
     conf = deepcopy(DEFAULT_CONF)
     conf.update({'automodapi_toctreedirnm': 'api',
                  'automodapi_writereprocessed': True,
-                 'automodsumm_writereprocessed': True})
+                 'automodsumm_writereprocessed': True,
+                 'automodsumm_properties_are_attributes': prop_attr})
 
     if os.path.basename(case_dir) in ('mixed_toplevel',
                                       'mixed_toplevel_all_objects',
