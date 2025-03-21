@@ -18,12 +18,16 @@
    {% endif %}
 
    {% block attributes_summary %}
-   {% if attributes %}
+   {% if attributes or properties %}
 
    .. rubric:: Attributes Summary
 
    .. autosummary::
    {% for item in attributes %}
+      ~{{ name }}.{{ item }}
+   {%- endfor %}
+
+   {% for item in properties %}
       ~{{ name }}.{{ item }}
    {%- endfor %}
 
@@ -44,12 +48,16 @@
    {% endblock %}
 
    {% block attributes_documentation %}
-   {% if attributes %}
+   {% if attributes or properties%}
 
    .. rubric:: Attributes Documentation
 
    {% for item in attributes %}
    .. autoattribute:: {{ item }}
+   {%- endfor %}
+
+   {% for item in properties %}
+   .. autoproperty:: {{ item }}
    {%- endfor %}
 
    {% endif %}
