@@ -1,12 +1,14 @@
 Changes in sphinx-automodapi
 ============================
 
-0.19.0 (unreleased)
+0.19.0 (2025-04-17)
 -------------------
 
 - Add ``automodsumm_properties_are_attributes`` configuration to control if
   class properties are treated with ``autoattribute`` or ``autoproperty``.
   [#197]
+
+- Fixes compatibility with Sphinx 8.2. [#196]
 
 0.18.0 (2024-09-13)
 -------------------
