@@ -40,7 +40,7 @@ jobs:
         cd ..
         python -m venv testenv
         testenv/bin/pip install pip -U
-        testenv/bin/pip install pytest cython sphinx-automodapi/dist/*.whl
+        testenv/bin/pip install sphinx-automodapi/dist/*.whl[test]
         testenv/bin/pytest sphinx-automodapi/sphinx_automodapi/tests
 
     - name: Publish distribution 📦 to PyPI
