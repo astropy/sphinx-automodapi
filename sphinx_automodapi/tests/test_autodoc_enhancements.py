@@ -56,5 +56,5 @@ def test_type_attrgetter_for_dataclass():
 
     with pytest.raises(AttributeError):
         getattr(MyDataclass, 'foo')
-    assert type_object_attrgetter(MyDataclass, 'foo') == 'foo'
+    assert type_object_attrgetter(MyDataclass, 'foo') == dataclasses.MISSING
     assert getattr(MyDataclass, 'bar') == 'bar value'
