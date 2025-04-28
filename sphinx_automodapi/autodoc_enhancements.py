@@ -62,17 +62,12 @@ def type_object_attrgetter(obj, attr, *defargs):
 
     try:
         return getattr(obj, attr, *defargs)
-    except AttributeError as e:
+    except AttributeError:
         # for dataclasses, get the attribute from the __dataclass_fields__
-        if dataclasses.is_dataclass(obj):
-            if attr in obj.__dataclass_fields__:
-                return obj.__dataclass_fields__[attr].name
-            else:
-                # raise original AttributeError
-                raise e
+        if dataclasses.is_dataclass(obj) and attr in obj.__dataclass_fields__:
+            return obj.__dataclass_fields__[attr].name
         else:
-            # raise original AttributeError
-            raise e
+            raise
 
 
 def setup(app):
