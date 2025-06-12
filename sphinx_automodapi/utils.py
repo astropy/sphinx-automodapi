@@ -194,7 +194,7 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
                     name = name[1:]
                 if current_module and \
                    not name.startswith(current_module + '.'):
-                    name = "%s.%s" % (current_module, name)
+                    name = "{}.{}".format(current_module, name)
                 documented.append((name, toctree, template,
                                    inherited_members, noindex))
                 continue

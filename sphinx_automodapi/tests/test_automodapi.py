@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 from copy import copy
@@ -82,7 +81,7 @@ def test_am_replacer_basic(tmpdir):
     assert result == am_replacer_basic_expected
 
 
-am_replacer_repr_str = u"""
+am_replacer_repr_str = """
 This comes before with spéciàl çhars
 
 .. automodapi:: sphinx_automodapi.tests.example_module.mixed

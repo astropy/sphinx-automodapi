@@ -12,7 +12,7 @@ from __future__ import annotations
 __all__ = ['SlotDict', 'DerivedParam', 'DerivedSlotParam',]
 
 
-class SlotDict(object):
+class SlotDict:
     """
     A class that uses __slots__ and __dict__ for its attribute namespace.
     """
@@ -72,7 +72,7 @@ class DerivedParam(SlotDict):
         extra_param : str
             An extra parameter
         """
-        super(DerivedParam, self).__init__(param, other_param)
+        super().__init__(param, other_param)
         self.extra_attr = extra_param
 
     def derived_from_slot_class_method(self):
@@ -104,7 +104,7 @@ class DerivedSlotParam(SlotDict):
         extra_param : str
             An extra parameter
         """
-        super(DerivedSlotParam, self).__init__(param, other_param)
+        super().__init__(param, other_param)
         self.extra_attr = extra_param
 
     def derived_from_slot_class_method(self):

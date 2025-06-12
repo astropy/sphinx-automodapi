@@ -1,7 +1,7 @@
 __all__ = ['Foo']
 
 
-class BaseFoo(object):
+class BaseFoo:
     """
     Base class for Foo
     """

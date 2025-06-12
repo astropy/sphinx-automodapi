@@ -324,7 +324,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
 
             # add automodule directive only if no-main-docstr isn't present
             if maindocstr:
-                automodline = '.. automodule:: {modname}'.format(modname=modnm)
+                automodline = f'.. automodule:: {modnm}'
             else:
                 automodline = ''
             if top_head:
@@ -409,7 +409,7 @@ def automodapi_replace(sourcestr, app, dotoctree=True, docname=None,
             if docname is None:
                 with open(os.path.join(app.srcdir, 'unknown.automodapi'),
                           'a', encoding='utf8') as f:
-                    f.write(u'\n**NEW DOC**\n\n')
+                    f.write('\n**NEW DOC**\n\n')
                     f.write(ustr)
             else:
                 env = app.builder.env
