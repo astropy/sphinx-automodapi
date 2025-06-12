@@ -1,11 +1,15 @@
 Changes in sphinx-automodapi
 ============================
 
+0.21.0 (unreleased)
+
+- No changes yet
+
+
 0.20.0 (2025-06-12)
 -------------------
 
 - Support for non-default dataclass fields. [#208]
-
 
 0.19.0 (2025-04-17)
 -------------------
