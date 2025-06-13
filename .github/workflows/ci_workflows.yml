@@ -28,11 +28,8 @@ jobs:
 
           # Linux - test different Sphinx versions
           - os: ubuntu-latest
-            python-version: 3.8
-            toxenv: py38-test-sphinx_oldest
-          - os: ubuntu-latest
-            python-version: 3.8
-            toxenv: py38-test-sphinx53
+            python-version: 3.9
+            toxenv: py39-test-sphinx_oldest
           - os: ubuntu-latest
             python-version: 3.9
             toxenv: py39-test-sphinx62
@@ -68,8 +65,8 @@ jobs:
 
           # Windows - just the oldest, stable, and dev
           - os: windows-latest
-            python-version: 3.8
-            toxenv: py38-test-sphinx_oldest
+            python-version: 3.9
+            toxenv: py39-test-sphinx_oldest
           - os: windows-latest
             python-version: '3.12'
             toxenv: py312-test-sphinx82
