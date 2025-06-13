@@ -53,12 +53,15 @@ jobs:
             toxenv: py312-test-sphinx81
           - os: ubuntu-latest
             python-version: '3.13'
+            toxenv: py313-test-sphinx82
+          - os: ubuntu-latest
+            python-version: '3.13'
             toxenv: py313-test-sphinxdev
 
           # MacOS X - just the stable and dev
           - os: macos-latest
             python-version: '3.11'
-            toxenv: py311-test-sphinx81-clocale
+            toxenv: py311-test-sphinx82-clocale
           - os: macos-latest
             python-version: '3.13'
             toxenv: py313-test-sphinxdev
@@ -68,8 +71,8 @@ jobs:
             python-version: 3.8
             toxenv: py38-test-sphinx_oldest
           - os: windows-latest
-            python-version: '3.10'
-            toxenv: py310-test-sphinx81
+            python-version: '3.12'
+            toxenv: py312-test-sphinx82
           - os: windows-latest
             python-version: '3.13'
             toxenv: py313-test-sphinxdev
