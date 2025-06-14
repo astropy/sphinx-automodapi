@@ -27,7 +27,7 @@ def cython_testpackage(tmpdir, request):
     test_pkg.join('setup.py').write(dedent("""\
         import sys
 
-        sys.path.insert(0, {0!r})
+        sys.path.insert(0, {!r})
 
         from os.path import join
         from setuptools import setup, Extension

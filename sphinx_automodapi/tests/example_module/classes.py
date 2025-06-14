@@ -1,7 +1,7 @@
 __all__ = ['Spam', 'Egg']
 
 
-class BaseSpam(object):
+class BaseSpam:
     """
     Base class for Spam
     """
@@ -26,7 +26,7 @@ class Spam(BaseSpam):
     pass
 
 
-class Egg(object):
+class Egg:
     """
     An egg (no inheritance)
     """

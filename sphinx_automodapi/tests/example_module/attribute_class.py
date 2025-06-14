@@ -1,4 +1,4 @@
-class ClassWithAttribute(object):
+class ClassWithAttribute:
     """A class with an attribute."""
     my_attribute = 1
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # -- General configuration ------------------------------------------------
 from sphinx_automodapi import __version__

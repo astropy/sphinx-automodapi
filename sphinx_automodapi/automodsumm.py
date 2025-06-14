@@ -535,7 +535,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
         try:
             import_by_name_values = import_by_name(name)
         except ImportError as e:
-            logger.warning('[automodsumm] failed to import %r: %s' % (name, e))
+            logger.warning('[automodsumm] failed to import {!r}: {}'.format(name, e))
             continue
 
         # if block to accommodate Sphinx's v1.2.2 and v1.2.3 respectively

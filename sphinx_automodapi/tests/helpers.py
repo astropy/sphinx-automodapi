@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Licensed under a 3-clause BSD style license - see LICENSE.rst
 
 import os
@@ -30,7 +29,7 @@ DEFAULT_CONF = {'source_suffix': '.rst',
 def write_conf(filename, conf):
     with open(filename, 'w') as f:
         for key, value in conf.items():
-            f.write("{0} = {1}\n".format(key, repr(conf[key])))
+            f.write(f"{key} = {repr(conf[key])}\n")
 
 
 def run_sphinx_in_tmpdir(tmpdir, additional_conf={}, expect_error=False):

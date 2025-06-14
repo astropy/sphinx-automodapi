@@ -12,7 +12,7 @@ def add(a, b):
     return a + b
 
 
-class MixedSpam(object):
+class MixedSpam:
     """
     Special spam
     """
