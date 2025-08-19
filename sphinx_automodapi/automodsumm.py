@@ -218,10 +218,9 @@ class Automodsumm(Autosummary):
             self.content = []
 
     def get_items(self, names):
-        try:
-            self.bridge.genopt.imported_members = True
-        except AttributeError:  # Sphinx < 4.0
-            self.genopt['imported-members'] = True
+
+        self.bridge.genopt.imported_members = True
+
         return Autosummary.get_items(self, names)
 
 
