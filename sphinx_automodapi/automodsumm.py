@@ -112,12 +112,12 @@ from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram, InheritanceGraph, try_import
 
-from .utils import find_mod_objs, cleanup_whitespace
+from .utils import find_mod_objs, cleanup_whitespace, SPHINX_LT_8_3
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
 logger = logging.getLogger(__name__)
-SPHINX_LT_8_2 = Version(sphinx.__version__) < Version("8.2.dev")
+SPHINX_LT_8_2 = Version(sphinx.__version__) < Version("8.2")
 
 
 def _str_list_converter(argument):
@@ -219,7 +219,8 @@ class Automodsumm(Autosummary):
 
     def get_items(self, names):
 
-        self.bridge.genopt.imported_members = True
+        if SPHINX_LT_8_3:
+            self.bridge.genopt.imported_members = True
 
         return Autosummary.get_items(self, names)
 
@@ -479,13 +480,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     """
 
     from sphinx.jinja2glue import BuiltinTemplateLoader
-    from sphinx.ext.autosummary import import_by_name, get_documenter
+    from sphinx.ext.autosummary import import_by_name
     from sphinx.util.osutil import ensuredir
     from sphinx.util.inspect import safe_getattr
     from jinja2 import FileSystemLoader, TemplateNotFound
     from jinja2.sandbox import SandboxedEnvironment
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
+    from .utils import get_documenter
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
