@@ -82,10 +82,19 @@ def setup(app):
     try:
         if SPHINX_LT_8_3:
             from sphinx.ext.autodoc import AttributeDocumenter
-            app.add_autodocumenter(AttributeDocumenter)
+
         else:
-            from sphinx.ext.autodoc.directive import AutodocDirective
-            app.add_directive('autoattribute', AutodocDirective)
+            from sphinx.ext.autodoc._directive_options import annotation_option, bool_option
+            from sphinx.ext.autodoc._documenters import Documenter
+
+            class AttributeDocumenter(Documenter):
+                """Specialized Documenter subclass for attributes."""
+                objtype = 'attribute'
+                option_spec = dict(Documenter.option_spec)
+                option_spec['annotation'] = annotation_option
+                option_spec['no-value'] = bool_option
+
+        app.add_autodocumenter(AttributeDocumenter)
     finally:
         app.config.suppress_warnings = suppress_warnings_orig
 
