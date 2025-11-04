@@ -9,8 +9,8 @@ from packaging.version import Version
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 
 __all__ = ['cleanup_whitespace',
-           'find_mod_objs', 'find_autosummary_in_lines_for_automodsumm',
-          ]
+           'find_mod_objs',
+           'find_autosummary_in_lines_for_automodsumm']
 
 SPHINX_LT_8_3 = Version(sphinx.__version__) < Version("8.3.dev")
 
