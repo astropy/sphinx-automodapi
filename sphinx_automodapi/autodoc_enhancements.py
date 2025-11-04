@@ -3,7 +3,7 @@ Miscellaneous enhancements to help autodoc along.
 """
 import dataclasses
 
-from sphinx.ext.autodoc import AttributeDocumenter
+from .utils import SPHINX_LT_8_3
 
 __all__ = []
 
@@ -80,7 +80,12 @@ def setup(app):
     if 'app.add_directive' not in app.config.suppress_warnings:
         app.config.suppress_warnings.append('app.add_directive')
     try:
-        app.add_autodocumenter(AttributeDocumenter)
+        if SPHINX_LT_8_3:
+            from sphinx.ext.autodoc import AttributeDocumenter
+            app.add_autodocumenter(AttributeDocumenter)
+        else:
+            from sphinx.ext.autodoc.directive import AutodocDirective
+            app.add_directive('autoattribute', AutodocDirective)
     finally:
         app.config.suppress_warnings = suppress_warnings_orig
 
