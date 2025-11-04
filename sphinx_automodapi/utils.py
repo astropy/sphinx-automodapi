@@ -9,8 +9,8 @@ from packaging.version import Version
 from sphinx.ext.autosummary.generate import find_autosummary_in_docstring
 
 __all__ = ['cleanup_whitespace',
-           'find_mod_objs', 'find_autosummary_in_lines_for_automodsumm',
-           'get_documenter']
+           'find_mod_objs',
+           'find_autosummary_in_lines_for_automodsumm']
 
 SPHINX_LT_8_3 = Version(sphinx.__version__) < Version("8.3.dev")
 
@@ -234,11 +234,11 @@ def find_autosummary_in_lines_for_automodsumm(lines, module=None, filename=None)
     return documented
 
 
-# This used to be in Sphinx proper but removed in
-# https://github.com/sphinx-doc/sphinx/pull/13985
-def get_documenter(app, obj, parent):
-    """Get an autodoc.Documenter class suitable for documenting the given
-    object.
+# sphinx-automodapi used to use sphinx.ext.autosummary.get_documenter()
+# from Sphinx proper, but the function was removed upstream in
+# https://github.com/sphinx-doc/sphinx/pull/13985.
+def get_object_type(app, obj, parent):
+    """Get the object type suitable for documenting the given object.
 
     *obj* is the Python object to be documented, and *parent* is an
     another Python object (e.g. a module or a class) to which *obj*
@@ -247,12 +247,11 @@ def get_documenter(app, obj, parent):
     if SPHINX_LT_8_3:
         from sphinx.ext.autosummary import get_documenter
 
-        retval = get_documenter(app, obj, parent)
+        documenter = get_documenter(app, obj, parent)
+        obj_type = documenter.objtype
+        return obj_type
 
-    else:
-        from sphinx.ext.autosummary import _get_documenter
+    from sphinx.ext.autosummary import _get_documenter
 
-        obj_type = _get_documenter(obj, parent)
-        retval = app.registry.documenters[obj_type]
-
-    return retval
+    obj_type = _get_documenter(obj, parent)
+    return obj_type

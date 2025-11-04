@@ -487,7 +487,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
     from jinja2.sandbox import SandboxedEnvironment
 
     from .utils import find_autosummary_in_lines_for_automodsumm as find_autosummary_in_lines
-    from .utils import get_documenter
+    from .utils import get_object_type
 
     # Create our own templating environment - here we use Astropy's
     # templates rather than the default autosummary templates, in order to
@@ -555,14 +555,14 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
         with open(fn, 'w', encoding='utf8') as f:
 
-            doc = get_documenter(app, obj, parent)
+            obj_type = get_object_type(app, obj, parent)
 
             if template_name is not None:
                 template = template_env.get_template(template_name)
             else:
                 tmplstr = 'autosummary_core/%s.rst'
                 try:
-                    template = template_env.get_template(tmplstr % doc.objtype)
+                    template = template_env.get_template(tmplstr % obj_type)
                 except TemplateNotFound:
                     template = template_env.get_template(tmplstr % 'base')
 
@@ -573,10 +573,10 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 items = []
                 for name in dir(obj):
                     try:
-                        documenter = get_documenter(app, safe_getattr(obj, name), obj)
+                        obj_type = get_object_type(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         continue
-                    if typ is None or documenter.objtype == typ:
+                    if typ is None or obj_type == typ:
                         items.append(name)
                 public = [x for x in items
                           if x in include_public or not x.startswith('_')]
@@ -604,20 +604,20 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
                 for name in names:
                     try:
-                        documenter = get_documenter(app, safe_getattr(obj, name), obj)
+                        obj_type = get_object_type(app, safe_getattr(obj, name), obj)
                     except AttributeError:
                         # for dataclasses try to get the attribute from the __dataclass_fields__
                         if dataclasses.is_dataclass(obj):
                             try:
                                 attr = obj.__dataclass_fields__[name]
-                                documenter = get_documenter(app, attr, obj)
+                                obj_type = get_object_type(app, attr, obj)
                             except KeyError:
                                 continue
-                    if typ is None or documenter.objtype == typ:
+                    if typ is None or obj_type == typ:
                         items.append(name)
-                    # elif typ == 'attribute' and documenter.objtype == 'property':
+                    # elif typ == 'attribute' and obj_type == 'property':
                     #     # In Sphinx 2.0 and above, properties have a separate
-                    #     # objtype, but we treat them the same here.
+                    #     # object type, but we treat them the same here.
                     #     items.append(name)
                 public = [x for x in items
                           if x in include_public or not x.startswith('_')]
@@ -625,7 +625,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
             ns = {}
 
-            if doc.objtype == 'module':
+            if obj_type == 'module':
                 ns['members'] = get_members_mod(obj, None)
                 ns['functions'], ns['all_functions'] = \
                     get_members_mod(obj, 'function')
@@ -633,7 +633,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                     get_members_mod(obj, 'class')
                 ns['exceptions'], ns['all_exceptions'] = \
                     get_members_mod(obj, 'exception')
-            elif doc.objtype == 'class':
+            elif obj_type == 'class':
                 if inherited_mem is not None:
                     # option set in this specifc directive
                     include_base = inherited_mem
@@ -662,7 +662,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 ns['attributes'].sort()
 
             parts = name.split('.')
-            if doc.objtype in ('method', 'attribute'):
+            if obj_type in ('method', 'attribute'):
                 mod_name = '.'.join(parts[:-2])
                 cls_name = parts[-2]
                 obj_name = '.'.join(parts[-2:])
@@ -676,7 +676,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
             ns['objname'] = obj_name
             ns['name'] = parts[-1]
 
-            ns['objtype'] = doc.objtype
+            ns['objtype'] = obj_type
             ns['underline'] = len(obj_name) * '='
 
             # We now check whether a file for reference footnotes exists for

@@ -3,12 +3,7 @@ Miscellaneous enhancements to help autodoc along.
 """
 import dataclasses
 
-from sphinx.ext.autodoc import AttributeDocumenter
-
 __all__ = []
-
-class_types = (type,)
-MethodDescriptorType = type(type.__subclasses__)
 
 
 # See
@@ -71,18 +66,7 @@ def type_object_attrgetter(obj, attr, *defargs):
 
 
 def setup(app):
-    # Must have the autodoc extension set up first so we can override it
-    app.setup_extension('sphinx.ext.autodoc')
-
     app.add_autodoc_attrgetter(type, type_object_attrgetter)
-
-    suppress_warnings_orig = app.config.suppress_warnings[:]
-    if 'app.add_directive' not in app.config.suppress_warnings:
-        app.config.suppress_warnings.append('app.add_directive')
-    try:
-        app.add_autodocumenter(AttributeDocumenter)
-    finally:
-        app.config.suppress_warnings = suppress_warnings_orig
 
     return {'parallel_read_safe': True,
             'parallel_write_safe': True}
