@@ -1,8 +1,10 @@
 Changes in sphinx-automodapi
 ============================
 
-0.21.0 (unreleased)
+0.21.0 (2025-12-01)
 -------------------
+
+- Fixes compatibility with Sphinx 9.0. [#215, #220, #224]
 
 - Minimum supported Python version is now 3.9. [#213]
 
