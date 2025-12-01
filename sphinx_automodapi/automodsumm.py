@@ -112,7 +112,7 @@ from sphinx.util import logging
 from sphinx.ext.autosummary import Autosummary
 from sphinx.ext.inheritance_diagram import InheritanceDiagram, InheritanceGraph, try_import
 
-from .utils import find_mod_objs, cleanup_whitespace, SPHINX_LT_8_3
+from .utils import find_mod_objs, cleanup_whitespace, SPHINX_LT_9
 
 __all__ = ['Automoddiagram', 'Automodsumm', 'automodsumm_to_autosummary_lines',
            'generate_automodsumm_docs', 'process_automodsumm_generation']
@@ -219,7 +219,7 @@ class Automodsumm(Autosummary):
 
     def get_items(self, names):
 
-        if SPHINX_LT_8_3:
+        if SPHINX_LT_9:
             self.bridge.genopt.imported_members = True
 
         return Autosummary.get_items(self, names)
