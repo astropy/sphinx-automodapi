@@ -12,7 +12,7 @@ __all__ = ['cleanup_whitespace',
            'find_mod_objs',
            'find_autosummary_in_lines_for_automodsumm']
 
-SPHINX_LT_8_3 = Version(sphinx.__version__) < Version("8.3.dev")
+SPHINX_LT_9 = Version(sphinx.__version__) < Version("9.0")
 
 # We use \n instead of os.linesep because even on Windows, the generated files
 # use \n as the newline character.
@@ -244,7 +244,7 @@ def get_object_type(app, obj, parent):
     another Python object (e.g. a module or a class) to which *obj*
     belongs to.
     """
-    if SPHINX_LT_8_3:
+    if SPHINX_LT_9:
         from sphinx.ext.autosummary import get_documenter
 
         documenter = get_documenter(app, obj, parent)
