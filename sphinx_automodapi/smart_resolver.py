@@ -15,6 +15,10 @@ corrected if possible.
 
 from docutils.nodes import literal, reference
 
+from .utils import SPHINX_LT_10
+
+__all__ = []
+
 
 def process_docstring(app, what, name, obj, options, lines):
     if isinstance(obj, type):
@@ -106,9 +110,12 @@ def missing_reference_handler(app, env, node, contnode):
                 if (reftarget not in mapping and
                         prefix in inventory):
 
-                    if 'py:class' in inventory[prefix] and \
-                            reftarget in inventory[prefix]['py:class']:
-                        newtarget = inventory[prefix]['py:class'][reftarget][2]
+                    if ('py:class' in inventory[prefix] and
+                            reftarget in inventory[prefix]['py:class']):
+                        if SPHINX_LT_10:
+                            newtarget = inventory[prefix]['py:class'][reftarget][2]
+                        else:
+                            newtarget = inventory[prefix]['py:class'][reftarget].uri
                         if not refexplicit and '~' not in node.rawsource:
                             contnode = literal(text=reftarget)
                         newnode = reference('', '', internal=True)
