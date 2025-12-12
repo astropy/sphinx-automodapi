@@ -13,7 +13,6 @@ __all__ = ['cleanup_whitespace',
            'find_autosummary_in_lines_for_automodsumm']
 
 SPHINX_LT_9 = Version(sphinx.__version__) < Version("9.0")
-SPHINX_LT_10 = Version(sphinx.__version__) < Version("10.0.dev")
 
 # We use \n instead of os.linesep because even on Windows, the generated files
 # use \n as the newline character.

@@ -15,7 +15,7 @@ corrected if possible.
 
 from docutils.nodes import literal, reference
 
-from .utils import SPHINX_LT_10
+from .utils import SPHINX_LT_9
 
 __all__ = []
 
@@ -112,7 +112,7 @@ def missing_reference_handler(app, env, node, contnode):
 
                     if ('py:class' in inventory[prefix] and
                             reftarget in inventory[prefix]['py:class']):
-                        if SPHINX_LT_10:
+                        if SPHINX_LT_9:
                             newtarget = inventory[prefix]['py:class'][reftarget][2]
                         else:
                             newtarget = inventory[prefix]['py:class'][reftarget].uri
