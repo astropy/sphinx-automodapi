@@ -602,7 +602,7 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                         dataclass_fieldnames = getattr(obj, '__dataclass_fields__').keys()
                         names = list(set(list(names) + list(dataclass_fieldnames)))
 
-                for name in names:
+                for name in list(names):
                     try:
                         obj_type = get_object_type(app, safe_getattr(obj, name), obj)
                     except AttributeError:
