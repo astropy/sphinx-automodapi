@@ -592,7 +592,6 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
 
                 # using dir gets all of the attributes, including the elements
                 # from the base class, otherwise use __dict__
-                names: list[str]
                 if include_base:
                     names = dir(obj)
                 else:
