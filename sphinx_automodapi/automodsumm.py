@@ -595,12 +595,12 @@ def generate_automodsumm_docs(lines, srcfn, app=None, suffix='.rst',
                 if include_base:
                     names = dir(obj)
                 else:
-                    names = getattr(obj, '__dict__').keys()
+                    names = list(getattr(obj, '__dict__').keys())
 
                     # add dataclass_field names for dataclass classes
                     if dataclasses.is_dataclass(obj):
                         dataclass_fieldnames = getattr(obj, '__dataclass_fields__').keys()
-                        names = list(set(list(names) + list(dataclass_fieldnames)))
+                        names = list(set(names + list(dataclass_fieldnames)))
 
                 for name in names:
                     try:
