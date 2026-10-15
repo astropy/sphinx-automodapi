@@ -1,10 +1,11 @@
 Changes in sphinx-automodapi
 ============================
 
-0.23.0 (unreleased)
+0.22.1 (2026-10-15)
 -------------------
 
-- No changes yet.
+- Fixed a bug to avoid problem from target object ``__dict__``
+  changing during iteration in ``generate_automodsumm_docs()``. [#246]
 
 0.22.0 (2025-12-12)
 -------------------
